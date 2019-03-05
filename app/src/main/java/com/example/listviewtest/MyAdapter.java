@@ -51,7 +51,7 @@ public class MyAdapter extends BaseAdapter {
         }
         TextView name = view.findViewById(R.id.tv_name);
         TextView content = view.findViewById(R.id.tv_content);
-        ImageView img = view.findViewById(R.id.tv_img);
+        ImageView img = view.findViewById(R.id.iv_icon);
 
         name.setText(mList.get(position).getmName());
         content.setText(mList.get(position).getmContent());

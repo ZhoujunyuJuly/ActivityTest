@@ -9,6 +9,8 @@ public class MyList {
         super();
     }
 
+
+
     public MyList(String name,String content,int img){
         super();
         this.mName = name;
@@ -16,13 +18,6 @@ public class MyList {
         this.mImg = img;
     }
 
-    public String getmName(){
-        return mName;
-    }
-
-    public String getmContent() {
-        return mContent;
-    }
 
     public int getmImg() {
         return mImg;
@@ -32,8 +27,16 @@ public class MyList {
         this.mImg = mImg;
     }
 
+    public String getmName() {
+        return mName;
+    }
+
     public void setmName(String mName) {
         this.mName = mName;
+    }
+
+    public String getmContent() {
+        return mContent;
     }
 
     public void setmContent(String mContent) {
