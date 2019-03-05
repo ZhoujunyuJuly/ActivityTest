@@ -14,7 +14,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    List userList = new ArrayList<>();
+    //List userList = new ArrayList<>();
+
+    private List<MyList> mList = new ArrayList<MyList>();
 
     private ListView mListView;
     private MyAdapter myAdapter;
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         fakeData();
 
-        myAdapter = new MyAdapter(MainActivity.this,userList);
+        myAdapter = new MyAdapter(MainActivity.this,mList);
         mListView.setAdapter(myAdapter);
     }
 
@@ -35,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private void fakeData(){
 
         for (int i = 0; i < 100 ; i++) {
-            userList.add(String.valueOf(i));
+             MyList myList = new MyList(String.valueOf(i),"hello",R.drawable.ic_launcher_background);
+             mList.add(myList);
         }
 
     }

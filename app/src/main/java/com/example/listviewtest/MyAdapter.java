@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 public class MyAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<String> mList;
+    private List<MyList> mList;
 
     public MyAdapter(Context context,List list) {
         super();
@@ -48,11 +49,13 @@ public class MyAdapter extends BaseAdapter {
         }else {
             view = convertView;
         }
-        TextView left = view.findViewById(R.id.tv_left);
-        TextView right = view.findViewById(R.id.tv_right);
+        TextView name = view.findViewById(R.id.tv_name);
+        TextView content = view.findViewById(R.id.tv_content);
+        ImageView img = view.findViewById(R.id.tv_img);
 
-        left.setText(mList.get(position));
-        right.setText(mList.get(position));
+        name.setText(mList.get(position).getmName());
+        content.setText(mList.get(position).getmContent());
+        img.setImageResource(mList.get(position).getmImg());
 
         return view;
     }
