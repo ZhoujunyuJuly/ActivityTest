@@ -9,21 +9,20 @@ import android.widget.TextView;
 
 import java.util.List;
 
-
+/**
+ * Created by zhoujunyu on March 3
+ *
+ */
 
 public class MyAdapter extends BaseAdapter {
 
-
-    //private String[] data={"apple","pine","banana","watermelon","orange","mango","pear","cherry","aaa","bbb","ccc","dfs","asdfasf","errt","eeee",
-           // "asdfasdf","werewwg","asdfdf","dfdgdgdg","fedfedf","efegeg","fgrg","eegreb","efev","efeevf","efwfweg","efw","tht","thr","egr","wfew"};
     private Context mContext;
-    private List<ListV1> mList;
+    private List<String> mList;
 
-    public MyAdapter(Context mcontext,List<ListV1> mList) {
+    public MyAdapter(Context context,List list) {
         super();
-        this.mContext = mcontext;
-        this.mList = mList;
-
+        this.mContext = context;
+        this.mList = list;
     }
 
     @Override
@@ -33,7 +32,7 @@ public class MyAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return mList.get(position);
     }
 
     @Override
@@ -45,17 +44,17 @@ public class MyAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = null;
         if(convertView == null) {
-            view = LayoutInflater.from(mContext).inflate(R.layout.activity_main, null);
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_listview, null);
         }else {
             view = convertView;
         }
-        TextView left = (TextView)view.findViewById(R.id.item_left);
-        TextView right = (TextView)view.findViewById(R.id.item_right);
+        TextView left = view.findViewById(R.id.tv_left);
+        TextView right = view.findViewById(R.id.tv_right);
 
-        left.setText(mList.get(position).getLeft());
-        right.setText(mList.get(position).getRight());
+        left.setText(mList.get(position));
+        right.setText(mList.get(position));
 
         return view;
-        }
+    }
 
 }
