@@ -15,29 +15,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     private List<MyRecList> mRecList;
 
 
-    static class BookViewHolder extends RecyclerView.ViewHolder{
-        ImageView img;
-        TextView bookname;
-        TextView description;
-        TextView chapter;
-        TextView customer;
-        TextView bookvalue;
-
-        public BookViewHolder(View view){
-            super(view);//?????????????????????????????
-            img = view.findViewById(R.id.iv_icon);
-            bookname = view.findViewById(R.id.tv_bookname);
-            description = view.findViewById(R.id.tv_description);
-            chapter = view.findViewById(R.id.tv_chapter);
-            customer = view.findViewById(R.id.tv_customer);
-            bookvalue = view.findViewById(R.id.tv_bookvalue);
-        }
-    }
-
     public BookAdapter(List<MyRecList> myRecList){
         mRecList = myRecList;
     }
-
 
     @NonNull
     @Override
@@ -61,5 +41,24 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     @Override
     public int getItemCount() {
         return mRecList.size();
+    }
+
+    static class BookViewHolder extends RecyclerView.ViewHolder{
+        ImageView img;
+        TextView bookname;
+        TextView description;
+        TextView chapter;
+        TextView customer;
+        TextView bookvalue;
+
+        public BookViewHolder(View view){
+            super(view);//?????????????????????????????
+            img = view.findViewById(R.id.iv_icon);
+            bookname = view.findViewById(R.id.tv_bookname);
+            description = view.findViewById(R.id.tv_description);
+            chapter = view.findViewById(R.id.tv_chapter);
+            customer = view.findViewById(R.id.tv_customer);
+            bookvalue = view.findViewById(R.id.tv_bookvalue);
+        }
     }
 }

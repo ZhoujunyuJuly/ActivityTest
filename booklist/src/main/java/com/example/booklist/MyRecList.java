@@ -1,5 +1,8 @@
 package com.example.booklist;
 
+/**
+ * Model Bean
+ */
 public class MyRecList {
     private int img;
     private String bookName;
