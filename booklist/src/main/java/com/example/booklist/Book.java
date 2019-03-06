@@ -3,7 +3,7 @@ package com.example.booklist;
 /**
  * Model Bean
  */
-public class MyRecList {
+public class Book {
     private int img;
     private String bookName;
     private String description;
@@ -11,11 +11,11 @@ public class MyRecList {
     private String customer;
     private String bookvalue;
 
-    public MyRecList(){
+    public Book(){
         super();
     }
 
-    public MyRecList(int img,String bookName,String description,String chapter,String customer,String bookvalue){
+    public Book(int img, String bookName, String description, String chapter, String customer, String bookvalue){
         super();
         this.img = img;
         this.bookName = bookName;

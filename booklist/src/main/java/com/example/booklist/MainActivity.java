@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
 
         findViews();
         initView();
+        click();
+
     }
 
     private void findViews() {
@@ -34,4 +38,14 @@ public class MainActivity extends AppCompatActivity {
         mBookAdapter = new BookAdapter(Data.makeFakeData());
         mRecyclerView.setAdapter(mBookAdapter);
     }
+
+    private void click(){
+        mBookAdapter.setOnItemClickListener(new BookAdapter.OnItemClickListen() {
+            @Override
+            public void onItemClick(View view,int position){
+                Toast.makeText(MainActivity.this,"click",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }
+
