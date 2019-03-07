@@ -1,5 +1,6 @@
 package com.example.booklist;
 
+import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -30,11 +31,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         public void onItemClick(View view,int position);
     }
 
-//    private AdapterView.OnItemClickListener mOnItemClickListener;
-//
-//    private void setOnItemClickListen(AdapterView.OnItemClickListener mOnItemClickListener){
-//        this.mOnItemClickListener = mOnItemClickListener;
-//    }
 
     private OnItemClickListen mClickListen;
 
@@ -71,8 +67,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         TextView chapter;
         TextView customer;
         TextView bookvalue;
-
-        //private OnItemClickListen mListener;
 
         public BookViewHolder(View itemview,OnItemClickListen listener){
             super(itemview);//?????????????????????????????

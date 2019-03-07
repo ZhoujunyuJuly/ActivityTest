@@ -1,5 +1,6 @@
 package com.example.booklist;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,8 +43,15 @@ public class MainActivity extends AppCompatActivity {
     private void click(){
         mBookAdapter.setOnItemClickListener(new BookAdapter.OnItemClickListen() {
             @Override
+
+            //TODO: 2019/3/7 点击事件，弹出提醒框
+//            public void onItemClick(View view,int position){
+//                Toast.makeText(MainActivity.this,"click",Toast.LENGTH_SHORT).show();
+//            }
+
             public void onItemClick(View view,int position){
-                Toast.makeText(MainActivity.this,"click",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this,SecondActivity.class);
+                startActivity(intent);
             }
         });
     }
