@@ -1,17 +1,11 @@
 package com.example.booklist;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,10 +32,12 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(layoutManager);
         mBookAdapter = new BookAdapter(Data.makeFakeData());
         mRecyclerView.setAdapter(mBookAdapter);
+        mRecyclerView.addItemDecoration(new BookDecoration());
     }
 
-    private void click(){
-        mBookAdapter.setOnItemClickListener(new BookAdapter.OnItemClickListen() {
+    private void click() {
+        mBookAdapter.setOnItemClickListener(new OnItemClickListen() {
+
             @Override
 
             //TODO: 2019/3/7 点击事件，弹出提醒框
@@ -49,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
 //                Toast.makeText(MainActivity.this,"click",Toast.LENGTH_SHORT).show();
 //            }
 
-            public void onItemClick(View view,int position){
-                Intent intent = new Intent(MainActivity.this,SecondActivity.class);
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(MainActivity.this, BookDetail.class);
                 startActivity(intent);
             }
         });

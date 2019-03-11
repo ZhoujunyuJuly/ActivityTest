@@ -27,9 +27,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     }
 
 
-    public interface OnItemClickListen{
-        public void onItemClick(View view,int position);
-    }
+   // public interface OnItemClickListen{
+      //  public void onItemClick(View view,int position);
+   // }
 
 
     private OnItemClickListen mClickListen;
@@ -74,7 +74,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
             itemview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    click(v);
+                    mClickListen.onItemClick(v,getAdapterPosition());;
                 }
             });
 
@@ -85,11 +85,8 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
             customer = itemview.findViewById(R.id.tv_customer);
             bookvalue = itemview.findViewById(R.id.tv_bookvalue);
         }
-
-        public void click(View v){
-            mClickListen.onItemClick(v,getAdapterPosition());
-        }
     }
+
 
     public void setOnItemClickListener(OnItemClickListen listener){
         this.mClickListen = listener;

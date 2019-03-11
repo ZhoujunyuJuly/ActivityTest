@@ -11,11 +11,11 @@ public class Book {
     private String customer;
     private String bookvalue;
 
-    public Book(){
+    public Book() {
         super();
     }
 
-    public Book(int img, String bookName, String description, String chapter, String customer, String bookvalue){
+    public Book(int img, String bookName, String description, String chapter, String customer, String bookvalue) {
         super();
         this.img = img;
         this.bookName = bookName;
