@@ -1,5 +1,7 @@
 package com.example.booklist;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,8 +52,18 @@ public class Data {
             dataList.add(ninth);
             dataList.add(tenth);
         }
+
+
+        //Log.d("zjy", "makeFakeData: ",dataList);
+
+        //System.out.println("zjy"+dataList.get(3));
+
         return dataList;
 
+    }
+
+    public static Book get(int postion) {
+        return dataList.get(postion);
     }
 
 }

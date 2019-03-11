@@ -28,10 +28,6 @@ public class MainActivity extends AppCompatActivity {
     private void findViews() {
         mRecyclerView = findViewById(R.id.recycler_view);
         cardView = findViewById(R.id.cardView);
-
-        cardView.setContentPadding(5,5,5,5);
-        cardView.setRadius(15);
-        cardView.setElevation(15);
     }
 
     private void initView() {
@@ -54,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(MainActivity.this, BookDetail.class);
+                intent.putExtra("index",position);
                 startActivity(intent);
             }
         });
