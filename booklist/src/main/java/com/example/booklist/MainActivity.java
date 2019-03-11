@@ -35,22 +35,15 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(layoutManager);
         mBookAdapter = new BookAdapter(Data.makeFakeData());
         mRecyclerView.setAdapter(mBookAdapter);
-        //mRecyclerView.addItemDecoration(new BookDecoration());
     }
 
     private void click() {
         mBookAdapter.setOnItemClickListener(new OnItemClickListen() {
 
             @Override
-
-            //TODO: 2019/3/7 点击事件，弹出提醒框
-//            public void onItemClick(View view,int position){
-//                Toast.makeText(MainActivity.this,"click",Toast.LENGTH_SHORT).show();
-//            }
-
             public void onItemClick(View view, int position) {
-                Intent intent = new Intent(MainActivity.this, BookDetail.class);
-                intent.putExtra("index",position);
+                Intent intent = new Intent(MainActivity.this, BookDetailActivity.class);
+                intent.putExtra("index", position);
                 startActivity(intent);
             }
         });

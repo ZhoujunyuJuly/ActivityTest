@@ -3,16 +3,11 @@ package com.example.booklist;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
-
-public class BookDetail extends AppCompatActivity {
+public class BookDetailActivity extends AppCompatActivity {
 
     ImageView img;
     TextView bookname;
@@ -29,19 +24,16 @@ public class BookDetail extends AppCompatActivity {
         setContentView(R.layout.item_bookview);
 
         findViews();
-
         getData();
-
         refresh(mbook);
-
 
     }
 
 
     private void getData() {
         Intent intent = getIntent();
-        int i = intent.getIntExtra("index",0);
-        Log.d("zhoujunyu",  String.valueOf(i));
+        int i = intent.getIntExtra("index", 0);
+        Log.d("zhoujunyu", String.valueOf(i));
         mbook = Data.get(i);
     }
 
@@ -54,7 +46,7 @@ public class BookDetail extends AppCompatActivity {
         bookvalue = findViewById(R.id.tv_bookvalue);
     }
 
-    private void refresh(Book book){
+    private void refresh(Book book) {
         img.setImageResource(book.getImg());
         bookname.setText(book.getBookName());
         description.setText(book.getDescription());
