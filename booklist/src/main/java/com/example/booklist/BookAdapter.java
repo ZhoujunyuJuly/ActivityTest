@@ -14,14 +14,12 @@ import java.util.List;
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
 
     private List<Book> mBookList;
+    private OnItemClickListen mClickListen;
 
 
     public BookAdapter(List<Book> bookList) {
         mBookList = bookList;
     }
-
-
-    private OnItemClickListen mClickListen;
 
     @NonNull
     @Override
@@ -49,6 +47,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         return mBookList.size();
     }
 
+    public void setOnItemClickListener(OnItemClickListen listener) {
+        this.mClickListen = listener;
+    }
+
     public class BookViewHolder extends RecyclerView.ViewHolder {
         ImageView img;
         TextView bookname;
@@ -74,10 +76,5 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
             customer = itemview.findViewById(R.id.tv_customer);
             bookvalue = itemview.findViewById(R.id.tv_bookvalue);
         }
-    }
-
-
-    public void setOnItemClickListener(OnItemClickListen listener) {
-        this.mClickListen = listener;
     }
 }

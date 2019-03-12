@@ -1,1 +1,1 @@
-include ':app', ':recyclerview', ':booklist'
+include ':app', ':recyclerview', ':booklist', ':pageofnick'
