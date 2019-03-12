@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true">
+
+        <ImageView
+            android:id="@+id/portrait"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@mipmap/ic_launcher_round"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="35dp"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/wechat_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="花泽不太累"
+            android:textSize="27dp"
+            android:layout_toRightOf="@id/portrait"
+            android:layout_alignTop="@id/portrait"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="微信号:tony10281101184"
+            android:textSize="15dp"
+            android:layout_alignBottom="@id/portrait"
+            android:layout_alignLeft="@id/wechat_name"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=">"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_centerVertical="true"
+            android:textSize="20dp"/>
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/middle"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_alignBottom="@+id/top"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="-500dp"
+        android:orientation="vertical">
+
+
+        <View
+            android:id="@+id/line1"
+            android:layout_width="fill_parent"
+            android:layout_height="10dp"
+            android:background="@color/colorGrey">
+
+        </View>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <ImageView
+                android:id="@+id/payImg"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="20dp"
+                android:src="@mipmap/ic_launcher_round" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/payImg"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/payImg"
+                android:text="支付" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/payImg"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:text=">"
+                android:textSize="18dp" />
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/line2"
+            android:layout_width="fill_parent"
+            android:layout_height="10dp"
+            android:background="@color/colorGrey">
+
+        </View>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <ImageView
+                android:id="@+id/payCollect"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="20dp"
+                android:src="@mipmap/ic_launcher_round" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/payCollect"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/payCollect"
+                android:text="收藏" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/payCollect"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:text=">"
+                android:textSize="18dp" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorGrey"></View>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <ImageView
+                android:id="@+id/payPhoto"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="20dp"
+                android:src="@mipmap/ic_launcher_round" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/payPhoto"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/payPhoto"
+                android:text="相册" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/payPhoto"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:text=">"
+                android:textSize="18dp" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorGrey"></View>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <ImageView
+                android:id="@+id/payCard"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="20dp"
+                android:src="@mipmap/ic_launcher_round" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/payCard"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/payCard"
+                android:text="卡包" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/payCard"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:text=">"
+                android:textSize="18dp" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="10dp"
+            android:background="@color/colorGrey"></View>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <ImageView
+                android:id="@+id/paySetting"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="20dp"
+                android:src="@mipmap/ic_launcher_round" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/paySetting"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/paySetting"
+                android:text="设置" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/paySetting"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:text=">"
+                android:textSize="18dp" />
+
+        </RelativeLayout>
+
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorGrey"></View>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="0dp">
+
+            <ImageView
+                android:id="@+id/payChat"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="10dp"
+                android:src="@mipmap/ic_launcher_round" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/payChat"
+                android:layout_alignBottom="@id/payChat"
+                android:text="微信"
+                android:layout_marginBottom="-20dp"
+                android:textSize="10dp"/>
+
+            <ImageView
+                android:id="@+id/payFind"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:src="@mipmap/ic_launcher_round" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/payFind"
+                android:layout_alignBottom="@id/payFind"
+                android:layout_centerHorizontal="true"
+                android:text="发现"
+                android:layout_marginBottom="-20dp"
+                android:textSize="10dp"/>
+
+            <ImageView
+                android:id="@+id/payMine"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="40dp"
+                android:src="@mipmap/ic_launcher_round" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/payMine"
+                android:layout_alignBottom="@id/payMine"
+                android:layout_centerHorizontal="true"
+                android:text="我的"
+                android:layout_marginBottom="-20dp"
+                android:textSize="10dp"/>
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>
