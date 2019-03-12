@@ -1,50 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorGrey">
 
     <RelativeLayout
         android:id="@+id/top"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_alignParentTop="true">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="#ffffff"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp">
 
         <ImageView
             android:id="@+id/portrait"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@mipmap/ic_launcher_round"
             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="35dp"
-            android:layout_centerVertical="true"/>
+            android:src="@mipmap/ic_launcher_round"/>
 
         <TextView
             android:id="@+id/wechat_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="花泽不太累"
-            android:textSize="27dp"
-            android:layout_toRightOf="@id/portrait"
             android:layout_alignTop="@id/portrait"
             android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/portrait"
+            android:text="花泽不太累"
             android:textColor="@color/colorBlack"
+            android:textSize="27dp"
             android:textStyle="bold"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/wechat_name"
+            android:layout_alignBottom="@id/portrait"
             android:text="微信号:tony10281101184"
             android:textSize="15dp"
-            android:layout_alignBottom="@id/portrait"
-            android:layout_alignLeft="@id/wechat_name"
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=">"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
             android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:text=">"
             android:textSize="20dp"/>
 
 
@@ -53,10 +58,10 @@
     <LinearLayout
         android:id="@+id/middle"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:layout_alignBottom="@+id/top"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="-500dp"
+        android:background="#FFFFFF"
         android:orientation="vertical">
 
 
@@ -218,6 +223,7 @@
             android:background="@color/colorGrey"></View>
 
         <RelativeLayout
+
             android:layout_width="match_parent"
             android:layout_height="50dp">
 
@@ -249,74 +255,71 @@
         </RelativeLayout>
 
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:background="@color/colorGrey"></View>
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="0dp">
-
-            <ImageView
-                android:id="@+id/payChat"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="10dp"
-                android:src="@mipmap/ic_launcher_round" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@id/payChat"
-                android:layout_alignBottom="@id/payChat"
-                android:text="微信"
-                android:layout_marginBottom="-20dp"
-                android:textSize="10dp"/>
-
-            <ImageView
-                android:id="@+id/payFind"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:src="@mipmap/ic_launcher_round" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@id/payFind"
-                android:layout_alignBottom="@id/payFind"
-                android:layout_centerHorizontal="true"
-                android:text="发现"
-                android:layout_marginBottom="-20dp"
-                android:textSize="10dp"/>
-
-            <ImageView
-                android:id="@+id/payMine"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="40dp"
-                android:src="@mipmap/ic_launcher_round" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@id/payMine"
-                android:layout_alignBottom="@id/payMine"
-                android:layout_centerHorizontal="true"
-                android:text="我的"
-                android:layout_marginBottom="-20dp"
-                android:textSize="10dp"/>
-        </RelativeLayout>
-
 
     </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp"
+        android:background="#FFFFFF">
+
+        <ImageView
+            android:id="@+id/payChat"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="10dp"
+            android:src="@mipmap/ic_launcher_round" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/payChat"
+            android:layout_alignBottom="@id/payChat"
+            android:layout_marginBottom="-20dp"
+            android:text="微信"
+            android:textSize="10dp"/>
+
+        <ImageView
+            android:id="@+id/payFind"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:src="@mipmap/ic_launcher_round" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/payFind"
+            android:layout_alignBottom="@id/payFind"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="-20dp"
+            android:text="发现"
+            android:textSize="10dp"/>
+
+        <ImageView
+            android:id="@+id/payMine"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="40dp"
+            android:src="@mipmap/ic_launcher_round" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/payMine"
+            android:layout_alignBottom="@id/payMine"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="-20dp"
+            android:text="我的"
+            android:textSize="10dp"/>
+    </RelativeLayout>
 
 
 </RelativeLayout>
