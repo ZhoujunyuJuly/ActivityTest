@@ -21,44 +21,19 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     private List<News.DataBean.ItemsBean> mItemsList;
 
-    public void setmOnItemClickListen(OnItemClickListen onItemClickListen) {
-        this.mOnItemClickListen = onItemClickListen;
-    }
-
     public NewsAdapter(List itemsList, Context context) {
         mItemsList = itemsList;
         mContext = context;
     }
 
-    public class NewsViewHolder extends RecyclerView.ViewHolder {
-        ImageView cover;
-        TextView title;
-        TextView name;
-        TextView time;
-
-        public NewsViewHolder(@NonNull View itemView,OnItemClickListen listen) {
-            super(itemView);
-
-            mOnItemClickListen= listen;
-            cover = itemView.findViewById(R.id.iv_cover);
-            title = itemView.findViewById(R.id.tv_title);
-            name = itemView.findViewById(R.id.tv_name);
-            time = itemView.findViewById(R.id.tv_time);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mOnItemClickListen.OnNewsClick(v,getAdapterPosition());
-                }
-            });
-
-        }
+    public void setmOnItemClickListen(OnItemClickListen onItemClickListen) {
+        this.mOnItemClickListen = onItemClickListen;
     }
 
     @Override
     public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_news,viewGroup,false);
-        NewsViewHolder holder = new NewsViewHolder(view,mOnItemClickListen);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_news, viewGroup, false);
+        NewsViewHolder holder = new NewsViewHolder(view, mOnItemClickListen);
         return holder;
     }
 
@@ -80,6 +55,31 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     @Override
     public int getItemCount() {
-        return  mItemsList.size();
+        return mItemsList.size();
+    }
+
+    public class NewsViewHolder extends RecyclerView.ViewHolder {
+        ImageView cover;
+        TextView title;
+        TextView name;
+        TextView time;
+
+        public NewsViewHolder(@NonNull View itemView, OnItemClickListen listen) {
+            super(itemView);
+
+            mOnItemClickListen = listen;
+            cover = itemView.findViewById(R.id.iv_cover);
+            title = itemView.findViewById(R.id.tv_title);
+            name = itemView.findViewById(R.id.tv_name);
+            time = itemView.findViewById(R.id.tv_time);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnItemClickListen.OnNewsClick(v, getAdapterPosition());
+                }
+            });
+
+        }
     }
 }

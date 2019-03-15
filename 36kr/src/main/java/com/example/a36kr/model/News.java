@@ -1,7 +1,5 @@
 package com.example.a36kr.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 public class News {
@@ -90,7 +88,7 @@ public class News {
              */
 
             private int id;
-//            private int project_id;
+            //            private int project_id;
             private int column_id;
             private Object post_id;
             private int is_top;

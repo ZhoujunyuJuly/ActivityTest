@@ -1,8 +1,8 @@
 package com.example.a36kr;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +12,10 @@ import android.widget.TextView;
 
 import com.example.a36kr.model.News;
 import com.google.gson.Gson;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.io.IOException;
 
@@ -26,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String NEWS_URL = "https://36kr.com/api/newsflash";
     TextView mFailureLog;
     private RecyclerView mRecyclerView;
+    private SmartRefreshLayout mSmartRefresh;
     private NewsAdapter mNewsAdapter;
     private News mNews;
 
@@ -42,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void findView() {
         mRecyclerView = findViewById(R.id.recyclerview);
+        mSmartRefresh = findViewById(R.id.smart_refresh);
     }
 
 
@@ -78,8 +84,13 @@ public class MainActivity extends AppCompatActivity {
             public void OnNewsClick(View view, int position) {
 
                 String address = mNews.getData().getItems().get(position).getNews_url();
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(address));
+
+                // TODO: 2019/3/15 不要删！！！
+                //Intent intent = new Intent(Intent.ACTION_VIEW);
+                //intent.setData(Uri.parse(address));
+
+                Intent intent = new Intent(MainActivity.this, NewsContentActivity.class);
+                intent.putExtra("url", address);
                 startActivity(intent);
 
                 Log.d("zhoujunyu", "OnNewsClick:success! ");
@@ -95,14 +106,32 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 if (mNews != null && mNews.getData() != null && mNews.getData().getItems() != null) {
                     mNewsAdapter = new NewsAdapter(mNews.getData().getItems(), MainActivity.this);
-                }else {
+                } else {
                     // TODO: 2019/3/14 toast提示
                 }
                 mRecyclerView.setAdapter(mNewsAdapter);
                 click();
+                smartRefreshClick();
             }
         });
 
+    }
+
+
+    private void smartRefreshClick(){
+        mSmartRefresh.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                refreshLayout.finishRefresh(2000/*,false*/);
+            }
+        });
+
+        mSmartRefresh.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                refreshLayout.finishLoadMore(2000/*,false*/);
+            }
+        });
     }
 
 
