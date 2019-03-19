@@ -8,13 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.EventLogTags;
-import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
-import java.net.URL;
 
 public class NewsContentActivity extends AppCompatActivity {
 
@@ -38,12 +33,12 @@ public class NewsContentActivity extends AppCompatActivity {
     }
 
 
-    private void init(){
+    private void init() {
         mwebView = findViewById(R.id.web_view);
     }
 
 
-    private void useWebView(){
+    private void useWebView() {
         Intent intent = getIntent();
         final String URL = intent.getStringExtra("url");
 
@@ -56,19 +51,19 @@ public class NewsContentActivity extends AppCompatActivity {
         mwebView.loadUrl(URL);
     }
 
-    private void useNotification(){
+    private void useNotification() {
         String id = "channel_1";
         String description = "wechat";
         int important = NotificationManager.IMPORTANCE_LOW;
 
-        mNotificationChannel = new NotificationChannel(id,description,important);
-        mNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        mNotificationChannel = new NotificationChannel(id, description, important);
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotificationManager.createNotificationChannel(mNotificationChannel);
 
         Intent intent = new Intent();
-        mResultIntent = PendingIntent.getActivity(this,1,intent,Intent.FLAG_ACTIVITY_NEW_TASK);
+        mResultIntent = PendingIntent.getActivity(this, 1, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        mNotification = new NotificationCompat.Builder(this,id)
+        mNotification = new NotificationCompat.Builder(this, id)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setContentTitle("微信")
                 .setContentText("一个红包")
@@ -78,6 +73,6 @@ public class NewsContentActivity extends AppCompatActivity {
                 .setAutoCancel(true)
                 .build();
 
-        mNotificationManager.notify(1,mNotification);
+        mNotificationManager.notify(1, mNotification);
     }
 }

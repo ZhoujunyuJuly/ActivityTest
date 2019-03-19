@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="180dp">
+
+    <ImageView
+        android:id="@+id/iv_movie"
+        android:layout_width="130dp"
+        android:layout_height="160dp"
+        android:layout_marginLeft="15dp"
+        android:layout_centerVertical="true"
+        android:src="@mipmap/ic_launcher"/>
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/iv_movie"
+        android:layout_alignTop="@id/iv_movie"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:textSize="19dp"
+        android:textStyle="bold"
+        android:textColor="@color/colorBlack"
+        android:text="tv_title"/>
+
+    <RatingBar
+        android:id="@+id/iv_star"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:isIndicator="true"
+        android:numStars="4"
+        android:progressTint="@color/colorYellow"
+        android:rating="3.5"
+        android:layout_below="@id/tv_title"
+        android:layout_alignLeft="@id/tv_title"
+        android:layout_marginTop="5dp" />
+
+    <TextView
+        android:id="@+id/tv_average"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/iv_star"
+        android:layout_alignBottom="@id/iv_star"
+        android:textSize="10dp"
+        android:textColor="@color/colorGrey"
+        android:text="5.0"/>
+
+    <TextView
+        android:id="@+id/tv_director"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_star"
+        android:layout_alignLeft="@id/tv_title"
+        android:textSize="10dp"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/colorGrey"
+        android:text="导演: " />
+
+    <TextView
+        android:id="@+id/tv_director_name"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/tv_director"
+        android:layout_alignBottom="@id/tv_director"
+        android:textSize="10dp"
+        android:textColor="@color/colorGrey"
+        android:text="李安"/>
+
+    <TextView
+        android:id="@+id/cast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_director"
+        android:layout_alignLeft="@id/tv_director"
+        android:textSize="10dp"
+        android:textColor="@color/colorGrey"
+        android:text="主演: "/>
+
+    <TextView
+        android:id="@+id/cast_name"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/cast"
+        android:layout_alignTop="@id/cast"
+        android:textSize="10dp"
+        android:textColor="@color/colorGrey"
+        android:text="许凯"/>
+
+   <TextView
+       android:id="@+id/tv_buyticket"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:background="@drawable/text_border"
+       android:layout_alignParentRight="true"
+       android:layout_marginRight="20dp"
+       android:layout_centerVertical="true"
+       android:textSize="13dp"
+       android:textColor="@color/colorRed"
+       android:text="购票"/>
+
+    <TextView
+        android:id="@+id/tv_collect_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/tv_buyticket"
+        android:layout_alignLeft="@id/tv_buyticket"
+        android:layout_marginLeft="3dp"
+        android:layout_marginBottom="5dp"
+        android:textSize="10dp"
+        android:textColor="@color/colorRed"
+        android:text="3.3"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/tv_collect_count"
+        android:layout_alignBottom="@id/tv_collect_count"
+        android:textSize="10dp"
+        android:textColor="@color/colorRed"
+        android:text="万人看过"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorGrey"/>
+
+</RelativeLayout>
