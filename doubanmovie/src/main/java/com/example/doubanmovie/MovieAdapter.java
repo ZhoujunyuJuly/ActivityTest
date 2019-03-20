@@ -54,6 +54,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         }
         viewHolder.mCast.setText(casts);
 
+        //导演
         String directors = "";
         for (int a = 0; a < movieList.getDirectors().size(); a++) {
             if (a != 0) {
@@ -63,9 +64,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         }
         viewHolder.mDirector.setText(directors);
 
-        //viewHolder.mStar.getNumStars(Integer.parseInt(String.valueOf(movieList.getRating().getAverage())));
-
-        viewHolder.mStar.setNumStars(movieList.getRating().getAverage().intValue() / 2);
+        //评分星星
+            viewHolder.mStar.setRating(movieList.getRating().getAverage().floatValue() / 2);
 
     }
 
