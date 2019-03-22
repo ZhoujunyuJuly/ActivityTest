@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="500dp"
+    android:background="@color/colorBgYellow">
+
+    <TextView
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:background="@color/colorCoverGrey"/>
+
+    <ImageView
+        android:id="@+id/iv_cover"
+        android:layout_width="220dp"
+        android:layout_height="300dp"
+        android:src="@mipmap/ic_launcher_round"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/tv_moviename"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24dp"
+        android:layout_below="@+id/background"
+        android:layout_marginLeft="35dp"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"
+        android:textColor="@color/colorBlack"
+        android:text="惊奇队长"/>
+
+    <TextView
+        android:id="@+id/tv_tags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_moviename"
+        android:layout_alignLeft="@id/tv_moviename"
+        android:layout_marginTop="5dp"
+        android:textSize="10dp"
+        android:textColor="@color/colorGrey"
+        android:text="2019/美国/动作/科幻/冒险"/>
+
+    <TextView
+        android:id="@+id/tv_ori_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_tags"
+        android:layout_alignLeft="@id/tv_tags"
+        android:textSize="10dp"
+        android:textColor="@color/colorGrey"
+        android:text="原名:captain Marvel" />
+
+    <TextView
+        android:id="@+id/tv_publishTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_ori_name"
+        android:layout_alignLeft="@id/tv_ori_name"
+        android:textSize="10dp"
+        android:textColor="@color/colorGrey"
+        android:text="上映时间：2019-03-08"/>
+
+    <TextView
+        android:id="@+id/tv_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10dp"
+        android:textColor="@color/colorGrey"
+        android:layout_below="@id/tv_publishTime"
+        android:layout_alignLeft="@id/tv_publishTime"
+        android:text="片长：124分钟"/>
+
+    <TextView
+        android:id="@+id/static_border"
+        android:layout_width="95dp"
+        android:layout_height="85dp"
+        android:layout_below="@id/background"
+        android:layout_alignRight="@id/background"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/colorWhite"/>
+
+    <TextView
+        android:layout_width="95dp"
+        android:layout_height="85dp"
+        android:layout_below="@id/background"
+        android:layout_alignRight="@id/background"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/detail_border"/>
+
+
+    <TextView
+        android:id="@+id/static_scores"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/static_border"
+        android:textColor="@color/colorGrey"
+        android:textSize="10dp"
+        android:layout_alignLeft="@id/static_border"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="7dp"
+        android:text="豆瓣评分"/>
+
+    <TextView
+        android:id="@+id/tv_scores"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/static_scores"
+        android:layout_alignLeft="@id/static_scores"
+        android:textSize="22dp"
+        android:layout_marginLeft="5dp"
+        android:textColor="@color/colorBlack"
+        android:textStyle="bold"
+        android:text="5.0"/>
+
+    <RatingBar
+        android:id="@+id/rb_star"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:rating="3.5"
+        android:layout_below="@id/tv_scores"
+        android:layout_alignLeft="@id/static_scores"
+        android:layout_marginLeft="-20dp"
+        style="?android:attr/ratingBarStyleSmall"
+        android:progressTint="@color/colorYellow"/>
+
+    <TextView
+        android:id="@+id/tv_count"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rb_star"
+        android:layout_alignLeft="@id/rb_star"
+        android:textColor="@color/colorGrey"
+        android:textSize="10dp"
+        android:gravity="center"
+        android:text="234554人"/>
+
+    <TextView
+        android:id="@+id/want"
+        android:layout_width="120dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/tv_duration"
+        android:layout_alignLeft="@id/tv_duration"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/watch_border"
+        android:textSize="12dp"
+        android:gravity="center"
+        android:textColor="@color/colorOrange"
+        android:text="想看"/>
+
+    <TextView
+        android:id="@+id/did"
+        android:layout_width="200dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/tv_duration"
+        android:layout_alignRight="@id/static_border"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/watch_border"
+        android:textSize="12dp"
+        android:gravity="center"
+        android:textColor="@color/colorOrange"
+        android:text="看过"/>
+
+
+
+</RelativeLayout>

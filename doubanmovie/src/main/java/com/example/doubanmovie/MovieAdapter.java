@@ -22,6 +22,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     private List<SubjectsBean> mMovieInfo;
     private Context mContent;
+    public OnItemClickListen onItemClickListen;
+
+    public void setOnItemClickListen(OnItemClickListen onItemClickListen) {
+        this.onItemClickListen = onItemClickListen;
+    }
 
     public MovieAdapter(List movie, Context context) {
         mMovieInfo = movie;
@@ -100,6 +105,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             mCast = itemView.findViewById(R.id.cast_name);
             mParticipator = itemView.findViewById(R.id.tv_collect_count);
             mStar = itemView.findViewById(R.id.iv_star);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListen.onMovieClick(v,getAdapterPosition());
+                }
+            });
         }
     }
 }

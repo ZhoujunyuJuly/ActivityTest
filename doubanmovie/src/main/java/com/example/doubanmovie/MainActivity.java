@@ -1,10 +1,12 @@
 package com.example.doubanmovie;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import com.example.doubanmovie.model.SubjectsBean;
 import com.example.doubanmovie.model.movie;
@@ -74,6 +76,23 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 mMovieAdapter = new MovieAdapter(mMovie.getSubjects(),MainActivity.this);
                 mRecyclerview.setAdapter(mMovieAdapter);
+                click();
+
+            }
+        });
+    }
+
+
+    private void click(){
+        mMovieAdapter.setOnItemClickListen(new OnItemClickListen() {
+            @Override
+            public void onMovieClick(View view, int position) {
+                Intent intent = new Intent(MainActivity.this,DetailActivity.class);
+
+                String movidID = mMovie.getSubjects().get(position).getId();
+                intent.putExtra("movieID",movidID);
+
+                startActivity(intent);
             }
         });
     }
