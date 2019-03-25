@@ -76,9 +76,14 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         holder.mMovieName.setText(mListData.getTitle());
         holder.mTags.setText(formatString(mListData));
-        holder.mOriName.setText("原名：" + mListData.getTitle());
-        holder.mPublishTime.setText(mContext.getString(R.string.pushlish_time) + mListData.getPubdates().get(1));//第一个为当地上映时间，第二为大陆上映时间
-        holder.mDuration.setText("片长：" + mListData.getDurations().get(0));//片长类数组中只有一个数据
+        holder.mOriName.setText(mContext.getString(R.string.ori_name) + mListData.getTitle());
+        if( mListData.getPubdates().size() <= 2){
+            holder.mPublishTime.setText(mContext.getString(R.string.pushlish_time) + mContext.getString(R.string.nullvalue));
+        }else {
+            holder.mPublishTime.setText(mContext.getString(R.string.pushlish_time) + mListData.getPubdates().get(1));//第一个为当地上映时间，第二为大陆上映时间
+        }
+
+        holder.mDuration.setText(mContext.getString(R.string.duration) + mListData.getDurations().get(0));//片长类数组中只有一个数据
         holder.mScores.setText(String.valueOf(mListData.getRating().getAverage()));
         holder.mStar.setRating(mListData.getRating().getAverage().floatValue() / 2);
         holder.mCount.setText(String.valueOf(mListData.getRatings_count()) + "人");
@@ -147,7 +152,7 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void setCommentRecyclerView(RecyclerView commentRecyclerView) {
-        CommentsAdapter commentsAdapter = new CommentsAdapter(mListData);
+        CommentsAdapter commentsAdapter = new CommentsAdapter(mListData,mContext);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         commentRecyclerView.setLayoutManager(layoutManager);
         commentRecyclerView.setAdapter(commentsAdapter);

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.example.doubanmovie.model.DetailMode.Detail;
 
 /**
@@ -16,8 +17,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<ItemViewHolder.MiddleC
     public Detail mData;
     private Context mContext;
 
-    public CommentsAdapter(Detail data) {
+    public CommentsAdapter(Detail data,Context context) {
         mData = data;
+        mContext = context;
 
     }
 
@@ -39,10 +41,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<ItemViewHolder.MiddleC
         viewHolder.mStar.setRating(mData.getPopular_comments().get(i).getRating().getValue().floatValue());
         viewHolder.mUserTime.setText(mData.getPopular_comments().get(i).getCreated_at());
 
-//        Glide.with(mContext).load(mData.getPopular_comments().get(i).getAuthor().getAvatar())
-//                .centerCrop()
-//                .placeholder(R.mipmap.ic_launcher)
-//                .into(viewHolder.mPortrait);
+        Glide.with(mContext).load(mData.getPopular_comments().get(i).getAuthor().getAvatar())
+                .centerCrop()
+                .placeholder(R.mipmap.ic_launcher)
+                .into(viewHolder.mPortrait);
 
     }
 

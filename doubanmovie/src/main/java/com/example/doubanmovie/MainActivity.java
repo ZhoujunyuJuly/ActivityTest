@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -65,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
     private void init() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerview.setLayoutManager(layoutManager);
+
+        PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
+        pagerSnapHelper.attachToRecyclerView(mRecyclerview);
     }
 
     private void URLConnection() {
