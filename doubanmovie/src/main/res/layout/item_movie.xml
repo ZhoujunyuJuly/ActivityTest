@@ -1,50 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="170dp">
+    android:layout_width="match_parent"
+    android:layout_height="170dp">
 
     <ImageView
         android:id="@+id/iv_movie"
         android:layout_width="110dp"
         android:layout_height="150dp"
-        android:layout_marginLeft="15dp"
         android:layout_centerVertical="true"
-        android:src="@mipmap/ic_launcher"/>
+        android:layout_marginLeft="15dp"
+        android:src="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/iv_movie"
         android:layout_alignTop="@id/iv_movie"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
-        android:textSize="18dp"
-        android:textStyle="bold"
+        android:layout_toRightOf="@id/iv_movie"
+        android:text="tv_title"
         android:textColor="@color/colorBlack"
-        android:text="tv_title"/>
+        android:textSize="18dp"
+        android:textStyle="bold" />
 
     <RatingBar
         android:id="@+id/iv_star"
         style="?android:attr/ratingBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title"
+        android:layout_alignLeft="@id/tv_title"
+        android:layout_marginTop="5dp"
         android:isIndicator="true"
         android:numStars="5"
         android:progressTint="@color/colorYellow"
-        android:rating="2.5"
-        android:layout_below="@id/tv_title"
-        android:layout_alignLeft="@id/tv_title"
-        android:layout_marginTop="5dp" />
+        android:rating="2.5" />
 
     <TextView
         android:id="@+id/tv_average"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/iv_star"
         android:layout_alignBottom="@id/iv_star"
-        android:textSize="10dp"
+        android:layout_toRightOf="@id/iv_star"
+        android:text="5.0"
         android:textColor="@color/colorGrey"
-        android:text="5.0"/>
+        android:textSize="10dp" />
 
     <TextView
         android:id="@+id/tv_director"
@@ -52,20 +53,20 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/iv_star"
         android:layout_alignLeft="@id/tv_title"
-        android:textSize="10dp"
         android:layout_marginTop="25dp"
+        android:text="导演: "
         android:textColor="@color/colorGrey"
-        android:text="导演: " />
+        android:textSize="10dp" />
 
     <TextView
         android:id="@+id/tv_director_name"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/tv_director"
         android:layout_alignBottom="@id/tv_director"
-        android:textSize="10dp"
+        android:layout_toRightOf="@id/tv_director"
+        android:text="李安"
         android:textColor="@color/colorGrey"
-        android:text="李安"/>
+        android:textSize="10dp" />
 
     <TextView
         android:id="@+id/cast"
@@ -73,31 +74,31 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_director"
         android:layout_alignLeft="@id/tv_director"
-        android:textSize="10dp"
+        android:text="主演: "
         android:textColor="@color/colorGrey"
-        android:text="主演: "/>
+        android:textSize="10dp" />
 
     <TextView
         android:id="@+id/cast_name"
         android:layout_width="140dp"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/cast"
         android:layout_alignTop="@id/cast"
-        android:textSize="10dp"
+        android:layout_toRightOf="@id/cast"
+        android:text="许凯"
         android:textColor="@color/colorGrey"
-        android:text="许凯"/>
+        android:textSize="10dp" />
 
-   <TextView
-       android:id="@+id/tv_buyticket"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:background="@drawable/text_border"
-       android:layout_alignParentRight="true"
-       android:layout_marginRight="20dp"
-       android:layout_centerVertical="true"
-       android:textSize="13dp"
-       android:textColor="@color/colorRed"
-       android:text="购票"/>
+    <TextView
+        android:id="@+id/tv_buyticket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/text_border"
+        android:text="购票"
+        android:textColor="@color/colorRed"
+        android:textSize="13dp" />
 
     <TextView
         android:id="@+id/tv_collect_count"
@@ -105,25 +106,24 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/tv_buyticket"
         android:layout_alignLeft="@id/tv_buyticket"
-        android:layout_marginLeft="3dp"
         android:layout_marginBottom="5dp"
-        android:textSize="10dp"
+        android:text="3.3"
         android:textColor="@color/colorRed"
-        android:text="3.3"/>
+        android:textSize="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/tv_collect_count"
         android:layout_alignBottom="@id/tv_collect_count"
-        android:textSize="10dp"
+        android:layout_toRightOf="@id/tv_collect_count"
+        android:text="万人看过"
         android:textColor="@color/colorRed"
-        android:text="万人看过"/>
+        android:textSize="10dp" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorGrey"/>
+        android:background="@color/colorGrey" />
 
 </RelativeLayout>

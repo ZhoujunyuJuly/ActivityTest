@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.doubanmovie.model.SubjectsBean;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -20,17 +21,17 @@ import java.util.List;
  */
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
+    public IRecyclerviewClick onItemClickListen;
     private List<SubjectsBean> mMovieInfo;
     private Context mContent;
-    public OnItemClickListen onItemClickListen;
-
-    public void setOnItemClickListen(OnItemClickListen onItemClickListen) {
-        this.onItemClickListen = onItemClickListen;
-    }
 
     public MovieAdapter(List movie, Context context) {
         mMovieInfo = movie;
         mContent = context;
+    }
+
+    public void setOnItemClickListen(IRecyclerviewClick onItemClickListen) {
+        this.onItemClickListen = onItemClickListen;
     }
 
     @Override
@@ -39,7 +40,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
         viewHolder.mMovieName.setText(movieList.getTitle());
         viewHolder.mMovieScore.setText(String.valueOf(movieList.getRating().getAverage()));
-        viewHolder.mParticipator.setText(String.valueOf(movieList.getCollect_count() / 10000));
+
+        //观影人数
+        DecimalFormat convert = new DecimalFormat("0.00");
+        String count = convert.format(Double.valueOf(movieList.getCollect_count()) / 10000);
+        viewHolder.mParticipator.setText(count);
 
         //电影封面
         Glide.with(mContent)
@@ -70,7 +75,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         viewHolder.mDirector.setText(directors);
 
         //评分星星
-            viewHolder.mStar.setRating(movieList.getRating().getAverage().floatValue() / 2);
+        viewHolder.mStar.setRating(movieList.getRating().getAverage().floatValue() / 2);
+
 
     }
 
@@ -96,6 +102,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         TextView mParticipator;
         RatingBar mStar;
 
+
         public MovieViewHolder(@NonNull View itemView) {
             super(itemView);
             mMovieCover = itemView.findViewById(R.id.iv_movie);
@@ -106,12 +113,44 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             mParticipator = itemView.findViewById(R.id.tv_collect_count);
             mStar = itemView.findViewById(R.id.iv_star);
 
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onItemClickListen.onMovieClick(v,getAdapterPosition());
+                    onItemClickListen.onMovieClick(v, getAdapterPosition());
                 }
             });
+
+            mMovieCover.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListen.onCoverClick(v, getAdapterPosition());
+
+
+//
+//                    ViewGroup.MarginLayoutParams marginLayoutParams = new ViewGroup.MarginLayoutParams(mMovieCover.getLayoutParams());
+//                    marginLayoutParams.leftMargin = 140;
+//                    marginLayoutParams.topMargin = 240;
+//                    RelativeLayout.MarginLayoutParams layoutParams = new RelativeLayout.LayoutParams(marginLayoutParams);
+//                    layoutParams.height = 350;
+//                    layoutParams.width = 300;
+//                    mMovieCover.setLayoutParams(layoutParams);
+//
+//                    mMovieCover.setScaleType(ImageView.ScaleType.FIT_XY);
+//                    mMovieCover.bringToFront();
+
+                    //放大的封面
+//                    Glide.with(mContent)
+//                            .load(mMovieInfo.get(getAdapterPosition()).getImages().getSmall())
+//                            .centerCrop()
+//                            .placeholder(R.mipmap.ic_launcher)
+//                            .into(mTopCover);
+
+
+                }
+            });
+
+
         }
     }
 }

@@ -1,12 +1,13 @@
 package com.example.doubanmovie;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.TextView;
+import android.view.MenuItem;
 
 import com.example.doubanmovie.model.DetailMode.Detail;
 import com.google.gson.Gson;
@@ -25,7 +26,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private static final String DETAIL_URL_HEAD = "https://api.douban.com/v2/movie/subject/";
     private static final String DETAIL_URL_TAIL = "?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC&client=something&udid=dddddddddddddddddddddd";
-    private String DETAIL_URL ="";
+    private String DETAIL_URL = "";
 
     private RecyclerView mRecyclerview;
     private TopDetailAdapter mAdapter;
@@ -38,6 +39,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        AddReturnButton();
         initparam();
         findView();
         init();
@@ -46,27 +48,46 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
-    private void initparam(){
+    private void AddReturnButton(){
+        ActionBar actionBar = getSupportActionBar();
+        if( actionBar != null ){
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                this.finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initparam() {
         typeList.add(0);
         typeList.add(1);
         typeList.add(2);
     }
-    private void findView(){
+
+    private void findView() {
         mRecyclerview = findViewById(R.id.detail_recyclerview);
     }
 
-    private void init(){
+    private void init() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerview.setLayoutManager(layoutManager);
     }
 
-    private void  getURL(){
+    private void getURL() {
         Intent intent = getIntent();
         String movieID = intent.getStringExtra("movieID");
         DETAIL_URL = DETAIL_URL_HEAD + movieID + DETAIL_URL_TAIL;
     }
 
-    private void URLConnection(){
+    private void URLConnection() {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(DETAIL_URL).get().build();
 
@@ -86,13 +107,13 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
-    private void analyzeData(String json){
-        mData = new Gson().fromJson(json,Detail.class);
+    private void analyzeData(String json) {
+        mData = new Gson().fromJson(json, Detail.class);
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mAdapter = new TopDetailAdapter(typeList,mData,DetailActivity.this);
+                mAdapter = new TopDetailAdapter(typeList, mData, DetailActivity.this);
                 mRecyclerview.setAdapter(mAdapter);
             }
         });

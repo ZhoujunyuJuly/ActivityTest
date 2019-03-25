@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@color/colorBgYellow">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorBgYellow">
 
     <TextView
         android:id="@+id/introduce"
@@ -9,26 +10,26 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="15dp"
-        android:textColor="@color/colorGrey"
-        android:text="剧情简介"/>
+        android:text="剧情简介"
+        android:textColor="@color/colorGrey" />
 
     <TextView
         android:id="@+id/tv_introduction"
         android:layout_width="310dp"
-        android:layout_alignLeft="@+id/introduce"
-        android:layout_below="@+id/introduce"
         android:layout_height="wrap_content"
-        android:text="一堆乱七八糟的简介之类的..."/>
+        android:layout_below="@+id/introduce"
+        android:layout_alignLeft="@+id/introduce"
+        android:text="一堆乱七八糟的简介之类的..." />
 
     <TextView
         android:id="@+id/cast_detail_fake"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_introduction"
-        android:layout_marginTop="20dp"
         android:layout_alignLeft="@id/tv_introduction"
-        android:textColor="@color/colorGrey"
-        android:text="影人"/>
+        android:layout_marginTop="20dp"
+        android:text="影人"
+        android:textColor="@color/colorGrey" />
 
     <ImageView
         android:id="@+id/iv_director"
@@ -36,31 +37,31 @@
         android:layout_height="100dp"
         android:layout_below="@id/cast_detail_fake"
         android:layout_alignLeft="@id/cast_detail_fake"
-        android:layout_marginTop="5dp"/>
+        android:layout_marginTop="5dp" />
 
     <ImageView
         android:id="@+id/iv_cast_1"
         android:layout_width="80dp"
         android:layout_height="100dp"
-        android:layout_toRightOf="@id/iv_director"
         android:layout_alignBottom="@id/iv_director"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/iv_director" />
 
     <ImageView
         android:id="@+id/iv_cast_2"
         android:layout_width="80dp"
         android:layout_height="100dp"
-        android:layout_toRightOf="@id/iv_cast_1"
         android:layout_alignBottom="@id/iv_director"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/iv_cast_1" />
 
     <ImageView
         android:id="@+id/iv_cast_3"
         android:layout_width="80dp"
         android:layout_height="100dp"
-        android:layout_toRightOf="@id/iv_cast_2"
         android:layout_alignBottom="@id/iv_director"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/iv_cast_2" />
 
     <TextView
         android:id="@+id/tv_director_name_detail"
@@ -69,7 +70,7 @@
         android:layout_below="@id/iv_director"
         android:layout_alignLeft="@id/iv_director"
         android:layout_marginLeft="25dp"
-        android:text="李安"/>
+        android:text="李安" />
 
     <TextView
         android:id="@+id/tv_director_work"
@@ -77,8 +78,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_director_name_detail"
         android:layout_alignLeft="@id/tv_director_name_detail"
-        android:textColor="@color/colorGrey"
-        android:text="导演"/>
+        android:text="导演"
+        android:textColor="@color/colorGrey" />
 
     <TextView
         android:id="@+id/tv_cast_1_name"
@@ -95,9 +96,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_cast_1_name"
         android:layout_alignLeft="@id/iv_cast_1"
-        android:textColor="@color/colorGrey"
         android:gravity="center"
-        android:text="饰 宋媛媛"/>
+        android:text="饰 宋媛媛"
+        android:textColor="@color/colorGrey" />
 
     <TextView
         android:id="@+id/tv_cast_2_name"
@@ -114,9 +115,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_cast_2_name"
         android:layout_alignLeft="@id/iv_cast_2"
-        android:textColor="@color/colorGrey"
         android:gravity="center"
-        android:text="饰 张哲凯"/>
+        android:text="饰 张哲凯"
+        android:textColor="@color/colorGrey" />
 
     <TextView
         android:id="@+id/tv_cast_3_name"
@@ -125,7 +126,7 @@
         android:layout_below="@id/iv_cast_3"
         android:layout_alignLeft="@id/iv_cast_3"
         android:gravity="center"
-        android:text="张书豪"/>
+        android:text="张书豪" />
 
     <TextView
         android:id="@+id/tv_cast_3_role"
@@ -133,9 +134,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_cast_3_name"
         android:layout_alignLeft="@id/iv_cast_3"
-        android:textColor="@color/colorGrey"
         android:gravity="center"
-        android:text="饰 杨佑贤"/>
+        android:text="饰 杨佑贤"
+        android:textColor="@color/colorGrey" />
 
     <TextView
         android:id="@+id/static_pic"
@@ -144,8 +145,8 @@
         android:layout_below="@id/tv_cast_1_role"
         android:layout_alignLeft="@id/cast_detail_fake"
         android:layout_marginTop="20dp"
-        android:textColor="@color/colorGrey"
-        android:text="预告片/剧照"/>
+        android:text="预告片/剧照"
+        android:textColor="@color/colorGrey" />
 
     <ImageView
         android:id="@+id/iv_pic"
@@ -158,22 +159,22 @@
         android:id="@+id/static_tl"
         android:layout_width="160dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
         android:layout_below="@id/iv_pic"
-        android:gravity="center"
+        android:layout_marginLeft="30dp"
         android:layout_marginTop="15dp"
+        android:gravity="center"
         android:text="评论"
         android:textSize="15dp" />
 
     <TextView
         android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/static_tl"
         android:layout_alignBottom="@id/static_tl"
-        android:textSize="15dp"
+        android:layout_toRightOf="@id/static_tl"
         android:gravity="center"
+        android:text="讨论区"
         android:textColor="@color/colorGrey"
-        android:text="讨论区"/>
+        android:textSize="15dp" />
 
     <View
         android:layout_width="160dp"
@@ -181,8 +182,7 @@
         android:layout_below="@id/static_tl"
         android:layout_alignLeft="@id/static_tl"
         android:layout_marginBottom="10dp"
-        android:background="@color/colorGrey"/>
-
+        android:background="@color/colorGrey" />
 
 
 </RelativeLayout>

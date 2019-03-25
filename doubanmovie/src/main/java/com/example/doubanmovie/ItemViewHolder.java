@@ -6,14 +6,12 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 /**
  * Created by zhoujunyu on 2019/3/21.
  */
 public class ItemViewHolder {
 
-    public class HeadViewHolder extends RecyclerView.ViewHolder{
+    public class HeadViewHolder extends RecyclerView.ViewHolder {
         ImageView mMovieCover;
         TextView mMovieName;
         TextView mTags;
@@ -24,7 +22,7 @@ public class ItemViewHolder {
         TextView mCount;
         RatingBar mStar;
 
-        public HeadViewHolder(View view){
+        public HeadViewHolder(View view) {
             super(view);
             mMovieCover = view.findViewById(R.id.iv_cover);
             mMovieName = view.findViewById(R.id.tv_moviename);
@@ -39,7 +37,7 @@ public class ItemViewHolder {
         }
     }
 
-    public class MiddleInfoViewHolder extends RecyclerView.ViewHolder{
+    public class MiddleInfoViewHolder extends RecyclerView.ViewHolder {
         TextView mIntroduction;
 
         TextView mDirector_name;
@@ -57,7 +55,7 @@ public class ItemViewHolder {
         ImageView mCast_3;
         ImageView mPic;
 
-        public MiddleInfoViewHolder(View view){
+        public MiddleInfoViewHolder(View view) {
             super(view);
             mIntroduction = view.findViewById(R.id.tv_introduction);
             mDirector_name = view.findViewById(R.id.tv_director_name_detail);
@@ -76,7 +74,7 @@ public class ItemViewHolder {
         }
     }
 
-    public class MiddleCommentsViewHolder extends RecyclerView.ViewHolder{
+    public class MiddleCommentsViewHolder extends RecyclerView.ViewHolder {
         ImageView mPortrait;
         TextView mUserName;
         TextView mUserComments;
@@ -84,7 +82,7 @@ public class ItemViewHolder {
         RatingBar mStar;
 
 
-        public MiddleCommentsViewHolder(View view){
+        public MiddleCommentsViewHolder(View view) {
             super(view);
             mPortrait = view.findViewById(R.id.portrait);
             mUserName = view.findViewById(R.id.tv_user_name);

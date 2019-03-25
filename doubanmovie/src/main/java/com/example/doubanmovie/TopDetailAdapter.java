@@ -20,12 +20,12 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public static final int TYPE_HEAD = 0;
     public static final int TYPE_MIDDLE_INFO = 1;
-    public static final int TYPE_MIDDLE_COMMENTS =2;
+    public static final int TYPE_MIDDLE_COMMENTS = 2;
     private final List<Integer> mTypeList;
     private Detail mListData;
     private Context mContext;
 
-    public TopDetailAdapter(List<Integer> list, Detail listData,Context Context) {
+    public TopDetailAdapter(List<Integer> list, Detail listData, Context Context) {
         mTypeList = list;
         mListData = listData;
         mContext = Context;
@@ -36,23 +36,24 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return mTypeList.get(position);
     }
 
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = null;
         RecyclerView.ViewHolder viewHolder = null;
         ItemViewHolder itemViewHolder = new ItemViewHolder();
-        switch (viewType){
+        switch (viewType) {
             case TYPE_HEAD:
-                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.head_cover,viewGroup,false);
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.head_cover, viewGroup, false);
                 ItemViewHolder.HeadViewHolder headViewHolder = itemViewHolder.new HeadViewHolder(view);
-                return  headViewHolder;
+                return headViewHolder;
             case TYPE_MIDDLE_INFO:
-                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.middle_information,viewGroup,false);
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.middle_information, viewGroup, false);
                 ItemViewHolder.MiddleInfoViewHolder infoViewHolder = itemViewHolder.new MiddleInfoViewHolder(view);
                 return infoViewHolder;
             case TYPE_MIDDLE_COMMENTS:
-                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.middle_comments_recyclerview,viewGroup,false);
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.middle_comments_recyclerview, viewGroup, false);
                 RecyclerViewHolder commentsViewHolder = new RecyclerViewHolder(view);
                 return commentsViewHolder;
         }
@@ -61,19 +62,17 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if( holder instanceof ItemViewHolder.HeadViewHolder ){
-            setHeadViewHolder((ItemViewHolder.HeadViewHolder)holder);
-        }
-        else if( holder instanceof ItemViewHolder.MiddleInfoViewHolder ){
-            setMiddleInfoViewHolder((ItemViewHolder.MiddleInfoViewHolder)holder);
-        }
-        else if( holder instanceof RecyclerViewHolder){
-            setCommentsViewHolder((RecyclerViewHolder)holder);
+        if (holder instanceof ItemViewHolder.HeadViewHolder) {
+            setHeadViewHolder((ItemViewHolder.HeadViewHolder) holder);
+        } else if (holder instanceof ItemViewHolder.MiddleInfoViewHolder) {
+            setMiddleInfoViewHolder((ItemViewHolder.MiddleInfoViewHolder) holder);
+        } else if (holder instanceof RecyclerViewHolder) {
+            setCommentsViewHolder((RecyclerViewHolder) holder);
         }
     }
 
 
-    public void setHeadViewHolder(ItemViewHolder.HeadViewHolder holder){
+    public void setHeadViewHolder(ItemViewHolder.HeadViewHolder holder) {
 
         holder.mMovieName.setText(mListData.getTitle());
         holder.mTags.setText(formatString(mListData));
@@ -81,7 +80,7 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.mPublishTime.setText("上映时间:" + mListData.getPubdates().get(1));//第一个为当地上映时间，第二为大陆上映时间
         holder.mDuration.setText("片长：" + mListData.getDurations().get(0));//片长类数组中只有一个数据
         holder.mScores.setText(String.valueOf(mListData.getRating().getAverage()));
-        holder.mStar.setRating(mListData.getRating().getAverage().floatValue() /2);
+        holder.mStar.setRating(mListData.getRating().getAverage().floatValue() / 2);
         holder.mCount.setText(String.valueOf(mListData.getRatings_count()) + "人");
 
         Glide.with(mContext)
@@ -92,11 +91,11 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     }
 
-    public String formatString(Detail c){
-        String tags ="";
+    public String formatString(Detail c) {
+        String tags = "";
         tags = c.getYear() + "/";
         tags += c.getCountries();
-        for (int i = 0; i < c.getGenres().size(); i ++) {
+        for (int i = 0; i < c.getGenres().size(); i++) {
             tags += "/";
             tags += c.getGenres().get(i);
         }
@@ -104,7 +103,7 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
 
-    public void setMiddleInfoViewHolder(ItemViewHolder.MiddleInfoViewHolder holder){
+    public void setMiddleInfoViewHolder(ItemViewHolder.MiddleInfoViewHolder holder) {
         holder.mIntroduction.setText(mListData.getSummary());
 
         //导演
@@ -143,24 +142,15 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 .into(holder.mPic);
     }
 
-    public void setCommentsViewHolder(RecyclerViewHolder holder){
+    public void setCommentsViewHolder(RecyclerViewHolder holder) {
         setCommentRecyclerView(holder.mRecyclerview);
     }
 
-    public void setCommentRecyclerView(RecyclerView commentRecyclerView){
+    public void setCommentRecyclerView(RecyclerView commentRecyclerView) {
         CommentsAdapter commentsAdapter = new CommentsAdapter(mListData);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         commentRecyclerView.setLayoutManager(layoutManager);
         commentRecyclerView.setAdapter(commentsAdapter);
-    }
-
-    public class RecyclerViewHolder extends RecyclerView.ViewHolder{
-        public RecyclerView mRecyclerview;
-
-        public RecyclerViewHolder(@NonNull View itemView) {
-            super(itemView);
-            mRecyclerview = itemView.findViewById(R.id.comments_recyclerview);
-        }
     }
 
     @Override
@@ -168,5 +158,12 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return mTypeList.size();
     }
 
+    public class RecyclerViewHolder extends RecyclerView.ViewHolder {
+        public RecyclerView mRecyclerview;
 
+        public RecyclerViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mRecyclerview = itemView.findViewById(R.id.comments_recyclerview);
+        }
+    }
 }

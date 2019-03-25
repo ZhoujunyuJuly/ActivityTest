@@ -41,6 +41,9 @@ public class DirectorsBean {
     }
 
     public void setName(String name) {
+        if (name != null) {
+
+        }
         this.name = name;
     }
 

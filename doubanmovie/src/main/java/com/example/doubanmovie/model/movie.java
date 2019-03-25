@@ -1,7 +1,5 @@
 package com.example.doubanmovie.model;
 
-import com.example.doubanmovie.Movie;
-
 import java.util.List;
 
 /**

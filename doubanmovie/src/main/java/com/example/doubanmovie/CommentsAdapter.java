@@ -6,10 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.doubanmovie.model.DetailMode.Detail;
 
 /**
@@ -28,9 +25,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<ItemViewHolder.MiddleC
     @NonNull
     @Override
     public ItemViewHolder.MiddleCommentsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.middle_comments,viewGroup,false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.middle_comments, viewGroup, false);
         ItemViewHolder holder = new ItemViewHolder();
-        ItemViewHolder.MiddleCommentsViewHolder commentsViewHolder= holder.new MiddleCommentsViewHolder(view);
+        ItemViewHolder.MiddleCommentsViewHolder commentsViewHolder = holder.new MiddleCommentsViewHolder(view);
 
         return commentsViewHolder;
     }

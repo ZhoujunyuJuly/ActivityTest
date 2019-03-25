@@ -1,36 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@color/colorBgYellow">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorBgYellow">
 
-  <ImageView
-      android:id="@+id/portrait"
-      android:layout_width="50dp"
-      android:layout_height="50dp"
-      android:layout_marginLeft="20dp"
-      android:layout_marginTop="10dp"
-      android:src="@mipmap/ic_launcher_round" />
-    
+    <ImageView
+        android:id="@+id/portrait"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:src="@mipmap/ic_launcher_round" />
+
     <TextView
         android:id="@+id/tv_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/portrait"
         android:layout_alignTop="@id/portrait"
-        android:textColor="@color/colorBlack"
         android:layout_marginLeft="10dp"
-        android:text="cheokman"/>
+        android:layout_toRightOf="@id/portrait"
+        android:text="cheokman"
+        android:textColor="@color/colorBlack" />
 
     <RatingBar
         android:id="@+id/rb_comment_star"
+        style="?android:attr/ratingBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/tv_user_name"
         android:layout_alignTop="@id/tv_user_name"
         android:layout_marginLeft="3dp"
-        style="?android:attr/ratingBarStyleSmall"
+        android:layout_toRightOf="@id/tv_user_name"
         android:numStars="5"
-        android:rating="3.5"
-        android:progressTint="@color/colorYellow"/>
+        android:progressTint="@color/colorYellow"
+        android:rating="3.5" />
 
     <TextView
         android:id="@+id/tv_user_comments"
@@ -38,19 +40,19 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_user_name"
         android:layout_alignLeft="@id/tv_user_name"
-        android:textSize="12dp"
-        android:text="回应海报的观影提示：不用带纸巾，带手机就行" />
+        android:text="回应海报的观影提示：不用带纸巾，带手机就行"
+        android:textSize="12dp" />
 
     <TextView
         android:id="@+id/tv_user_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_user_comments"
-        android:textColor="@color/colorGrey"
-        android:textSize="9dp"
         android:layout_alignLeft="@id/tv_user_comments"
-        android:text="3个月前"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp"
+        android:text="3个月前"
+        android:textColor="@color/colorGrey"
+        android:textSize="9dp" />
 
 </RelativeLayout>

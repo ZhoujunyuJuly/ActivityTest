@@ -1,7 +1,5 @@
 package com.example.doubanmovie.model.DetailMode;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 /**
