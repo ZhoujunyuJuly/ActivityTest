@@ -77,7 +77,7 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.mMovieName.setText(mListData.getTitle());
         holder.mTags.setText(formatString(mListData));
         holder.mOriName.setText("原名：" + mListData.getTitle());
-        holder.mPublishTime.setText("上映时间:" + mListData.getPubdates().get(1));//第一个为当地上映时间，第二为大陆上映时间
+        holder.mPublishTime.setText(mContext.getString(R.string.pushlish_time) + mListData.getPubdates().get(1));//第一个为当地上映时间，第二为大陆上映时间
         holder.mDuration.setText("片长：" + mListData.getDurations().get(0));//片长类数组中只有一个数据
         holder.mScores.setText(String.valueOf(mListData.getRating().getAverage()));
         holder.mStar.setRating(mListData.getRating().getAverage().floatValue() / 2);

@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">DoubanMovie</string>
+    <string appname="周周"></string>
+    <string name="pushlish_time">发布时间</string>
 </resources>
