@@ -17,7 +17,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<ItemViewHolder.MiddleC
     public Detail mData;
     private Context mContext;
 
-    public CommentsAdapter(Detail data,Context context) {
+    public CommentsAdapter(Detail data, Context context) {
         mData = data;
         mContext = context;
 

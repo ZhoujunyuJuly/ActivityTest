@@ -1,1 +1,1 @@
-include ':app', ':recyclerview', ':booklist', ':pageofnick', ':http', ':36kr', ':doubanmovie'
+include ':app', ':recyclerview', ':booklist', ':pageofnick', ':http', ':36kr', ':doubanmovie', ':fragment'

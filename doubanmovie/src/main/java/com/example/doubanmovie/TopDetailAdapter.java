@@ -77,9 +77,9 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.mMovieName.setText(mListData.getTitle());
         holder.mTags.setText(formatString(mListData));
         holder.mOriName.setText(mContext.getString(R.string.ori_name) + mListData.getTitle());
-        if( mListData.getPubdates().size() <= 2){
+        if (mListData.getPubdates().size() < 2) {
             holder.mPublishTime.setText(mContext.getString(R.string.pushlish_time) + mContext.getString(R.string.nullvalue));
-        }else {
+        } else {
             holder.mPublishTime.setText(mContext.getString(R.string.pushlish_time) + mListData.getPubdates().get(1));//第一个为当地上映时间，第二为大陆上映时间
         }
 
@@ -152,7 +152,7 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void setCommentRecyclerView(RecyclerView commentRecyclerView) {
-        CommentsAdapter commentsAdapter = new CommentsAdapter(mListData,mContext);
+        CommentsAdapter commentsAdapter = new CommentsAdapter(mListData, mContext);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         commentRecyclerView.setLayoutManager(layoutManager);
         commentRecyclerView.setAdapter(commentsAdapter);

@@ -48,9 +48,9 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
-    private void AddReturnButton(){
+    private void AddReturnButton() {
         ActionBar actionBar = getSupportActionBar();
-        if( actionBar != null ){
+        if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -58,7 +58,7 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 this.finish();
                 return true;
