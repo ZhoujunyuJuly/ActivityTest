@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.tv_onepage:
                 if (fg_one == null) {
-                    fg_one = new MainFragment(R.layout.fg_movie_one);
+                    fg_one = MainFragment.mainFragment(R.layout.fg_movie_one);
                     fragmentTransaction.add(R.id.frag_layout, fg_one);
                 } else {
                     fragmentTransaction.show(fg_one);
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.tv_twopage:
                 if (fg_two == null) {
-                    fg_two = new MainFragment(R.layout.fg_movie_two);
+                    fg_two = MainFragment.mainFragment(R.layout.fg_movie_two);
                     fragmentTransaction.add(R.id.frag_layout, fg_two);
                 } else {
                     fragmentTransaction.show(fg_two);

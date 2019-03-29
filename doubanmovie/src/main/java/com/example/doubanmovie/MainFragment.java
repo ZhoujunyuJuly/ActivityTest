@@ -1,5 +1,6 @@
 package com.example.doubanmovie;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -46,9 +47,38 @@ public class MainFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private ProgressBar mBeginProgressbar;
     private SmartRefreshLayout mSmartRefreshLayout;
+    private String mRefreshStatus = "refresh";
 
-    public MainFragment(int layoutType) {
-        mLayoutType = layoutType;
+    private static final String TYPE = "type";
+
+//    public MainFragment(){
+//        ;
+//    }
+//
+//    public MainFragment(int layoutType) {
+//        mLayoutType = layoutType;
+//    }
+//
+
+
+    public MainFragment() {
+
+    }
+
+    public static MainFragment mainFragment(int layoutType){
+        MainFragment fragment = new MainFragment();
+        Bundle args = new Bundle();
+        args.putInt(TYPE,layoutType);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if( getArguments() != null){
+            mLayoutType = getArguments().getInt(TYPE);
+        }
     }
 
     @Nullable
@@ -128,6 +158,7 @@ public class MainFragment extends Fragment {
         mSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                mRefreshStatus = "refresh";
                 URLConnection();
                 mSmartRefreshLayout.finishRefresh(2000);
             }
@@ -136,6 +167,7 @@ public class MainFragment extends Fragment {
         mSmartRefreshLayout.setOnLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                mRefreshStatus = "load";
                 URLConnection();
                 mSmartRefreshLayout.finishLoadMore(2000);
             }
@@ -208,8 +240,13 @@ public class MainFragment extends Fragment {
 
 
     private void GetPage() {
+        if( mRefreshStatus == "load") {
+            PAGE += 1;
+        }else {
+            PAGE = 0;
+        }
         DOUBAN_URL_FORMAL = DOUBAN_URL.replace("start=0", "start=" + PAGE);
-        PAGE += 1;
+
         Log.d("zjy", "douban_url is " + DOUBAN_URL_FORMAL);
     }
 
