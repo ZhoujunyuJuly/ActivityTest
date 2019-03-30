@@ -1,4 +1,4 @@
-package com.example.doubanmovie;
+package com.example.doubanmovie.main;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -11,6 +11,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.doubanmovie.R;
 import com.example.doubanmovie.model.SubjectsBean;
 
 import java.text.DecimalFormat;
@@ -22,11 +23,11 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
     public IRecyclerviewClick onItemClickListen;
-    private List<SubjectsBean> mMovieInfo;
+    private List<SubjectsBean> mSubjectList;
     private Context mContent;
 
     public MovieAdapter(List movie, Context context) {
-        mMovieInfo = movie;
+        mSubjectList = movie;
         mContent = context;
     }
 
@@ -36,7 +37,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder viewHolder, int i) {
-        SubjectsBean movieList = mMovieInfo.get(i);
+        SubjectsBean movieList = mSubjectList.get(i);
 
         viewHolder.mMovieName.setText(movieList.getTitle());
         viewHolder.mMovieScore.setText(String.valueOf(movieList.getRating().getAverage()));
@@ -90,7 +91,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     @Override
     public int getItemCount() {
-        return mMovieInfo.size();
+        return mSubjectList.size();
     }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder {
@@ -117,36 +118,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onItemClickListen.onMovieClick(v, getAdapterPosition());
+                    onItemClickListen.onMovieClick(v, mSubjectList.get(getAdapterPosition()));
                 }
             });
 
             mMovieCover.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onItemClickListen.onCoverClick(v, getAdapterPosition());
-
-
-//
-//                    ViewGroup.MarginLayoutParams marginLayoutParams = new ViewGroup.MarginLayoutParams(mMovieCover.getLayoutParams());
-//                    marginLayoutParams.leftMargin = 140;
-//                    marginLayoutParams.topMargin = 240;
-//                    RelativeLayout.MarginLayoutParams layoutParams = new RelativeLayout.LayoutParams(marginLayoutParams);
-//                    layoutParams.height = 350;
-//                    layoutParams.width = 300;
-//                    mMovieCover.setLayoutParams(layoutParams);
-//
-//                    mMovieCover.setScaleType(ImageView.ScaleType.FIT_XY);
-//                    mMovieCover.bringToFront();
-
-                    //放大的封面
-//                    Glide.with(mContent)
-//                            .load(mMovieInfo.get(getAdapterPosition()).getImages().getSmall())
-//                            .centerCrop()
-//                            .placeholder(R.mipmap.ic_launcher)
-//                            .into(mTopCover);
-
-
+                    onItemClickListen.onCoverClick(v, mSubjectList.get(getAdapterPosition()));
                 }
             });
 

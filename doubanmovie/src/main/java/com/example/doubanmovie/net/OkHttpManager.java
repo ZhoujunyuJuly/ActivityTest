@@ -1,26 +1,32 @@
 package com.example.doubanmovie.net;
 
+import android.os.Handler;
+import android.os.Looper;
+
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
-import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 
 /**
  * Created by zhoujunyu on 2019/3/26.
  */
 public class OkHttpManager {
-    private static OkHttpManager ourInstance;
-    private OkHttpClient mClient;
 
-//    static OkHttpManager getInstance() {
-//        return ourInstance;
-//    }
+    public static final String TAG = OkHttpManager.class.getSimpleName();
+
+    private static OkHttpManager ourInstance;
+    private OkHttpClient mOkHttpClient;
+    private Handler mDelivery;
 
     private OkHttpManager() {
-        mClient = new OkHttpClient();
+        mOkHttpClient = new OkHttpClient();
+        mDelivery = new Handler(Looper.getMainLooper());
     }
 
     public static synchronized OkHttpManager getInstance() {
@@ -30,36 +36,68 @@ public class OkHttpManager {
         return ourInstance;
     }
 
+    /**
+     * 异步的get请求
+     *
+     * @param url
+     * @param callback 请求回调
+     * @param params  所需的额外参数，公共参数里面自动添加
+     */
+    public void get(String url, Map<String, String> params, final Callback callback) {
 
-    public void get(String address, Map<String, String> params, Callback callback) {
-        final Request request = new Request.Builder().url(address).get().build();
-        Call call = mClient.newCall(request);
-
-        call.enqueue(callback);
-
+        final Request request = new Request.Builder()
+                .url(buildGetUrl(url, params))
+                .build();
+        deliveryResult(callback, request);
     }
 
-    public String MapToURL(Map<String, String> params) {
-        StringBuilder url = new StringBuilder();
-        for (String key : params.keySet()) {
-            url.append(key).append("=").append(params.get(key)).append("&");
+    /**
+     * 异步的post请求
+     *
+     * @param url
+     * @param callback 请求回调
+     * @param params 所需的额外参数，公共参数里面自动添加
+     */
+    public void post(String url,  Map<String, String> params, final Callback callback) {
+        Request request = buildPostRequest(url, params);
+        deliveryResult(callback, request);
+    }
+
+    /**
+     * 构造get请求的参数,将参数拼接起来
+     *
+     * @param url 请求路径
+     * @param params 签名的参数，所有参数按key进行生序排列
+     */
+    protected String buildGetUrl(String url,Map<String, String> params) {
+
+        if(params == null || params.isEmpty()){
+            return url;
         }
-        url.deleteCharAt(url.length() - 1);
+        StringBuilder sb = new StringBuilder();
+        sb.append(url).append("?");
 
-        return url.toString();
-    }
-
-    public Map<String, String> URLToMap(String url) {
-        Map<String, String> map = new HashMap();
-        String[] params = url.split("&");
-        for (int i = 0; i < params.length; i++) {
-            String[] param = params[i].split("=");
-            if (param.length == 2) {
-                map.put(param[0], param[1]);
-            }
+        for (Map.Entry<String, String> item : params.entrySet()) {
+            sb.append(item.getKey()).append("=").append(URLEncoder.encode(item.getValue())).append("&");
         }
-        return map;
+
+        return sb.toString();
     }
 
+    private Request buildPostRequest(String url, Map<String, String> params) {
 
+        FormBody.Builder builder = new FormBody.Builder();
+
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            builder.add(entry.getKey(), entry.getValue());
+        }
+
+        RequestBody body = builder.build();
+
+        return new Request.Builder().url(url).post(body).build();
+    }
+
+    private void deliveryResult(Callback callback, final Request request) {
+       mOkHttpClient.newCall(request).enqueue(callback);
+    }
 }

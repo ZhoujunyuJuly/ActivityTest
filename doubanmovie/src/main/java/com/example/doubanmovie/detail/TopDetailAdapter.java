@@ -1,4 +1,4 @@
-package com.example.doubanmovie;
+package com.example.doubanmovie.detail;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.example.doubanmovie.R;
+import com.example.doubanmovie.detail.CommentsAdapter;
+import com.example.doubanmovie.detail.ItemViewHolder;
 import com.example.doubanmovie.model.DetailMode.Detail;
 
 import java.util.List;

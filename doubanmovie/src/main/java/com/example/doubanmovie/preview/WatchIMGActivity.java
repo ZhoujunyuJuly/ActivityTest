@@ -1,4 +1,4 @@
-package com.example.doubanmovie;
+package com.example.doubanmovie.preview;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.example.doubanmovie.R;
 
 public class WatchIMGActivity extends AppCompatActivity {
 

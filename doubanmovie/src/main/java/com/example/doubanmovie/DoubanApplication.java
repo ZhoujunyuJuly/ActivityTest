@@ -9,11 +9,9 @@ import com.tencent.bugly.crashreport.CrashReport;
  */
 public class DoubanApplication extends Application {
 
-
     @Override
     public void onCreate() {
         super.onCreate();
-        CrashReport.initCrashReport(getApplicationContext(), "65e2364471", true);
-
+        CrashReport.initCrashReport(getApplicationContext(), C.BUGLY_ID, true);
     }
 }

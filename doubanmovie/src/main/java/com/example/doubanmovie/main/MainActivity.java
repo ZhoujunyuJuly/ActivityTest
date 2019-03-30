@@ -1,4 +1,4 @@
-package com.example.doubanmovie;
+package com.example.doubanmovie.main;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.doubanmovie.R;
 import com.example.doubanmovie.model.movie;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 

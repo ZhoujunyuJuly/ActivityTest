@@ -1,10 +1,12 @@
-package com.example.doubanmovie;
+package com.example.doubanmovie.detail;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.example.doubanmovie.R;
 
 /**
  * Created by zhoujunyu on 2019/3/21.

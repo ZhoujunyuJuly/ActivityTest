@@ -1,5 +1,6 @@
-package com.example.doubanmovie;
+package com.example.doubanmovie.detail;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.doubanmovie.R;
 import com.example.doubanmovie.model.DetailMode.Detail;
 import com.google.gson.Gson;
 
@@ -24,6 +26,8 @@ import okhttp3.Response;
 
 public class DetailActivity extends AppCompatActivity {
 
+    public static final String MOVIEID_KEY = "movieID";
+
     private static final String DETAIL_URL_HEAD = "https://api.douban.com/v2/movie/subject/";
     private static final String DETAIL_URL_TAIL = "?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC&client=something&udid=dddddddddddddddddddddd";
     private String DETAIL_URL = "";
@@ -32,6 +36,12 @@ public class DetailActivity extends AppCompatActivity {
     private TopDetailAdapter mAdapter;
     private Detail mData;
     private List<Integer> typeList = new ArrayList<>();
+
+    public static void start( Context context, String movieId) {
+        Intent intent = new Intent(context,DetailActivity.class);
+        intent.putExtra(MOVIEID_KEY,movieId);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +93,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private void getURL() {
         Intent intent = getIntent();
-        String movieID = intent.getStringExtra("movieID");
+        String movieID = intent.getStringExtra(MOVIEID_KEY);
         DETAIL_URL = DETAIL_URL_HEAD + movieID + DETAIL_URL_TAIL;
     }
 
