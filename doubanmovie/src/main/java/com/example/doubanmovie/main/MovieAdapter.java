@@ -39,20 +39,20 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public void onBindViewHolder(@NonNull MovieViewHolder viewHolder, int i) {
         SubjectsBean movieList = mSubjectList.get(i);
 
-        viewHolder.mMovieName.setText(movieList.getTitle());
-        viewHolder.mMovieScore.setText(String.valueOf(movieList.getRating().getAverage()));
+        viewHolder.name.setText(movieList.getTitle());
+        viewHolder.score.setText(String.valueOf(movieList.getRating().getAverage()));
 
         //观影人数
         DecimalFormat convert = new DecimalFormat("0.00");
         String count = convert.format(Double.valueOf(movieList.getCollect_count()) / 10000);
-        viewHolder.mParticipator.setText(count);
+        viewHolder.participator.setText(count);
 
         //电影封面
         Glide.with(mContent)
                 .load(movieList.getImages().getSmall())
                 .centerCrop()
                 .placeholder(R.mipmap.ic_launcher)
-                .into(viewHolder.mMovieCover);
+                .into(viewHolder.cover);
 
 
         //主演
@@ -63,7 +63,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             }
             casts += movieList.getCasts().get(a).getName();
         }
-        viewHolder.mCast.setText(casts);
+        viewHolder.cast.setText(casts);
 
         //导演
         String directors = "";
@@ -73,10 +73,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             }
             directors += movieList.getDirectors().get(a).getName();
         }
-        viewHolder.mDirector.setText(directors);
+        viewHolder.director.setText(directors);
 
         //评分星星
-        viewHolder.mStar.setRating(movieList.getRating().getAverage().floatValue() / 2);
+        viewHolder.star.setRating(movieList.getRating().getAverage().floatValue() / 2);
 
 
     }
@@ -95,24 +95,24 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder {
-        ImageView mMovieCover;
-        TextView mMovieName;
-        TextView mMovieScore;
-        TextView mDirector;
-        TextView mCast;
-        TextView mParticipator;
-        RatingBar mStar;
+        ImageView cover;
+        TextView name;
+        TextView score;
+        TextView director;
+        TextView cast;
+        TextView participator;
+        RatingBar star;
 
 
         public MovieViewHolder(@NonNull View itemView) {
             super(itemView);
-            mMovieCover = itemView.findViewById(R.id.iv_movie);
-            mMovieName = itemView.findViewById(R.id.tv_title);
-            mMovieScore = itemView.findViewById(R.id.tv_average);
-            mDirector = itemView.findViewById(R.id.tv_director_name);
-            mCast = itemView.findViewById(R.id.cast_name);
-            mParticipator = itemView.findViewById(R.id.tv_collect_count);
-            mStar = itemView.findViewById(R.id.iv_star);
+            cover = itemView.findViewById(R.id.iv_movie);
+            name = itemView.findViewById(R.id.tv_title);
+            score = itemView.findViewById(R.id.tv_average);
+            director = itemView.findViewById(R.id.tv_director_name);
+            cast = itemView.findViewById(R.id.cast_name);
+            participator = itemView.findViewById(R.id.tv_collect_count);
+            star = itemView.findViewById(R.id.iv_star);
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +122,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
                 }
             });
 
-            mMovieCover.setOnClickListener(new View.OnClickListener() {
+            cover.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onItemClickListen.onCoverClick(v, mSubjectList.get(getAdapterPosition()));
