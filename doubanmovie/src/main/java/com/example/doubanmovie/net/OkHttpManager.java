@@ -29,9 +29,11 @@ public class OkHttpManager {
         mDelivery = new Handler(Looper.getMainLooper());
     }
 
-    public static synchronized OkHttpManager getInstance() {
-        if (ourInstance == null) {
-            ourInstance = new OkHttpManager();
+    public static OkHttpManager getInstance() {
+        synchronized (OkHttpManager.class) {
+            if (ourInstance == null) {
+                ourInstance = new OkHttpManager();
+            }
         }
         return ourInstance;
     }

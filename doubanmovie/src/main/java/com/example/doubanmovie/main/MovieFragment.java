@@ -1,6 +1,5 @@
 package com.example.doubanmovie.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,17 +10,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.doubanmovie.C;
-import com.example.doubanmovie.detail.DetailActivity;
 import com.example.doubanmovie.R;
+import com.example.doubanmovie.detail.DetailActivity;
 import com.example.doubanmovie.model.SubjectsBean;
-import com.example.doubanmovie.preview.WatchIMGActivity;
 import com.example.doubanmovie.model.movie;
 import com.example.doubanmovie.net.OkHttpManager;
+import com.example.doubanmovie.preview.WatchIMGActivity;
 import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -41,7 +38,7 @@ import okhttp3.Response;
 /**
  * Created by zhoujunyu on 2019/3/26.
  */
-public class MainFragment extends Fragment {
+public class MovieFragment extends Fragment {
 
     private static int PAGE = 0;
     private static int PAGE_COUNT = 20;
@@ -57,12 +54,13 @@ public class MainFragment extends Fragment {
 
     private static final String TYPE = "type";
 
-    public MainFragment() {
+    public MovieFragment() {
 
     }
 
-    public static MainFragment mainFragment(int layoutType){
-        MainFragment fragment = new MainFragment();
+    //工厂设计模式
+    public static MovieFragment mainFragment(int layoutType){
+        MovieFragment fragment = new MovieFragment();
         Bundle args = new Bundle();
         args.putInt(TYPE,layoutType);
         fragment.setArguments(args);
@@ -80,22 +78,23 @@ public class MainFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(mLayoutType, container, false);
-        if (mLayoutType == R.layout.fg_movie_one) {
-            mRecyclerView = view.findViewById(R.id.pageone_recycler_view);
-            mSmartRefreshLayout = view.findViewById(R.id.smart_refresh);
+        View view = inflater.inflate(R.layout.fg_movie_one, container, false);
+        mRecyclerView = view.findViewById(R.id.pageone_recycler_view);
+        mSmartRefreshLayout = view.findViewById(R.id.smart_refresh);
 
-            LinearLayoutManager layoutManager = new LinearLayoutManager(this.getActivity());
-            mRecyclerView.setLayoutManager(layoutManager);
-            setSmartRefreshLayout();
-            mSmartRefreshLayout.autoRefresh();
-            mMovieAdapter = new MovieAdapter(mSubjectsList, getActivity());
-            mRecyclerView.setAdapter(mMovieAdapter);
-            setRecylcerviewListener();
-        } else {
-            TextView textView = view.findViewById(R.id.pagetwo);
-            textView.setText("你点到第二页了！");
-        }
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this.getActivity());
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        //加载刷新界面
+        setSmartRefreshLayout();
+        mSmartRefreshLayout.autoRefresh();
+
+        //载入适配器，以便拉取本地数据
+        mMovieAdapter = new MovieAdapter(mSubjectsList, getActivity());
+        mRecyclerView.setAdapter(mMovieAdapter);
+
+        setRecylcerviewListener();
+
         return view;
     }
 
@@ -114,7 +113,10 @@ public class MainFragment extends Fragment {
         map.put("apikey", "0b2bdeda43b5688921839c8ecb20399b");
         map.put("city", "北京");
         map.put("start", String.valueOf(page * PAGE_COUNT));
+
+        //每次渲染的item数据
         map.put("count", String.valueOf(PAGE_COUNT));
+
         map.put("client","somemessage");
         map.put("udid","dddddddddddddddddddddd");
 
@@ -122,18 +124,20 @@ public class MainFragment extends Fragment {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d("zjy", "singleton is failed!");
-                finishRefresh();
+                finishRefresh();//完成刷新
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String json = response.body().string();
                 mMovie = new Gson().fromJson(json, movie.class);
+
+                //判断界面item数大于总item数时，无新数据；扔回主线程
                 if (mMovie.getTotal() < PAGE  * PAGE_COUNT) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getActivity(),"没有更多数据了,小君君同学", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(),"没有更多数据了", Toast.LENGTH_LONG).show();
                             finishRefresh();
                         }
                     });
@@ -143,6 +147,8 @@ public class MainFragment extends Fragment {
 
                         if (PAGE == 0) {
                             mSubjectsList.clear();
+
+                            //更新数据
                             mSubjectsList.addAll(mMovie.getSubjects());
                         } else {
                             mSubjectsList.addAll(mMovie.getSubjects());
@@ -199,11 +205,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onCoverClick(View view, SubjectsBean subjectsBean) {
                 // TODO: 2019/3/30 仿照上面写法自己写一个
-//                String IMG_URL = mMovie.getSubjects().get(position).getImages().getMedium();
-//                Intent intent = new Intent(getActivity(), WatchIMGActivity.class);
-//
-//                intent.putExtra("IMG_URL", IMG_URL);
-//                startActivity(intent);
+                WatchIMGActivity.start(getActivity(),subjectsBean.getImages().getMedium());
             }
         });
 

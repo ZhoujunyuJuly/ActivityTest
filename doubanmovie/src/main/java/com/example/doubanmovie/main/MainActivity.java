@@ -2,7 +2,9 @@ package com.example.doubanmovie.main;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -15,7 +17,7 @@ import com.example.doubanmovie.R;
 import com.example.doubanmovie.model.movie;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,ViewPager.OnPageChangeListener {
     public static final String DOUBAN_URL = "https://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=北京&start=0&count=100&client=somemessage&udid=dddddddddddddddddddddd";
     public static final String DOUBAN_URL_TEST = "https://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=北京&start=9&count=100&client=somemessage&udid=dddddddddddddddddddddd";
     TextView mTextPage1;
@@ -28,14 +30,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView mTopCover;
     private ProgressBar mBeginProgressbar;
     private SmartRefreshLayout mSmartRefreshLayout;
-    private MainFragment fg_one, fg_two;
+    private MovieFragment fg_moive;
+    private TextFragment fg_text ;
     private FragmentManager mFragmentManager;
     private RelativeLayout mRelativeLayout;
+
+    private ViewPager mViewPager;
+    private FragmentPagerAdapter mFragmentPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mFragmentPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
 
         findViews();
         mTextPage1.performClick();
@@ -44,10 +52,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void findViews() {
 
-        mFragmentManager = getSupportFragmentManager();
-        mRelativeLayout = findViewById(R.id.frag_layout);
+       // mFragmentManager = getSupportFragmentManager();
+       // mRelativeLayout = findViewById(R.id.vpager);
         mTextPage1 = findViewById(R.id.tv_onepage);
         mTextPage2 = findViewById(R.id.tv_twopage);
+
+        mViewPager = findViewById(R.id.vpager);
+        mViewPager.setAdapter(mFragmentPagerAdapter);
+        mViewPager.setCurrentItem(0);
+        mViewPager.addOnPageChangeListener(MainActivity.this);
 
         mTextPage1.setOnClickListener(this);
         mTextPage2.setOnClickListener(this);
@@ -55,40 +68,56 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+
+
+
     public void onClick(View v) {
-        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        hideAllFragment(fragmentTransaction);
+//        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+//        hideAllFragment(fragmentTransaction);
 
         switch (v.getId()) {
             case R.id.tv_onepage:
-                if (fg_one == null) {
-                    fg_one = MainFragment.mainFragment(R.layout.fg_movie_one);
-                    fragmentTransaction.add(R.id.frag_layout, fg_one);
-                } else {
-                    fragmentTransaction.show(fg_one);
-                }
+//                if (fg_moive == null) {
+//                    fg_moive = MovieFragment.mainFragment(R.layout.fg_movie_one);
+//                    fragmentTransaction.add(R.id.vpager, fg_moive);
+//                } else {
+//                    fragmentTransaction.show(fg_moive);
+//                }
+                mViewPager.setCurrentItem(0);
 
                 break;
             case R.id.tv_twopage:
-                if (fg_two == null) {
-                    fg_two = MainFragment.mainFragment(R.layout.fg_movie_two);
-                    fragmentTransaction.add(R.id.frag_layout, fg_two);
-                } else {
-                    fragmentTransaction.show(fg_two);
-                }
+//                if (fg_text == null) {
+//                    fg_text = new TextFragment();
+//                    fragmentTransaction.add(R.id.vpager, fg_text);
+//                } else {
+//                    fragmentTransaction.show(fg_text);
+//                }
+
+                mViewPager.setCurrentItem(1);
 
                 break;
         }
-
-        fragmentTransaction.commit();
+//        fragmentTransaction.commit();
     }
 
     private void hideAllFragment(FragmentTransaction fragmentTransaction) {
-        if (fg_one != null) fragmentTransaction.hide(fg_one);
-        if (fg_two != null) fragmentTransaction.hide(fg_two);
+        if (fg_moive != null) fragmentTransaction.hide(fg_moive);
+        if (fg_text != null) fragmentTransaction.hide(fg_text);
 
     }
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+    }
 
 }
 
