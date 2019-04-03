@@ -1,5 +1,6 @@
 package com.example.doubanmovie.main;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -58,6 +59,9 @@ public class MovieFragment extends Fragment {
     private String mCity = "北京";
 
     private static final String TYPE = "type";
+    public TransData mTransData;
+
+
 
     public MovieFragment() {
 
@@ -79,6 +83,7 @@ public class MovieFragment extends Fragment {
             mLayoutType = getArguments().getInt(TYPE);
         }
     }
+
 
     @Nullable
     @Override
@@ -104,6 +109,24 @@ public class MovieFragment extends Fragment {
         return view;
     }
 
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try{
+            mTransData = (TransData)context;
+        }catch (Exception e){
+            throw new ClassCastException(context.toString() + "must implement OnArticleSelectedListener");
+        }
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+    }
 
     private void refreshCity() {
 
@@ -186,6 +209,24 @@ public class MovieFragment extends Fragment {
                         } else {
                             mSubjectsList.addAll(mMovie.getSubjects());
                         }
+
+                        String[] imgURL = new String[5];
+                        String[] movieName = new String[5];
+                        for (int i = 0; i < 5; i++) {
+                            //imgURL[i] = mSubjectsList.get(i).getImages().getSmall();
+                            Log.d("zjy", "onResponse: subjects is "+ mMovie.getSubjects().get(i).getImages().getSmall());
+                            imgURL[i] = mMovie.getSubjects().get(i).getImages().getSmall();
+                            movieName[i] = mMovie.getSubjects().get(i).getTitle();
+
+                           // Log.d("zjy", "onActivityCreated: value is "+imgURL[i]);
+                        }
+
+
+
+//        mTransData.moviefgToBannerfg(imgURL);
+                        //String[] imgURL = {"https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2551352209.jpg","0"};
+
+                        mTransData.moviefgToBannerfg(imgURL,movieName);
                     }
                     getActivity().runOnUiThread(new Runnable() {
                         @Override

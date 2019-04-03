@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="220dp"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
+
+    <com.daimajia.slider.library.SliderLayout
+        android:id="@+id/ad_banner_id"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        custom:auto_cycle="true"
+        custom:pager_animation="Accordion"
+        custom:indicator_visibility="visible"
+        custom:pager_animation_span="200"/>
+
+
+    <com.daimajia.slider.library.Indicators.PagerIndicator
+        android:id="@+id/indicator_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        custom:shape="oval"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        custom:selected_color="@color/colorBlack"
+        custom:unselected_color="@color/colorGrey"/>
+
+
+
+    <!--<com.daimajia.slider.library.Indicators.PagerIndicator-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content">-->
+        <!---->
+    <!--</com.daimajia.slider.library.Indicators.PagerIndicator>-->
+
+</RelativeLayout>

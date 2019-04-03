@@ -18,7 +18,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:src="@mipmap/ic_launcher_round"
-        app:riv_corner_radius="10dp"/>
+        app:riv_corner_radius="12dp"/>
 
     <TextView
         android:id="@+id/tv_moviename"
