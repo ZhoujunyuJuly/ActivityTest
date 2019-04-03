@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorBgYellow">
 
     <TextView
@@ -10,13 +11,14 @@
         android:layout_height="350dp"
         android:background="@color/colorCoverGrey" />
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/iv_cover"
         android:layout_width="220dp"
         android:layout_height="300dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:src="@mipmap/ic_launcher_round" />
+        android:src="@mipmap/ic_launcher_round"
+        app:riv_corner_radius="10dp"/>
 
     <TextView
         android:id="@+id/tv_moviename"

@@ -13,6 +13,7 @@ import com.example.doubanmovie.R;
 import com.example.doubanmovie.detail.CommentsAdapter;
 import com.example.doubanmovie.detail.ItemViewHolder;
 import com.example.doubanmovie.model.DetailMode.Detail;
+import com.example.doubanmovie.preview.WatchIMGActivity;
 
 import java.util.List;
 
@@ -96,6 +97,13 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 .centerCrop()
                 .placeholder(R.mipmap.ic_launcher)
                 .into(holder.mMovieCover);
+
+        holder.mMovieCover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WatchIMGActivity.start(mContext,mListData.getImages().getLarge());
+            }
+        });
 
     }
 

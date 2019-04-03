@@ -7,7 +7,7 @@
     tools:context=".preview.WatchIMGActivity"
    >
 
-    <ImageView
+    <com.wingsofts.dragphotoview.DragPhotoView
         android:id="@+id/iv_largeImg"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

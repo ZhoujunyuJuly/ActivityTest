@@ -12,10 +12,10 @@
         android:name=".DoubanApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="豆瓣假电影"
+        android:label=""
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/CustomTitleTheme">
         <activity android:name=".main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,8 +23,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".detail.DetailActivity" />
-        <activity android:name=".preview.WatchIMGActivity"></activity>
+        <activity android:name=".detail.DetailActivity" android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
+        <activity android:name=".preview.WatchIMGActivity" android:theme="@style/translucent">
+
+
+        </activity>
     </application>
 
 </manifest>

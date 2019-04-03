@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.doubanmovie.R;
+import com.wingsofts.dragphotoview.DragPhotoView;
 
 public class WatchIMGActivity extends Activity {
     public static final String IMGID_KEY = "IMG_URL";
@@ -29,7 +31,7 @@ public class WatchIMGActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_watch_img);
 
-        ImageView mImg;
+        DragPhotoView mImg;
         mImg = findViewById(R.id.iv_largeImg);
 
         Intent intent = getIntent();
@@ -41,6 +43,14 @@ public class WatchIMGActivity extends Activity {
                 .centerCrop()
                 .placeholder(R.mipmap.ic_launcher)
                 .into(mImg);
+
+        mImg.setOnExitListener(new DragPhotoView.OnExitListener() {
+            @Override
+            public void onExit(DragPhotoView dragPhotoView, float v, float v1, float v2, float v3) {
+                finish();
+            }
+        });
+
 
     }
 }

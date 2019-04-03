@@ -10,6 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.doubanmovie.C;
@@ -51,6 +54,8 @@ public class MovieFragment extends Fragment {
     private int mLayoutType;
     private RecyclerView mRecyclerView;
     private SmartRefreshLayout mSmartRefreshLayout;
+    private Spinner mSpinner;
+    private String mCity = "北京";
 
     private static final String TYPE = "type";
 
@@ -94,8 +99,36 @@ public class MovieFragment extends Fragment {
         mRecyclerView.setAdapter(mMovieAdapter);
 
         setRecylcerviewListener();
+        refreshCity();
 
         return view;
+    }
+
+
+    private void refreshCity() {
+
+        mSpinner = ((MainActivity) getActivity()).getSpinner();
+
+        String[] city = getResources().getStringArray(R.array.city);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, city);//创建Arrayadapter适配器
+
+        mSpinner.setAdapter(adapter);
+
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mCity = mSpinner.getItemAtPosition(position).toString();
+                //Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+                setSmartRefreshLayout();
+                mSmartRefreshLayout.autoRefresh();
+            }
+
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void loadNew() {
@@ -111,7 +144,7 @@ public class MovieFragment extends Fragment {
     private void loadPage(final int page) {
         Map<String, String> map = new HashMap<>();
         map.put("apikey", "0b2bdeda43b5688921839c8ecb20399b");
-        map.put("city", "北京");
+        map.put("city", mCity);
         map.put("start", String.valueOf(page * PAGE_COUNT));
 
         //每次渲染的item数据
