@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by zhoujunyu on 2019/3/19.
  */
-public class movie {
+public class Movie {
 
     /**
      * count : 100

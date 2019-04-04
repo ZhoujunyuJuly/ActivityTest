@@ -19,8 +19,8 @@ import android.widget.Toast;
 import com.example.doubanmovie.C;
 import com.example.doubanmovie.R;
 import com.example.doubanmovie.detail.DetailActivity;
+import com.example.doubanmovie.model.Movie;
 import com.example.doubanmovie.model.SubjectsBean;
-import com.example.doubanmovie.model.movie;
 import com.example.doubanmovie.net.OkHttpManager;
 import com.example.doubanmovie.preview.WatchIMGActivity;
 import com.google.gson.Gson;
@@ -48,7 +48,7 @@ public class MovieFragment extends Fragment {
     private static int PAGE_COUNT = 20;
 
     private MovieAdapter mMovieAdapter;
-    private movie mMovie;
+    private Movie mMovie;
 
     private List<SubjectsBean> mSubjectsList = new ArrayList<>();
 
@@ -68,11 +68,8 @@ public class MovieFragment extends Fragment {
     }
 
     //工厂设计模式
-    public static MovieFragment mainFragment(int layoutType){
+    public static MovieFragment mainFragment(){
         MovieFragment fragment = new MovieFragment();
-        Bundle args = new Bundle();
-        args.putInt(TYPE,layoutType);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -141,7 +138,7 @@ public class MovieFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mCity = mSpinner.getItemAtPosition(position).toString();
-                //Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), mCity, Toast.LENGTH_SHORT).show();
                 setSmartRefreshLayout();
                 mSmartRefreshLayout.autoRefresh();
             }
@@ -186,7 +183,7 @@ public class MovieFragment extends Fragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String json = response.body().string();
-                mMovie = new Gson().fromJson(json, movie.class);
+                mMovie = new Gson().fromJson(json, Movie.class);
 
                 //判断界面item数大于总item数时，无新数据；扔回主线程
                 if (mMovie.getTotal() < PAGE  * PAGE_COUNT) {

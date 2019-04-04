@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.example.doubanmovie.R;
 
+import org.w3c.dom.Text;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -31,6 +33,14 @@ public class TextFragment extends Fragment {
     public TextFragment() {
         // Required empty public constructor
     }
+
+
+
+    public static TextFragment textFragment(){
+        TextFragment fragment = new TextFragment();
+        return fragment;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -12,19 +12,15 @@ import android.view.ViewGroup;
  */
 public class MainPagerAdapter extends FragmentPagerAdapter {
 
-    private final int PAGE_COUNT = 2;
-    private MovieFragment movieFragment = null;
-    private TextFragment textFragment = null;
+    private static String[] info = {"正在热映","即将上映"};
 
     public MainPagerAdapter(FragmentManager fm) {
         super(fm);
-        movieFragment = new MovieFragment();
-        textFragment = new TextFragment();
     }
 
     @Override
     public int getCount() {
-        return PAGE_COUNT;
+        return info.length;
     }
 
 
@@ -42,22 +38,17 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int i) {
-        Fragment fragment = null;
-        switch (i){
-            case 0:
-                fragment = movieFragment;
-                break;
-            case 1:
-                fragment = textFragment;
-                break;
+        if( i == 1){
+            return TextFragment.textFragment();
         }
-        return fragment;
+        else {
+            return MovieFragment.mainFragment();
+        }
     }
 
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        String[] info = {"第一页","第二页"};
         return info[position];
 
     }

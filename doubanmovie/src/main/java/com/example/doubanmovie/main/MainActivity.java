@@ -15,10 +15,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.example.doubanmovie.R;
-import com.example.doubanmovie.model.movie;
+import com.example.doubanmovie.model.Movie;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,ViewPager.OnPageChangeListener,TransData {
@@ -30,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String DOUBAN_URL_FORMAL = "";
     private RecyclerView mRecyclerview;
     private MovieAdapter mMovieAdapter;
-    private movie mMovie;
+    private Movie mMovie;
     private ImageView mTopCover;
     private ProgressBar mBeginProgressbar;
     private SmartRefreshLayout mSmartRefreshLayout;
