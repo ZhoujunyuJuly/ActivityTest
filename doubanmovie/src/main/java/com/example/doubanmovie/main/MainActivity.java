@@ -1,8 +1,6 @@
 package com.example.doubanmovie.main;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
@@ -20,10 +18,10 @@ import com.example.doubanmovie.R;
 import com.example.doubanmovie.model.Movie;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,ViewPager.OnPageChangeListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
     public static final String DOUBAN_URL = "https://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=北京&start=0&count=100&client=somemessage&udid=dddddddddddddddddddddd";
     public static final String DOUBAN_URL_TEST = "https://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=北京&start=9&count=100&client=somemessage&udid=dddddddddddddddddddddd";
-   // TextView mTextPage1;
+    // TextView mTextPage1;
     //TextView mTextPage2;
     private int PAGE = 0;
     private String DOUBAN_URL_FORMAL = "";
@@ -34,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ProgressBar mBeginProgressbar;
     private SmartRefreshLayout mSmartRefreshLayout;
     private MovieFragment fg_moive;
-    private TextFragment fg_text ;
+    private TextFragment fg_text;
     private FragmentManager mFragmentManager;
     private RelativeLayout mRelativeLayout;
 
@@ -50,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_main);
-        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,R.layout.spinner);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.spinner);
 
 
         findViews();
@@ -61,13 +59,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public Spinner getSpinner(){
+    public Spinner getSpinner() {
         mspinner = findViewById(R.id.spinner_city);
         return mspinner;
     }
 
 
-      //加载固定广告栏；为了从item中拿已经解析完的数据，线程等待3秒，并在两个fragment之间传递电影封面url数据
+    //加载固定广告栏；为了从item中拿已经解析完的数据，线程等待3秒，并在两个fragment之间传递电影封面url数据
 //    private void loadBanner(){
 //        //延迟3秒，直到json解析完数据
 //        Handler handler = new Handler();
@@ -93,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //    }
 
 
-      //第二个fragment从activity中拿图片地址的构造函数
+    //第二个fragment从activity中拿图片地址的构造函数
 //    public String[] getmBannerImgURL(){
 //        return mBannerImgURL;
 //        //String[] imgURL = {"https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2551352209.jpg","0"};
@@ -101,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //    }
 
 
-      //第二个fragment从activity中拿电影名称的构造函数
+    //第二个fragment从activity中拿电影名称的构造函数
 //    public String[] getmMovieName(){
 //        return mMovieName;
 //    }
@@ -126,16 +124,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
-
-
     public void onClick(View v) {
 
         //注释掉部分为只通过fragment传递点击事件，两个fragment切换，不使用viewpager
 //        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 //        hideAllFragment(fragmentTransaction);
 
-       // switch (v.getId()) {
+        // switch (v.getId()) {
         //    case R.id.tv_onepage:
 //                if (fg_moive == null) {
 //                    fg_moive = MovieFragment.mainFragment(R.layout.fg_movie_one);
@@ -143,20 +138,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                } else {
 //                    fragmentTransaction.show(fg_moive);
 //
-                mViewPager.setCurrentItem(0);
+        mViewPager.setCurrentItem(0);
 
-           //     break;
-           // case R.id.tv_twopage:
+        //     break;
+        // case R.id.tv_twopage:
 //                if (fg_text == null) {
 //                    fg_text = new TextFragment();
 //                    fragmentTransaction.add(R.id.vpager, fg_text);
 //                } else {
 //                    fragmentTransaction.show(fg_text);
 //                }
-                mViewPager.setCurrentItem(1);
+        mViewPager.setCurrentItem(1);
 
-             //   break;
-       // }
+        //   break;
+        // }
 //        fragmentTransaction.commit();
     }
 

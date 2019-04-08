@@ -4,7 +4,6 @@ import android.os.Handler;
 import android.os.Looper;
 
 import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.Callback;
@@ -43,7 +42,7 @@ public class OkHttpManager {
      *
      * @param url
      * @param callback 请求回调
-     * @param params  所需的额外参数，公共参数里面自动添加
+     * @param params   所需的额外参数，公共参数里面自动添加
      */
     public void get(String url, Map<String, String> params, final Callback callback) {
 
@@ -58,9 +57,9 @@ public class OkHttpManager {
      *
      * @param url
      * @param callback 请求回调
-     * @param params 所需的额外参数，公共参数里面自动添加
+     * @param params   所需的额外参数，公共参数里面自动添加
      */
-    public void post(String url,  Map<String, String> params, final Callback callback) {
+    public void post(String url, Map<String, String> params, final Callback callback) {
         Request request = buildPostRequest(url, params);
         deliveryResult(callback, request);
     }
@@ -68,12 +67,12 @@ public class OkHttpManager {
     /**
      * 构造get请求的参数,将参数拼接起来
      *
-     * @param url 请求路径
+     * @param url    请求路径
      * @param params 签名的参数，所有参数按key进行生序排列
      */
-    protected String buildGetUrl(String url,Map<String, String> params) {
+    protected String buildGetUrl(String url, Map<String, String> params) {
 
-        if(params == null || params.isEmpty()){
+        if (params == null || params.isEmpty()) {
             return url;
         }
         StringBuilder sb = new StringBuilder();
@@ -100,6 +99,6 @@ public class OkHttpManager {
     }
 
     private void deliveryResult(Callback callback, final Request request) {
-       mOkHttpClient.newCall(request).enqueue(callback);
+        mOkHttpClient.newCall(request).enqueue(callback);
     }
 }

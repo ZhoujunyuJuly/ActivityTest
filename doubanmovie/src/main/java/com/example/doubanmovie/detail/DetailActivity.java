@@ -37,9 +37,9 @@ public class DetailActivity extends AppCompatActivity {
     private Detail mData;
     private List<Integer> typeList = new ArrayList<>();
 
-    public static void start( Context context, String movieId) {
-        Intent intent = new Intent(context,DetailActivity.class);
-        intent.putExtra(MOVIEID_KEY,movieId);
+    public static void start(Context context, String movieId) {
+        Intent intent = new Intent(context, DetailActivity.class);
+        intent.putExtra(MOVIEID_KEY, movieId);
         context.startActivity(intent);
     }
 

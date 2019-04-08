@@ -1,7 +1,5 @@
 package com.example.doubanmovie.main;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.doubanmovie.R;
-
-import org.w3c.dom.Text;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,8 +31,7 @@ public class TextFragment extends Fragment {
     }
 
 
-
-    public static TextFragment textFragment(){
+    public static TextFragment textFragment() {
         TextFragment fragment = new TextFragment();
         return fragment;
     }
@@ -47,7 +42,7 @@ public class TextFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View view = inflater.inflate(R.layout.fg_movie_two,container,false);
+        View view = inflater.inflate(R.layout.fg_movie_two, container, false);
         TextView textView = view.findViewById(R.id.pagetwo);
         textView.setText("你点到第二页了！");
         return view;

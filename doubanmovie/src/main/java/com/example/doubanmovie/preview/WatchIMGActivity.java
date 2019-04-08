@@ -4,10 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.view.Window;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.doubanmovie.R;
@@ -17,9 +14,9 @@ public class WatchIMGActivity extends Activity {
     public static final String IMGID_KEY = "IMG_URL";
 
 
-    public static void start(Context context,String IMGID){
-        Intent intent = new Intent(context,WatchIMGActivity.class);
-        intent.putExtra(IMGID_KEY,IMGID);
+    public static void start(Context context, String IMGID) {
+        Intent intent = new Intent(context, WatchIMGActivity.class);
+        intent.putExtra(IMGID_KEY, IMGID);
         context.startActivity(intent);
     }
 

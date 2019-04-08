@@ -16,11 +16,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.daimajia.slider.library.Animations.DescriptionAnimation;
-import com.daimajia.slider.library.Indicators.PagerIndicator;
-import com.daimajia.slider.library.SliderLayout;
-import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.example.doubanmovie.C;
 import com.example.doubanmovie.R;
 import com.example.doubanmovie.detail.DetailActivity;
@@ -52,24 +47,21 @@ import okhttp3.Response;
  */
 public class MovieFragment extends Fragment {
 
+    private static final String TYPE = "type";
     private static int PAGE = 0;
     private static int PAGE_COUNT = 20;
-    private int ADtimes = 1;
-
+    private static int FIRST_AD_TIMES = 1;
     //原有适配器
     //private MovieAdapter mMovieAdapter;
     private BaseMovieAdapter mBaseMovieAdapter;
     private Movie mMovie;
-
     private List<SubjectsBean> mSubjectsList = new ArrayList<>();
-
     // private int mLayoutType;
     private RecyclerView mRecyclerView;
     private SmartRefreshLayout mSmartRefreshLayout;
     private Spinner mSpinner;
     private String mCity = "北京";
-
-    private static final String TYPE = "type";
+    private Banner mBanner;
 
     //fragment之间传数接口
     //public TransData mTransData;
@@ -116,14 +108,38 @@ public class MovieFragment extends Fragment {
         //使用原有适配器，只有item数据，无头部和尾部
         //mMovieAdapter = new MovieAdapter(mSubjectsList, getActivity());
 
+
         //使用带头部的适配器
         mBaseMovieAdapter = new BaseMovieAdapter(R.layout.item_movie, mSubjectsList, getActivity());
         mRecyclerView.setAdapter(mBaseMovieAdapter);
+
+        //加载适配器头部
+        loadHeadView();
 
         setRecylcerviewListener();
         refreshCity();
 
         return view;
+    }
+
+    private void loadHeadView() {
+
+        View viewBanner = getLayoutInflater().inflate(R.layout.ad_banner, null);
+        mBanner = viewBanner.findViewById(R.id.banner);
+        //设置banner样式
+        mBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE);
+        //设置图片加载器
+        mBanner.setImageLoader(new BannerImageLoader());
+        //设置banner动画效果
+        mBanner.setBannerAnimation(Transformer.Stack);
+        //设置自动轮播，默认为true
+        mBanner.isAutoPlay(true);
+        //设置轮播时间
+        mBanner.setDelayTime(2000);
+        //设置指示器位置（当banner模式中有指示器时）
+        mBanner.setIndicatorGravity(BannerConfig.CENTER);
+
+        mBaseMovieAdapter.addHeaderView(viewBanner);
     }
 
 
@@ -249,9 +265,9 @@ public class MovieFragment extends Fragment {
                             //mBaseMovieAdapter.addHeaderView(LinearLayout.inflate(getActivity(),R.layout.ad_banner,null));
 
                             //loadBanner_slide();
-                            if( ADtimes == 1) {
+                            if (FIRST_AD_TIMES == 1) {
                                 loadBanner_youth();
-                                ADtimes =0;
+                                FIRST_AD_TIMES = 0;
                             }
                             finishRefresh();
                         }
@@ -262,7 +278,7 @@ public class MovieFragment extends Fragment {
         });
     }
 
-//使用slider + indicator库
+    //使用slider + indicator库
     private void loadBanner_slide() {
 //        View view = getLayoutInflater().inflate(R.layout.ad_banner, null);
 //        SliderLayout mSliderLayout;
@@ -302,43 +318,29 @@ public class MovieFragment extends Fragment {
 
     }
 
-//使用banner_youth库
-    private void loadBanner_youth(){
+    //使用banner_youth库
+    private void loadBanner_youth() {
 
         //数据集合
         List<String> imgURL = new ArrayList<>();
-        List<String> movieName= new ArrayList<>();
+        List<String> movieName = new ArrayList<>();
 
-        for (int i = 0; i < 5; i++) {
-            imgURL.add(mSubjectsList.get(i).getImages().getMedium());
-            movieName.add(mSubjectsList.get(i).getTitle());
+        if (!mSubjectsList.isEmpty()) {
+            for (SubjectsBean bean : mSubjectsList) {
+                if (imgURL.size() <= 5) {
+                    imgURL.add(bean.getImages().getMedium());
+                    movieName.add(bean.getTitle());
+                }
+            }
         }
 
-        //载入视图
-        View view = getLayoutInflater().inflate(R.layout.ad_banner,null);
-        Banner banner = view.findViewById(R.id.banner);
 
-        //设置banner样式
-        banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE);
-        //设置图片加载器
-        banner.setImageLoader(new BannerImageLoader());
         //设置图片集合
-        banner.setImages(imgURL);
-        //设置banner动画效果
-        banner.setBannerAnimation(Transformer.FlipHorizontal);
+        mBanner.setImages(imgURL);
         //设置标题集合（当banner样式有显示title时）
-        banner.setBannerTitles(movieName);
-        //设置自动轮播，默认为true
-        banner.isAutoPlay(true);
-        //设置轮播时间
-        banner.setDelayTime(1500);
-        //设置指示器位置（当banner模式中有指示器时）
-        banner.setIndicatorGravity(BannerConfig.CENTER);
+        mBanner.setBannerTitles(movieName);
         //banner设置方法全部调用完毕时最后调用
-        banner.start();
-
-        mBaseMovieAdapter.addHeaderView(view);
-
+        mBanner.start();
     }
 
     private void finishRefresh() {

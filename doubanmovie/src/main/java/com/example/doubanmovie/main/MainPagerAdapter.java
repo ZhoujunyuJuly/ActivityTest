@@ -12,7 +12,7 @@ import android.view.ViewGroup;
  */
 public class MainPagerAdapter extends FragmentPagerAdapter {
 
-    private static String[] info = {"正在热映","即将上映"};
+    private static String[] info = {"正在热映", "即将上映"};
 
     public MainPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -38,10 +38,9 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int i) {
-        if( i == 1){
+        if (i == 1) {
             return TextFragment.textFragment();
-        }
-        else {
+        } else {
             return MovieFragment.mainFragment();
         }
     }

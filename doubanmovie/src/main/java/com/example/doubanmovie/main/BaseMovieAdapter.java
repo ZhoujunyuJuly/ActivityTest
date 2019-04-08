@@ -16,11 +16,11 @@ import java.util.List;
 /**
  * Created by zhoujunyu on 2019/4/8.
  */
-public class BaseMovieAdapter extends BaseQuickAdapter<SubjectsBean,BaseViewHolder> {
+public class BaseMovieAdapter extends BaseQuickAdapter<SubjectsBean, BaseViewHolder> {
 
     private Context mContext;
 
-    public BaseMovieAdapter(int layoutResId, @Nullable List<SubjectsBean> data,Context context) {
+    public BaseMovieAdapter(int layoutResId, @Nullable List<SubjectsBean> data, Context context) {
         super(layoutResId, data);
         mContext = context;
     }
@@ -41,7 +41,7 @@ public class BaseMovieAdapter extends BaseQuickAdapter<SubjectsBean,BaseViewHold
             }
             casts += item.getCasts().get(a).getName();
         }
-        helper.setText(R.id.cast_name,casts);
+        helper.setText(R.id.cast_name, casts);
 
         //导演
         String directors = "";
@@ -51,7 +51,7 @@ public class BaseMovieAdapter extends BaseQuickAdapter<SubjectsBean,BaseViewHold
             }
             directors += item.getDirectors().get(a).getName();
         }
-        helper.setText(R.id.tv_director_name,directors);
+        helper.setText(R.id.tv_director_name, directors);
 
 
         //电影封面
@@ -59,18 +59,17 @@ public class BaseMovieAdapter extends BaseQuickAdapter<SubjectsBean,BaseViewHold
                 .load(item.getImages().getSmall())
                 .centerCrop()
                 .placeholder(R.mipmap.ic_launcher)
-                .into((ImageView)helper.getView(R.id.iv_movie));
+                .into((ImageView) helper.getView(R.id.iv_movie));
 
 
         //电影名、评分、观影人数、评分星星
-          helper.setText(R.id.tv_title,item.getTitle())
-                .setText(R.id.tv_average,String.valueOf(item.getRating().getAverage()))
-                .setText(R.id.tv_collect_count,count)
-                .setRating(R.id.iv_star,item.getRating().getAverage().floatValue()/2)
+        helper.setText(R.id.tv_title, item.getTitle())
+                .setText(R.id.tv_average, String.valueOf(item.getRating().getAverage()))
+                .setText(R.id.tv_collect_count, count)
+                .setRating(R.id.iv_star, item.getRating().getAverage().floatValue() / 2)
                 .addOnClickListener(R.id.iv_movie);
 
     }
-
 
 
 }

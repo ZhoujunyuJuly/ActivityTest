@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.example.doubanmovie.R;
-import com.example.doubanmovie.detail.ItemViewHolder;
 import com.example.doubanmovie.model.DetailMode.Detail;
 
 /**
