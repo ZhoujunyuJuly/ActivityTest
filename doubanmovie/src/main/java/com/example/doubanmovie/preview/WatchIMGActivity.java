@@ -32,7 +32,7 @@ public class WatchIMGActivity extends Activity {
         mImg = findViewById(R.id.iv_largeImg);
 
         Intent intent = getIntent();
-        String IMG_URL = intent.getStringExtra("IMG_URL");
+        String IMG_URL = intent.getStringExtra(IMGID_KEY);
 
 
         Glide.with(this)

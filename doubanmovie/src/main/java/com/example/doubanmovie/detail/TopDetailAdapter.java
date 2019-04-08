@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.example.doubanmovie.R;
+import com.example.doubanmovie.VideoActivity;
 import com.example.doubanmovie.model.DetailMode.Detail;
 import com.example.doubanmovie.preview.WatchIMGActivity;
 
@@ -154,6 +155,16 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 .centerCrop()
                 .placeholder(R.mipmap.ic_launcher)
                 .into(holder.mPic);
+
+
+        holder.mPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if( mListData.getTrailer_urls() != null && !mListData.getTrailer_urls().isEmpty() )
+                VideoActivity.start(mContext,mListData.getTrailer_urls().get(1));
+            }
+        });
+
     }
 
     public void setCommentsViewHolder(RecyclerViewHolder holder) {

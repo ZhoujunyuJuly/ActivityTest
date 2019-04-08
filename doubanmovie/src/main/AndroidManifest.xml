@@ -29,10 +29,8 @@
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
             android:name=".preview.WatchIMGActivity"
-            android:theme="@style/translucent">
-
-
-        </activity>
+            android:theme="@style/translucent"></activity>
+        <activity android:name=".VideoActivity"></activity>
     </application>
 
 </manifest>
