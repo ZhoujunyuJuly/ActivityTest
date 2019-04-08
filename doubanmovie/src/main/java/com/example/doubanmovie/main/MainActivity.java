@@ -20,7 +20,7 @@ import com.example.doubanmovie.R;
 import com.example.doubanmovie.model.Movie;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,ViewPager.OnPageChangeListener,TransData {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,ViewPager.OnPageChangeListener {
     public static final String DOUBAN_URL = "https://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=北京&start=0&count=100&client=somemessage&udid=dddddddddddddddddddddd";
     public static final String DOUBAN_URL_TEST = "https://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=北京&start=9&count=100&client=somemessage&udid=dddddddddddddddddddddd";
    // TextView mTextPage1;
@@ -56,7 +56,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViews();
         //mTextPage1.performClick();
 
-         loadBanner();
+        //加载广告栏
+        //loadBanner();
 
     }
 
@@ -65,52 +66,62 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return mspinner;
     }
 
-    private void loadBanner(){
-        //延迟3秒，直到json解析完数据
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
 
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                Fragment fragment = new BannerFragment();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.add(R.id.ad_layout,fragment).commit();
-            }
-        }, 5000);//3秒后执行Runnable中的run方法
+      //加载固定广告栏；为了从item中拿已经解析完的数据，线程等待3秒，并在两个fragment之间传递电影封面url数据
+//    private void loadBanner(){
+//        //延迟3秒，直到json解析完数据
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                FragmentManager fragmentManager = getSupportFragmentManager();
+//                Fragment fragment = new BannerFragment();
+//                FragmentTransaction transaction = fragmentManager.beginTransaction();
+//                transaction.add(R.id.ad_layout,fragment).commit();
+//            }
+//        }, 5000);//3秒后执行Runnable中的run方法
+//
+//    }
 
-    }
 
-    @Override
-    public void moviefgToBannerfg(String[] imgURL,String[] movieName) {
-        this.mBannerImgURL = imgURL;
-        this.mMovieName = movieName;
-    }
+    //传递数据的接口方法实现
+//    @Override
+//    public void moviefgToBannerfg(String[] imgURL,String[] movieName) {
+//        this.mBannerImgURL = imgURL;
+//        this.mMovieName = movieName;
+//    }
 
-    public String[] getmBannerImgURL(){
-        return mBannerImgURL;
-        //String[] imgURL = {"https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2551352209.jpg","0"};
-        //return imgURL;
-    }
 
-    public String[] getmMovieName(){
-        return mMovieName;
-    }
+      //第二个fragment从activity中拿图片地址的构造函数
+//    public String[] getmBannerImgURL(){
+//        return mBannerImgURL;
+//        //String[] imgURL = {"https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2551352209.jpg","0"};
+//        //return imgURL;
+//    }
+
+
+      //第二个fragment从activity中拿电影名称的构造函数
+//    public String[] getmMovieName(){
+//        return mMovieName;
+//    }
 
 
     private void findViews() {
         mFragmentPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
-
-//        mTextPage1 = findViewById(R.id.tv_onepage);
-      //  mTextPage2 = findViewById(R.id.tv_twopage);
 
         mViewPager = findViewById(R.id.vpager);
         mViewPager.setAdapter(mFragmentPagerAdapter);
         mViewPager.setCurrentItem(0);
         mViewPager.addOnPageChangeListener(MainActivity.this);
 
+
+        //不使用viewpager，只用fragment传递点击事件
+//        mTextPage1 = findViewById(R.id.tv_onepage);
+//        mTextPage2 = findViewById(R.id.tv_twopage);
+//
 //        mTextPage1.setOnClickListener(this);
-       // mTextPage2.setOnClickListener(this);
+//        mTextPage2.setOnClickListener(this);
 
     }
 
@@ -119,6 +130,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void onClick(View v) {
+
+        //注释掉部分为只通过fragment传递点击事件，两个fragment切换，不使用viewpager
 //        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 //        hideAllFragment(fragmentTransaction);
 
@@ -131,7 +144,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    fragmentTransaction.show(fg_moive);
 //
                 mViewPager.setCurrentItem(0);
-                //loadBanner();
 
            //     break;
            // case R.id.tv_twopage:
