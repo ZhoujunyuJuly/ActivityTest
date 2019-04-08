@@ -54,6 +54,7 @@ public class MovieFragment extends Fragment {
 
     private static int PAGE = 0;
     private static int PAGE_COUNT = 20;
+    private int ADtimes = 1;
 
     //原有适配器
     //private MovieAdapter mMovieAdapter;
@@ -118,7 +119,6 @@ public class MovieFragment extends Fragment {
         //使用带头部的适配器
         mBaseMovieAdapter = new BaseMovieAdapter(R.layout.item_movie, mSubjectsList, getActivity());
         mRecyclerView.setAdapter(mBaseMovieAdapter);
-
 
         setRecylcerviewListener();
         refreshCity();
@@ -249,7 +249,10 @@ public class MovieFragment extends Fragment {
                             //mBaseMovieAdapter.addHeaderView(LinearLayout.inflate(getActivity(),R.layout.ad_banner,null));
 
                             //loadBanner_slide();
-                            loadBanner_youth();
+                            if( ADtimes == 1) {
+                                loadBanner_youth();
+                                ADtimes =0;
+                            }
                             finishRefresh();
                         }
                     });
@@ -322,7 +325,7 @@ public class MovieFragment extends Fragment {
         //设置图片集合
         banner.setImages(imgURL);
         //设置banner动画效果
-        banner.setBannerAnimation(Transformer.DepthPage);
+        banner.setBannerAnimation(Transformer.FlipHorizontal);
         //设置标题集合（当banner样式有显示title时）
         banner.setBannerTitles(movieName);
         //设置自动轮播，默认为true
