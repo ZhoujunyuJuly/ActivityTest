@@ -1,7 +1,7 @@
 package com.example.wbdemo;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView mResponse;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void initView(){
+    private void initView() {
         webview_btn = findViewById(R.id.button_webview);
         html_btn = findViewById(R.id.button_html);
         mResponse = findViewById(R.id.response);
@@ -89,10 +88,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private Map getKey(String key, String redirect_url){
-        Map<String,String> map = new HashMap<>();
-        map.put("client_id",key);
-        map.put("redirect_uri",redirect_url);
+    private Map getKey(String key, String redirect_url) {
+        Map<String, String> map = new HashMap<>();
+        map.put("client_id", key);
+        map.put("redirect_uri", redirect_url);
 
         return map;
     }
