@@ -25,7 +25,7 @@ public class OkHttpManager {
 
     private OkHttpManager() {
         mOkHttpClient = new OkHttpClient();
-        mDelivery = new Handler(Looper.getMainLooper());
+        mDelivery = new Handler(Looper.getMainLooper());//放到主线程/UI线程处理
     }
 
     public static OkHttpManager getInstance() {
@@ -79,7 +79,7 @@ public class OkHttpManager {
         sb.append(url).append("?");
 
         for (Map.Entry<String, String> item : params.entrySet()) {
-            sb.append(item.getKey()).append("=").append(URLEncoder.encode(item.getValue())).append("&");
+            sb.append(item.getKey()).append("=").append(URLEncoder.encode(item.getValue())).append("&");//解码
         }
 
         return sb.toString();

@@ -161,7 +161,7 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             @Override
             public void onClick(View v) {
                 if( mListData.getTrailer_urls() != null && !mListData.getTrailer_urls().isEmpty() )
-                VideoActivity.start(mContext,mListData.getTrailer_urls().get(1));
+                VideoActivity.start(mContext,mListData.getTrailer_urls().get(0));
             }
         });
 
