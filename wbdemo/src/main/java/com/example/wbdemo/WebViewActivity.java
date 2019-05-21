@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
@@ -41,8 +42,8 @@ public class WebViewActivity extends AppCompatActivity {
     private String AUTH_URL;
 
     private WebView mWebView;
-    private TextView mTvJson;
     private Token mToken;
+    private String mToken_content;
 
 
     public static void start(Context context, String authUrl) {
@@ -56,18 +57,17 @@ public class WebViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
 
-        getURL();
+        //getURL();
         initView();
     }
 
 
     private void getURL() {
-        Intent intent = getIntent();
-        AUTH_URL = intent.getStringExtra(TAG_URL);
+        //Intent intent = getIntent();
+        //AUTH_URL = intent.getStringExtra(TAG_URL);
     }
 
     private void initView() {
-        mTvJson = findViewById(R.id.tv_json);
         mWebView = findViewById(R.id.webview);
         mWebView.getSettings().setJavaScriptEnabled(true);
 
@@ -76,6 +76,7 @@ public class WebViewActivity extends AppCompatActivity {
 //        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
 
         parseJson();
+        mWebView.addJavascriptInterface(new InJavaScriptLocalObj(),"local_obj");
         mWebView.loadUrl(API_URL);
     }
 
@@ -88,40 +89,67 @@ public class WebViewActivity extends AppCompatActivity {
                 CODE = url.substring(url.indexOf("code=") + 5);//获取code
                 Log.d("zjy", "跳转网址为:  " + HEADER_ACCESS + getPost());
                 view.postUrl(HEADER_ACCESS, getPost().getBytes());
-                //LaunchActivity.start(WebViewActivity.this,CODE);
 
-                OkHttpManager.getInstance().post(HEADER_ACCESS, getMap(), new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getApplicationContext(), "访问失败", Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        final String json = response.body().toString();
-                        mToken = new Gson().fromJson(json, Token.class);
-
-                        saveToken();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mTvJson.setText(json);
-                                Toast.makeText(getApplicationContext(), "成功", Toast.LENGTH_LONG).show();
-
-                            }
-                        });
-                    }
-                });
+                //使用OKHTTP获取json
+//                OkHttpManager.getInstance().post(HEADER_ACCESS, getMap(), new Callback() {
+//                    @Override
+//                    public void onFailure(Call call, IOException e) {
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                Toast.makeText(getApplicationContext(), "访问失败", Toast.LENGTH_LONG).show();
+//                            }
+//                        });
+//                    }
+//
+//                    @Override
+//                    public void onResponse(Call call, Response response) throws IOException {
+//                        final String json = response.body().toString();
+//
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                mToken = new Gson().fromJson(json, Token.class);
+//                                //saveToken();
+//                                mTvJson.setText(json);
+//                                Toast.makeText(getApplicationContext(), "成功", Toast.LENGTH_LONG).show();
+//                            }
+//                        });
+//                    }
+//                });
 
                 return true;
             }
+
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                view.loadUrl("javascript:window.local_obj.showSource('<head>'+"
+                        + "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
+            }
         });
+
+
     }
+
+    //提取TOKEN
+    final class InJavaScriptLocalObj {
+        @JavascriptInterface
+        public void showSource(String html) {
+            Log.d("zjy", "html is " + html);
+            if(html !=null && html.contains("{\"access_token\"")) {
+                String json = html.substring(html.indexOf("{\"access_token\""), html.indexOf("</pre>"));
+                mToken = new Gson().fromJson(json,Token.class);
+                mToken_content = mToken.getAccess_token();
+                Log.d("zjy", "json is " + mToken_content);
+            }
+
+        }
+    }
+
+
+
 
 
     private void saveToken() {
