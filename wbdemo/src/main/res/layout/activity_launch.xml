@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LaunchActivity">
+    tools:context=".LaunchActivity"
+    android:orientation="vertical"
+    android:background="@color/BgGray">
 
-    <TextView
-        android:id="@+id/tv_json_lanuch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        android:layout_centerHorizontal="true"
-        android:text="回到应用界面"
-        />
+    <include layout="@layout/launch_top"/>
 
-</RelativeLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/launch_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </android.support.v4.view.ViewPager>
+
+    <include layout="@layout/launch_bottom"/>
+
+</LinearLayout>

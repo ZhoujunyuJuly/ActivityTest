@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="top_tab">
+        <item>全部</item>
+        <item>原创微博</item>
+        <item>收藏</item>
+        <item>好友圈</item>
+        <item>特别关注</item>
+        <item>我的赞</item>
+    </string-array>
+</resources>
