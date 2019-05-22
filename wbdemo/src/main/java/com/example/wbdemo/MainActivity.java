@@ -22,6 +22,7 @@ import static com.example.wbdemo.Object.URLInfo.API_URL;
 import static com.example.wbdemo.Object.URLInfo.CLIENT_ID;
 import static com.example.wbdemo.Object.URLInfo.REDIRECT_URL;
 import static com.example.wbdemo.Object.URLInfo.REQUEST_URL;
+import static com.example.wbdemo.Object.URLInfo.TOKEN;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.button_webview:
                 WebViewActivity.start(MainActivity.this, API_URL);
+                //LaunchActivity.start(this,TOKEN);
                 break;
 
         }

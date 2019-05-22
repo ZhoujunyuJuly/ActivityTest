@@ -51,4 +51,9 @@ public class OkHttpManager {
         return request;
     }
 
+    public void get(String url,Callback callback){
+        Request request = new Request.Builder().url(url).build();
+        mOkHttpClient.newCall(request).enqueue(callback);
+    }
+
 }

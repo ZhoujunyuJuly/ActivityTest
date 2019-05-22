@@ -5,25 +5,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.wbdemo.Object.Token;
-import com.example.wbdemo.net.OkHttpManager;
 import com.google.gson.Gson;
 
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 import static com.example.wbdemo.Object.URLInfo.API_URL;
 import static com.example.wbdemo.Object.URLInfo.CLIENT_ID;
@@ -31,13 +24,10 @@ import static com.example.wbdemo.Object.URLInfo.CLIENT_SECRET;
 import static com.example.wbdemo.Object.URLInfo.GRANT_TYPE;
 import static com.example.wbdemo.Object.URLInfo.HEADER_ACCESS;
 import static com.example.wbdemo.Object.URLInfo.REDIRECT_URL;
+import static com.example.wbdemo.Object.URLInfo.TAG_URL;
 
 public class WebViewActivity extends AppCompatActivity {
 
-
-    public static final String TAG_URL = "authurl";
-    public static final String api_url = "https://api.weibo.com/oauth2/authorize";
-    public static final String postDate = "client_id=621366344&redirect_uri=https://www.baidu.com";
     private String CODE;
     private String AUTH_URL;
 
@@ -48,7 +38,7 @@ public class WebViewActivity extends AppCompatActivity {
 
     public static void start(Context context, String authUrl) {
         Intent intent = new Intent(context, WebViewActivity.class);
-        intent.putExtra(TAG_URL, authUrl);
+        intent.putExtra(TAG_URL, authUrl);//未使用传参
         context.startActivity(intent);
     }
 
@@ -62,24 +52,20 @@ public class WebViewActivity extends AppCompatActivity {
     }
 
 
+    //本activity未使用到传值
     private void getURL() {
-        //Intent intent = getIntent();
-        //AUTH_URL = intent.getStringExtra(TAG_URL);
+        Intent intent = getIntent();
+        AUTH_URL = intent.getStringExtra(TAG_URL);
     }
 
     private void initView() {
         mWebView = findViewById(R.id.webview);
         mWebView.getSettings().setJavaScriptEnabled(true);
 
-        //webview设置清空缓存模式
-//        WebSettings settings = mWebView.getSettings();
-//        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-
         parseJson();
-        mWebView.addJavascriptInterface(new InJavaScriptLocalObj(),"local_obj");
+        mWebView.addJavascriptInterface(new InJavaScriptLocalObj(), "local_obj");
         mWebView.loadUrl(API_URL);
     }
-
 
     private void parseJson() {
         mWebView.setWebViewClient(new WebViewClient() {
@@ -117,41 +103,33 @@ public class WebViewActivity extends AppCompatActivity {
 //                        });
 //                    }
 //                });
-
                 return true;
             }
-
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 view.loadUrl("javascript:window.local_obj.showSource('<head>'+"
                         + "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
+                //线程休息3秒
+//                Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if(!TextUtils.isEmpty(mToken_content)) {
+//                            LaunchActivity.start(WebViewActivity.this, mToken_content);
+//                        }
+//                    }
+//                }, 5000);//3秒后执行Runnable中的run方法
+
+                if (!TextUtils.isEmpty(mToken_content)) {
+                    LaunchActivity.start(WebViewActivity.this, mToken_content);
+                }
             }
         });
-
-
     }
 
-    //提取TOKEN
-    final class InJavaScriptLocalObj {
-        @JavascriptInterface
-        public void showSource(String html) {
-            Log.d("zjy", "html is " + html);
-            if(html !=null && html.contains("{\"access_token\"")) {
-                String json = html.substring(html.indexOf("{\"access_token\""), html.indexOf("</pre>"));
-                mToken = new Gson().fromJson(json,Token.class);
-                mToken_content = mToken.getAccess_token();
-                Log.d("zjy", "json is " + mToken_content);
-            }
-
-        }
-    }
-
-
-
-
-
+    //保存token
     private void saveToken() {
         SharedPreferences.Editor editor = getSharedPreferences("access_token", MODE_PRIVATE).edit();
         editor.putString("access_token", mToken.getAccess_token());
@@ -163,6 +141,7 @@ public class WebViewActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    //使用code请求token的post信息
     private String getPost() {
         String post = MapToString(getMap());
         return post;
@@ -181,13 +160,36 @@ public class WebViewActivity extends AppCompatActivity {
 
     private String MapToString(Map<String, String> map) {
         StringBuilder sb = new StringBuilder();
-
         for (Map.Entry<String, String> item : map.entrySet()) {
             sb.append(item.getKey()).append("=").append(URLEncoder.encode(item.getValue())).append("&");//解码
         }
 
         sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
+    }
+
+    //提取TOKEN，当界面加载完
+    final class InJavaScriptLocalObj {
+        @JavascriptInterface
+        public void showSource(String html) {
+            Log.d("zjy", "html is " + html);
+            if (html != null && html.contains("{\"access_token\"")) {
+                String json = html.substring(html.indexOf("{\"access_token\""), html.indexOf("</pre>"));
+                mToken = new Gson().fromJson(json, Token.class);
+                mToken_content = mToken.getAccess_token();
+
+                if (!TextUtils.isEmpty(mToken_content)) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            LaunchActivity.start(WebViewActivity.this, mToken_content);
+                            Log.d("zjy", "json is " + mToken_content);
+                        }
+                    });
+                }
+            }
+
+        }
     }
 
 }
