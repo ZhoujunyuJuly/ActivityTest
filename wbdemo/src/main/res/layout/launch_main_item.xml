@@ -39,7 +39,7 @@
         android:text="时间"/>
 
     <TextView
-        android:id="@+id/tv_launch_content"
+        android:id="@+id/tv_main_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_main_timeline"
@@ -48,17 +48,17 @@
         android:layout_marginRight="@string/border_padding"
         android:text="weibo内容"/>
 
-    <com.lzy.ninegrid.NineGridView
-        android:id="@+id/nine_grid_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_launch_content"
-        android:layout_marginTop="@string/border_padding"
-        android:layout_marginLeft="@string/border_padding"
-        android:layout_marginRight="@string/border_padding"
-        app:ngv_mode="grid">
+    <!--<com.lzy.ninegrid.NineGridView-->
+        <!--android:id="@+id/nine_grid_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/tv_main_content"-->
+        <!--android:layout_marginTop="@string/border_padding"-->
+        <!--android:layout_marginLeft="@string/border_padding"-->
+        <!--android:layout_marginRight="@string/border_padding"-->
+        <!--app:ngv_mode="grid">-->
 
-    </com.lzy.ninegrid.NineGridView>
+    <!--</com.lzy.ninegrid.NineGridView>-->
 
 
 

@@ -7,33 +7,20 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.wbdemo.FunctionModule.FindFragment;
-import com.example.wbdemo.FunctionModule.InfoFragment;
-import com.example.wbdemo.FunctionModule.MainFragment;
-import com.example.wbdemo.FunctionModule.SettingFragment;
-import com.example.wbdemo.net.OkHttpManager;
+import com.example.wbdemo.FunctionModule.Find.FindFragment;
+import com.example.wbdemo.FunctionModule.Info.InfoFragment;
+import com.example.wbdemo.FunctionModule.Main.MainFragment;
+import com.example.wbdemo.FunctionModule.Setting.SettingFragment;
 
-import org.w3c.dom.Text;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
-
-import static com.example.wbdemo.Object.URLInfo.HOME_TIMELINE_URL;
 import static com.example.wbdemo.Object.URLInfo.TOKEN_TAG;
 
 public class LaunchActivity extends AppCompatActivity implements ViewPager.OnClickListener {
@@ -67,16 +54,16 @@ public class LaunchActivity extends AppCompatActivity implements ViewPager.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-//        setContentView(R.layout.activity_launch);
-//
-//        initView();
-//        initData();
+        setContentView(R.layout.activity_launch);
+
+        initView();
+        initData();
 
 
         //查看api
-        setContentView(R.layout.print_json);
-        mTvPrintJson = findViewById(R.id.tv_print_json);
-        parseJson();
+//        setContentView(R.layout.print_json);
+//        mTvPrintJson = findViewById(R.id.tv_print_json);
+//        parseJson();
 
     }
 
@@ -101,7 +88,7 @@ public class LaunchActivity extends AppCompatActivity implements ViewPager.OnCli
     private void initData(){
         mFragments = new ArrayList<>();
 
-        mFragments.add(new MainFragment());
+        mFragments.add(initMainFragment());
         mFragments.add(new FindFragment());
         mFragments.add(new InfoFragment());
         mFragments.add(new SettingFragment());
@@ -139,6 +126,12 @@ public class LaunchActivity extends AppCompatActivity implements ViewPager.OnCli
         });
 
         mMainTab.performClick();
+    }
+
+
+    private MainFragment initMainFragment(){
+        MainFragment mainFragment = MainFragment.newInstance(getIntent().getStringExtra(TOKEN_TAG));
+        return mainFragment;
     }
 
     @Override
@@ -189,37 +182,4 @@ public class LaunchActivity extends AppCompatActivity implements ViewPager.OnCli
         mSettingTab.setImageResource(R.mipmap.setting);
     }
 
-    private void parseJson(){
-        OkHttpManager.getInstance().get(getURL(), new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(),"error okhttp",Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                final String json = response.body().string();
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(),"success",Toast.LENGTH_LONG).show();
-                        mTvPrintJson.setText(json);
-                        Log.d("zjy", "lanuch json is " + json);
-                    }
-                });
-            }
-        });
-    }
-
-    private String getURL(){
-        mToken = getIntent().getStringExtra(TOKEN_TAG);
-        Log.d("zjy", "getURL: " + HOME_TIMELINE_URL + "?access_token=" + mToken);
-        return HOME_TIMELINE_URL + "?access_token=" + mToken;
-    }
 }

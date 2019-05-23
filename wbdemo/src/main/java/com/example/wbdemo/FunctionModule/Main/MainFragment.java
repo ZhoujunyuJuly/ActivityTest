@@ -1,0 +1,158 @@
+package com.example.wbdemo.FunctionModule.Main;
+
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.wbdemo.Object.Main.HomeTimeLine;
+import com.example.wbdemo.Object.Main.StatusesBean;
+import com.example.wbdemo.R;
+import com.example.wbdemo.net.OkHttpManager;
+import com.google.gson.Gson;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
+import static com.example.wbdemo.Object.URLInfo.HOME_TIMELINE_URL;
+
+
+public class MainFragment extends Fragment {
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String TOKEN = "token";
+
+    // TODO: Rename and change types of parameters
+    private String mToken;
+    private RecyclerView mRecyclerView;
+    private MainAdapter mMainAdapter;
+    private TextView mTest;
+
+    private HomeTimeLine mHomeTimeLine;
+    private List<StatusesBean> mStatusesList = new ArrayList<>();
+
+
+
+    public MainFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment MainFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static MainFragment newInstance(String token) {
+        MainFragment fragment = new MainFragment();
+        Bundle args = new Bundle();
+        args.putString(TOKEN, token);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mToken = getArguments().getString(TOKEN);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_main, container, false);
+
+
+        mTest = view.findViewById(R.id.tv_fg_main_json);
+        parseJson();
+
+
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                initView(view);
+//            }
+//        },5000);
+
+        initView(view);
+        //EventBus.getDefault().register(this);
+        return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        //EventBus.getDefault().unregister(this);
+        super.onDestroyView();
+    }
+
+
+    private void initView(View view){
+        mRecyclerView = view.findViewById(R.id.recyclerview_fg_main);
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mMainAdapter = new MainAdapter(R.layout.launch_main_item,mStatusesList,getActivity());
+        mRecyclerView.setAdapter(mMainAdapter);
+
+    }
+
+    private void parseJson(){
+        OkHttpManager.getInstance().get(getURL(), new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getActivity(), "error okhttp", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String json = response.body().string();
+                mHomeTimeLine = new Gson().fromJson(json,HomeTimeLine.class);
+
+                if( mHomeTimeLine != null && mHomeTimeLine.getStatuses() != null && !mHomeTimeLine.getStatuses().isEmpty()){
+                    mStatusesList.clear();
+                    mStatusesList.addAll(mHomeTimeLine.getStatuses());
+                }
+
+                Log.d("zjy", "json is" + json);
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //mTest.setText(json);
+                        Toast.makeText(getActivity(), "success", Toast.LENGTH_LONG).show();
+                        mMainAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        });
+    }
+
+
+    private String getURL(){
+        return HOME_TIMELINE_URL + "?access_token=" + mToken;
+    }
+
+
+}

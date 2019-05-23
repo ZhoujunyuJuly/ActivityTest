@@ -183,7 +183,6 @@ public class WebViewActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             LaunchActivity.start(WebViewActivity.this, mToken_content);
-                            Log.d("zjy", "json is " + mToken_content);
                         }
                     });
                 }
