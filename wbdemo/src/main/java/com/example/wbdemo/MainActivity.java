@@ -82,8 +82,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.button_webview:
-                //WebViewActivity.start(MainActivity.this, API_URL);
-                LaunchActivity.start(this,"222");
+                //进行授权
+                WebViewActivity.start(MainActivity.this, API_URL);
+
+                //查看布局,直接跳转布局，不传token
+                //LaunchActivity.start(this,"222");
                 break;
 
         }

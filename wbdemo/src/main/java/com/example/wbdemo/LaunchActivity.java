@@ -23,6 +23,8 @@ import com.example.wbdemo.FunctionModule.MainFragment;
 import com.example.wbdemo.FunctionModule.SettingFragment;
 import com.example.wbdemo.net.OkHttpManager;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +56,8 @@ public class LaunchActivity extends AppCompatActivity implements ViewPager.OnCli
     private List<Fragment> mFragments;
     private FragmentPagerAdapter mFragPagerAdapter;
 
+    private TextView mTvPrintJson;
+
     public static void start(Context context,String token) {
         Intent intent = new Intent(context, LaunchActivity.class);
         intent.putExtra(TOKEN_TAG,token);
@@ -63,10 +67,17 @@ public class LaunchActivity extends AppCompatActivity implements ViewPager.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_launch);
+//        setContentView(R.layout.activity_launch);
+//
+//        initView();
+//        initData();
 
-        initView();
-        initData();
+
+        //查看api
+        setContentView(R.layout.print_json);
+        mTvPrintJson = findViewById(R.id.tv_print_json);
+        parseJson();
+
     }
 
     private void initView(){
@@ -108,7 +119,6 @@ public class LaunchActivity extends AppCompatActivity implements ViewPager.OnCli
         };
 
         mViewPager.setAdapter(mFragPagerAdapter);
-        mViewPager.setCurrentItem(0);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -127,6 +137,8 @@ public class LaunchActivity extends AppCompatActivity implements ViewPager.OnCli
 
             }
         });
+
+        mMainTab.performClick();
     }
 
     @Override
@@ -135,15 +147,19 @@ public class LaunchActivity extends AppCompatActivity implements ViewPager.OnCli
 
         switch (v.getId()){
             case R.id.iv_main_tab:
+                mViewPager.setCurrentItem(TAB_MAIN);
                 setTab(TAB_MAIN);
                 break;
             case R.id.iv_find_tab:
+                mViewPager.setCurrentItem(TAB_FIND);
                 setTab(TAB_FIND);
                 break;
             case R.id.iv_info_tab:
+                mViewPager.setCurrentItem(TAB_INFO);
                 setTab(TAB_INFO);
                 break;
             case R.id.iv_setting_tab:
+                mViewPager.setCurrentItem(TAB_SETTING);
                 setTab(TAB_SETTING);
                 break;
         }
@@ -193,6 +209,7 @@ public class LaunchActivity extends AppCompatActivity implements ViewPager.OnCli
                     @Override
                     public void run() {
                         Toast.makeText(getApplicationContext(),"success",Toast.LENGTH_LONG).show();
+                        mTvPrintJson.setText(json);
                         Log.d("zjy", "lanuch json is " + json);
                     }
                 });
