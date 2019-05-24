@@ -1,4 +1,6 @@
-package com.example.wbdemo.Object.Main;
+package com.example.wbdemo.Object.MainFgData;
+
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
@@ -99,12 +101,15 @@ public class StatusesBean {
     private String gif_ids;
     private int is_show_bulletin;
     private CommentManageInfoBean comment_manage_info;
-    private List<?> pic_urls;
     private List<AnnotationsBean> annotations;
     private List<Integer> biz_ids;
     private List<?> darwin_tags;
     private List<?> hot_weibo_tags;
     private List<?> text_tag_tips;
+    private String original_pic;
+
+    @SerializedName("pic_urls")
+    private List<PicUrlsBean> pic_urls;
 
     public String getCreated_at() {
         return created_at;
@@ -442,14 +447,6 @@ public class StatusesBean {
         this.comment_manage_info = comment_manage_info;
     }
 
-    public List<?> getPic_urls() {
-        return pic_urls;
-    }
-
-    public void setPic_urls(List<?> pic_urls) {
-        this.pic_urls = pic_urls;
-    }
-
     public List<AnnotationsBean> getAnnotations() {
         return annotations;
     }
@@ -490,4 +487,39 @@ public class StatusesBean {
         this.text_tag_tips = text_tag_tips;
     }
 
+
+    //九宫格
+    public List<PicUrlsBean> getPic_urls() {
+        return pic_urls;
+    }
+
+    public void setPic_urls(List<PicUrlsBean> pic_urls) {
+        this.pic_urls = pic_urls;
+    }
+
+
+    public static class PicUrlsBean {
+        /**
+         * thumbnail_pic : http://wx1.sinaimg.cn/thumbnail/80762695ly1g3b2qrfj9mj20j62n1gt6.jpg
+         */
+
+        private String thumbnail_pic;
+
+        public String getThumbnail_pic() {
+            return thumbnail_pic;
+        }
+
+        public void setThumbnail_pic(String thumbnail_pic) {
+            this.thumbnail_pic = thumbnail_pic;
+        }
+    }
+
+
+    public String getOriginal_pic() {
+        return original_pic;
+    }
+
+    public void setOriginal_pic(String original_pic) {
+        this.original_pic = original_pic;
+    }
 }

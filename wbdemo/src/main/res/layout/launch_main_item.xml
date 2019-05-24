@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/White">
 
@@ -48,19 +48,20 @@
         android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
         android:text="weibo内容"/>
 
-    <!--<com.lzy.ninegrid.NineGridView-->
-        <!--android:id="@+id/nine_grid_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@id/tv_main_content"-->
-        <!--android:layout_marginTop="@string/border_padding"-->
-        <!--android:layout_marginLeft="@string/border_padding"-->
-        <!--android:layout_marginRight="@string/border_padding"-->
-        <!--app:ngv_mode="grid">-->
+    <com.lzy.ninegrid.NineGridView
+        android:id="@+id/nine_grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_main_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        app:ngv_mode="grid">
 
-    <!--</com.lzy.ninegrid.NineGridView>-->
+    </com.lzy.ninegrid.NineGridView>
 
 
 

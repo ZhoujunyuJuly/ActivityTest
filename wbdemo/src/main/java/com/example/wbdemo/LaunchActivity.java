@@ -13,10 +13,16 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.wbdemo.FunctionModule.Find.FindFragment;
 import com.example.wbdemo.FunctionModule.Info.InfoFragment;
 import com.example.wbdemo.FunctionModule.Main.MainFragment;
 import com.example.wbdemo.FunctionModule.Setting.SettingFragment;
+import com.example.wbdemo.Object.EventTransStatusBean;
+import com.example.wbdemo.Object.MainFgData.StatusesBean;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +45,13 @@ public class LaunchActivity extends AppCompatActivity implements ViewPager.OnCli
     private ImageView mSettingTab;
     private ImageView mTopPortrait;
     private Spinner mTopTab;
+    private List<StatusesBean> mStatusesList = new ArrayList<>();
 
     private List<Fragment> mFragments;
     private FragmentPagerAdapter mFragPagerAdapter;
 
-    private TextView mTvPrintJson;
+    private ImageView mMyPortrait;
+
 
     public static void start(Context context,String token) {
         Intent intent = new Intent(context, LaunchActivity.class);
@@ -59,17 +67,20 @@ public class LaunchActivity extends AppCompatActivity implements ViewPager.OnCli
         initView();
         initData();
 
+        EventBus.getDefault().register(this);
 
-        //查看api
-//        setContentView(R.layout.print_json);
-//        mTvPrintJson = findViewById(R.id.tv_print_json);
-//        parseJson();
+    }
 
+    @Subscribe
+    public void onEventMainThread(EventTransStatusBean event){
+        mStatusesList = event.getmStatusesBean();
+        Glide.with(getApplicationContext()).load(mStatusesList.get(0).getUser().getProfile_image_url()).into(mMyPortrait);
     }
 
     private void initView(){
         mViewPager = findViewById(R.id.launch_viewpager);
 
+        mMyPortrait = findViewById(R.id.iv_top_portrait);
         mMainTab = findViewById(R.id.iv_main_tab);
         mFindTab = findViewById(R.id.iv_find_tab);
         mInfoTab = findViewById(R.id.iv_info_tab);
@@ -182,4 +193,9 @@ public class LaunchActivity extends AppCompatActivity implements ViewPager.OnCli
         mSettingTab.setImageResource(R.mipmap.setting);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().register(this);
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.wbdemo.Object.Main;
+package com.example.wbdemo.Object.MainFgData;
 
 /**
  * Created by zhoujunyu on 2019/5/23.

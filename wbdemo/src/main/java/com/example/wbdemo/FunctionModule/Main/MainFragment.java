@@ -1,24 +1,30 @@
 package com.example.wbdemo.FunctionModule.Main;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.wbdemo.Object.Main.HomeTimeLine;
-import com.example.wbdemo.Object.Main.StatusesBean;
+import com.bumptech.glide.Glide;
+import com.example.wbdemo.Object.EventTransStatusBean;
+import com.example.wbdemo.Object.MainFgData.HomeTimeLine;
+import com.example.wbdemo.Object.MainFgData.StatusesBean;
 import com.example.wbdemo.R;
 import com.example.wbdemo.net.OkHttpManager;
 import com.google.gson.Gson;
+import com.lzy.ninegrid.NineGridView;
+import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,6 +44,7 @@ public class MainFragment extends Fragment {
 
     // TODO: Rename and change types of parameters
     private String mToken;
+    private ImageView mMyPortrait;
     private RecyclerView mRecyclerView;
     private MainAdapter mMainAdapter;
 
@@ -108,6 +115,7 @@ public class MainFragment extends Fragment {
 
         mMainAdapter = new MainAdapter(R.layout.launch_main_item,mStatusesList,getActivity());
         mRecyclerView.setAdapter(mMainAdapter);
+        NineGridView.setImageLoader(new PicassoImageLoader());
     }
 
     private void parseJson(){
@@ -138,6 +146,7 @@ public class MainFragment extends Fragment {
                     public void run() {
                         Toast.makeText(getActivity(), "success", Toast.LENGTH_LONG).show();
                         mMainAdapter.notifyDataSetChanged();
+                        EventBus.getDefault().post(new EventTransStatusBean(mStatusesList));
                     }
                 });
             }
@@ -149,5 +158,17 @@ public class MainFragment extends Fragment {
         return HOME_TIMELINE_URL + "?access_token=" + mToken;
     }
 
-
+    private class PicassoImageLoader implements NineGridView.ImageLoader {
+        @Override
+        public void onDisplayImage(Context context, ImageView imageView, String url) {
+            Picasso.with(context).load(url)//
+                    .placeholder(R.drawable.ic_default_image)//
+                    .error(R.drawable.ic_default_image)//
+                    .into(imageView);
+        }
+        @Override
+        public Bitmap getCacheImage(String url) {
+            return null;
+        }
+    }
 }

@@ -1,6 +1,4 @@
-package com.example.wbdemo.Object.Main;
-
-import com.google.gson.annotations.SerializedName;
+package com.example.wbdemo.Object.MainFgData;
 
 import java.util.List;
 
