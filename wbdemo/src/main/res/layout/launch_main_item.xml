@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="300dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/White">
 
@@ -11,7 +11,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         app:riv_oval="true"
-        android:layout_marginLeft="@string/border_padding"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:src="@mipmap/launch_portrait"/>
 
@@ -28,13 +28,14 @@
         android:textColor="@color/TextBlack"
         android:text="用户名"/>
 
+
     <TextView
         android:id="@+id/tv_main_timeline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/iv_main_portrait"
         android:layout_alignLeft="@id/tv_main_username"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="6dp"
         android:textSize="10dp"
         android:text="时间"/>
 
@@ -45,7 +46,8 @@
         android:layout_below="@id/tv_main_timeline"
         android:layout_alignLeft="@id/iv_main_portrait"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="@string/border_padding"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="15dp"
         android:text="weibo内容"/>
 
     <!--<com.lzy.ninegrid.NineGridView-->

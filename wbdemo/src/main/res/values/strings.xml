@@ -1,4 +1,3 @@
 <resources>
     <string name="app_name">wbDemo</string>
-    <string name="border_padding">10dp</string>
 </resources>

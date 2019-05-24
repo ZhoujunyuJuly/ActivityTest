@@ -1,7 +1,9 @@
 package com.example.wbdemo.FunctionModule.Main;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,7 +40,6 @@ public class MainFragment extends Fragment {
     private String mToken;
     private RecyclerView mRecyclerView;
     private MainAdapter mMainAdapter;
-    private TextView mTest;
 
     private HomeTimeLine mHomeTimeLine;
     private List<StatusesBean> mStatusesList = new ArrayList<>();
@@ -77,40 +78,36 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-
-        mTest = view.findViewById(R.id.tv_fg_main_json);
         parseJson();
-
-
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                initView(view);
-//            }
-//        },5000);
-
         initView(view);
-        //EventBus.getDefault().register(this);
+
         return view;
     }
 
     @Override
     public void onDestroyView() {
-        //EventBus.getDefault().unregister(this);
         super.onDestroyView();
     }
 
 
     private void initView(View view){
         mRecyclerView = view.findViewById(R.id.recyclerview_fg_main);
-
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+                outRect.bottom = 40;
+                if (parent.getChildAdapterPosition(view) == 0) {
+                    outRect.top = 40;
+                }
+            }
+        });
+
         mMainAdapter = new MainAdapter(R.layout.launch_main_item,mStatusesList,getActivity());
         mRecyclerView.setAdapter(mMainAdapter);
-
     }
 
     private void parseJson(){
@@ -135,12 +132,10 @@ public class MainFragment extends Fragment {
                     mStatusesList.addAll(mHomeTimeLine.getStatuses());
                 }
 
-                Log.d("zjy", "json is" + json);
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        //mTest.setText(json);
                         Toast.makeText(getActivity(), "success", Toast.LENGTH_LONG).show();
                         mMainAdapter.notifyDataSetChanged();
                     }

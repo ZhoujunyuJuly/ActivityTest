@@ -1,8 +1,10 @@
 package com.example.wbdemo.FunctionModule.Main;
 
 import android.content.Context;
+import android.support.annotation.LongDef;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -27,11 +29,20 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder helper, StatusesBean item) {
+
+        //微博昵称
         helper.setText(R.id.tv_main_username,item.getUser().getName());
-        helper.setText(R.id.tv_main_timeline,item.getCreated_at());
+
+        //发布时间
+        String time = item.getCreated_at();
+        time = time.substring(0,time.indexOf("+"));
+        helper.setText(R.id.tv_main_timeline,time);
+
         helper.setText(R.id.tv_main_content,item.getText());
 
-        //Glide.with(mContext).load(item.getUser().getAvatar_hd()).into((ImageView)helper.getView(R.id.iv_main_portrait));
+
+        Glide.with(mContext).load(item.getUser().getAvatar_hd()).into((ImageView)helper.getView(R.id.iv_main_portrait));
+
 
     }
 }
