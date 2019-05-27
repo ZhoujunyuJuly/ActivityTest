@@ -60,4 +60,6 @@ dependencies {
     //BUGLY
     compile  'com.tencent.bugly:crashreport:latest.release'
     compile  'com.tencent.bugly:nativecrashreport:latest.release'
+    //下拉刷新
+    compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-26'
 }

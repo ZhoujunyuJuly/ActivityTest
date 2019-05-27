@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.chad.library.adapter.base.loadmore.LoadMoreView;
 import com.example.wbdemo.Object.EventTransStatusBean;
 import com.example.wbdemo.Object.MainFgData.HomeTimeLine;
 import com.example.wbdemo.Object.MainFgData.StatusesBean;
@@ -22,6 +23,12 @@ import com.example.wbdemo.R;
 import com.example.wbdemo.net.OkHttpManager;
 import com.google.gson.Gson;
 import com.lzy.ninegrid.NineGridView;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
@@ -44,9 +51,11 @@ public class MainFragment extends Fragment {
 
     // TODO: Rename and change types of parameters
     private String mToken;
+    private int mPage;
     private ImageView mMyPortrait;
     private RecyclerView mRecyclerView;
     private MainAdapter mMainAdapter;
+    private SmartRefreshLayout mSmartRefresh;
 
     private HomeTimeLine mHomeTimeLine;
     private List<StatusesBean> mStatusesList = new ArrayList<>();
@@ -87,6 +96,7 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
+        mPage = 1;
         parseJson();
         initView(view);
 
@@ -100,22 +110,50 @@ public class MainFragment extends Fragment {
 
 
     private void initView(View view){
+
+        initRefreshLayout(view);//初始化刷新布局
+
         mRecyclerView = view.findViewById(R.id.recyclerview_fg_main);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
-                outRect.bottom = 40;
+                outRect.bottom = 40;//item间间隔
                 if (parent.getChildAdapterPosition(view) == 0) {
                     outRect.top = 40;
                 }
             }
         });
 
+
         mMainAdapter = new MainAdapter(R.layout.launch_main_item,mStatusesList,getActivity());
         mRecyclerView.setAdapter(mMainAdapter);
-        NineGridView.setImageLoader(new PicassoImageLoader());
+        NineGridView.setImageLoader(new PicassoImageLoader());//载入九宫格图片基类
+
+    }
+
+    private void initRefreshLayout(View view){
+        mSmartRefresh = view.findViewById(R.id.fg_main_refreshlayout);
+        mSmartRefresh.setRefreshHeader(new ClassicsHeader(getContext()));
+        mSmartRefresh.setRefreshFooter(new ClassicsFooter(getContext()));
+        mSmartRefresh.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                mPage = 1;
+                parseJson();
+                mSmartRefresh.finishRefresh(1000);
+            }
+        });
+
+        mSmartRefresh.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                mPage = 1;
+                parseJson();
+                mSmartRefresh.finishLoadMore(1000);
+            }
+        });
     }
 
     private void parseJson(){
@@ -155,8 +193,10 @@ public class MainFragment extends Fragment {
 
 
     private String getURL(){
-        return HOME_TIMELINE_URL + "?access_token=" + mToken;
+        String OriURL = HOME_TIMELINE_URL + "?access_token=" + mToken;
+        return OriURL + "&page=" + mPage;
     }
+
 
     private class PicassoImageLoader implements NineGridView.ImageLoader {
         @Override

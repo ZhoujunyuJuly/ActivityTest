@@ -8,7 +8,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.wbdemo.Object.MainFgData.HomeTimeLine;
 import com.example.wbdemo.net.OkHttpManager;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,16 +21,15 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import static com.example.wbdemo.Object.URLInfo.API_URL;
-import static com.example.wbdemo.Object.URLInfo.CLIENT_ID;
-import static com.example.wbdemo.Object.URLInfo.REDIRECT_URL;
-import static com.example.wbdemo.Object.URLInfo.REQUEST_URL;
-import static com.example.wbdemo.Object.URLInfo.TOKEN;
+import static com.example.wbdemo.Object.URLInfo.EntireLINK;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button webview_btn;
     private Button html_btn;
     private TextView mResponse;
+    private HomeTimeLine mHomeTimeLine;
 
 
     @Override
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_html:
-                OkHttpManager.getInstance().post(REQUEST_URL, getKey(CLIENT_ID, REDIRECT_URL), new Callback() {
+                OkHttpManager.getInstance().get(EntireLINK + "&page=2", new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         runOnUiThread(new Runnable() {
@@ -70,10 +71,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onResponse(Call call, final Response response) throws IOException {
                         final String repo = response.body().string();
+                        mHomeTimeLine = new Gson().fromJson(repo,HomeTimeLine.class);
+
+                        final String test = mHomeTimeLine.getStatuses().get(0).getUser().getName();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mResponse.setText(repo);
+                                mResponse.setText(test);
                                 Toast.makeText(MainActivity.this, "success", Toast.LENGTH_LONG).show();
                             }
                         });
