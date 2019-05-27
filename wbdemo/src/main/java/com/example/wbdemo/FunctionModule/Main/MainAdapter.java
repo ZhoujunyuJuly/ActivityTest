@@ -1,9 +1,19 @@
 package com.example.wbdemo.FunctionModule.Main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
+import android.view.MotionEvent;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -14,6 +24,8 @@ import com.lzy.ninegrid.ImageInfo;
 import com.lzy.ninegrid.NineGridView;
 import com.lzy.ninegrid.preview.NineGridViewClickAdapter;
 import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +43,7 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, StatusesBean item) {
+    protected void convert(BaseViewHolder helper, final StatusesBean item) {
 
         //微博头像
         Glide.with(mContext).load(item.getUser().getAvatar_hd()).into((ImageView)helper.getView(R.id.iv_main_portrait));
@@ -45,7 +57,26 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
         helper.setText(R.id.tv_main_timeline,time);
 
         //微博内容
-        helper.setText(R.id.tv_main_content,item.getText());
+        if(item.getText().contains("http://")){
+            //final String videoURL = item.getText().substring(item.getText().indexOf("http://"),item.getText().length()-1);
+            SpannableString content = new SpannableString(item.getText());
+            content.setSpan(new LINKURLSpan(""),item.getText().indexOf("http://"),
+                    item.getText().length()-1,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            helper.setText(R.id.tv_main_content,content);
+            TextView ActiveText;
+            ActiveText = helper.getView(R.id.tv_main_content);
+            ActiveText.setMovementMethod(new LinkMovementMethod(){
+                @Override
+                public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
+                    //WatchVideoActivity.start(mContext,videoURL);
+                    //return super.onTouchEvent(widget, buffer, event);
+                    return true;
+                }
+            });
+
+        }else {
+            helper.setText(R.id.tv_main_content, item.getText());
+        }
 
         //九宫格
         ArrayList<ImageInfo> imageInfo = new ArrayList<>();
@@ -54,11 +85,7 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
             for (StatusesBean.PicUrlsBean imageDetail : imageDetails) {
                 ImageInfo info = new ImageInfo();
                 info.setThumbnailUrl(imageDetail.getThumbnail_pic());
-                if(imageDetails.size() == 1) {
-                    info.setBigImageUrl(item.getOriginal_pic());
-                }else {
-                    info.setBigImageUrl(imageDetail.getThumbnail_pic());
-                }
+                info.setBigImageUrl(imageDetail.getThumbnail_pic().replace("thumbnail","large"));
                 imageInfo.add(info);
             }
         }
@@ -70,19 +97,18 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
     }
 
 
-    private class PicassoImageLoader implements NineGridView.ImageLoader {
 
-        @Override
-        public void onDisplayImage(Context context, ImageView imageView, String url) {
-            Picasso.with(context).load(url)//
-                    .placeholder(R.drawable.ic_default_image)//
-                    .error(R.drawable.ic_default_image)//
-                    .into(imageView);
+    public class LINKURLSpan extends URLSpan {
+        public LINKURLSpan(String url) {
+            super(url);
         }
 
         @Override
-        public Bitmap getCacheImage(String url) {
-            return null;
+        public void updateDrawState(TextPaint ds) {
+            super.updateDrawState(ds);
+            ds.setUnderlineText(false);//无下划线
+            ds.setColor(Color.parseColor("#1E90FF"));//蓝色
         }
     }
+
 }

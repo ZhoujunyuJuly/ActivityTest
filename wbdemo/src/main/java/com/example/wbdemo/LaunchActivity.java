@@ -23,6 +23,7 @@ import com.example.wbdemo.Object.MainFgData.StatusesBean;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,10 +72,12 @@ public class LaunchActivity extends AppCompatActivity implements ViewPager.OnCli
 
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(EventTransStatusBean event){
         mStatusesList = event.getmStatusesBean();
-        Glide.with(getApplicationContext()).load(mStatusesList.get(0).getUser().getProfile_image_url()).into(mMyPortrait);
+        if(mStatusesList != null) {
+            Glide.with(getApplicationContext()).load(mStatusesList.get(0).getUser().getProfile_image_url()).into(mMyPortrait);
+        }
     }
 
     private void initView(){

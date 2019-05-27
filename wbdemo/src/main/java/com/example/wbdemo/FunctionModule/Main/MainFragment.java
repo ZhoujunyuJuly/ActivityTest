@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -194,6 +195,7 @@ public class MainFragment extends Fragment {
 
     private String getURL(){
         String OriURL = HOME_TIMELINE_URL + "?access_token=" + mToken;
+        Log.d("zjyy", "getURL: " + mToken);
         return OriURL + "&page=" + mPage;
     }
 

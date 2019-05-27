@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_html:
-                OkHttpManager.getInstance().get(EntireLINK + "&page=2", new Callback() {
+                OkHttpManager.getInstance().get(EntireLINK + "&page=1", new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         runOnUiThread(new Runnable() {
