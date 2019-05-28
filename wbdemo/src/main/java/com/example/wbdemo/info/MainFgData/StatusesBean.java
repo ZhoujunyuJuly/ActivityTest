@@ -1,4 +1,4 @@
-package com.example.wbdemo.Object.MainFgData;
+package com.example.wbdemo.info.MainFgData;
 
 import com.google.gson.annotations.SerializedName;
 

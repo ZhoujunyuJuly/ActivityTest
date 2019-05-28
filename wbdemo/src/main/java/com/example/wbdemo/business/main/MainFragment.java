@@ -1,4 +1,4 @@
-package com.example.wbdemo.FunctionModule.Main;
+package com.example.wbdemo.business.main;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,11 +15,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.chad.library.adapter.base.loadmore.LoadMoreView;
-import com.example.wbdemo.Object.EventTransStatusBean;
-import com.example.wbdemo.Object.MainFgData.HomeTimeLine;
-import com.example.wbdemo.Object.MainFgData.StatusesBean;
+import com.example.wbdemo.event.EventManager;
+import com.example.wbdemo.event.StatusEvent;
+import com.example.wbdemo.info.MainFgData.HomeTimeLine;
+import com.example.wbdemo.info.MainFgData.StatusesBean;
 import com.example.wbdemo.R;
 import com.example.wbdemo.net.OkHttpManager;
 import com.google.gson.Gson;
@@ -42,7 +41,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static com.example.wbdemo.Object.URLInfo.HOME_TIMELINE_URL;
+import static com.example.wbdemo.info.URLInfo.HOME_TIMELINE_URL;
 
 
 public class MainFragment extends Fragment {
@@ -60,6 +59,8 @@ public class MainFragment extends Fragment {
 
     private HomeTimeLine mHomeTimeLine;
     private List<StatusesBean> mStatusesList = new ArrayList<>();
+
+    private boolean FirstTime = true;
 
 
 
@@ -184,8 +185,11 @@ public class MainFragment extends Fragment {
                     @Override
                     public void run() {
                         Toast.makeText(getActivity(), "success", Toast.LENGTH_LONG).show();
-                        mMainAdapter.notifyDataSetChanged();
-                        EventBus.getDefault().post(new EventTransStatusBean(mStatusesList));
+                            mMainAdapter.notifyDataSetChanged();
+                            if(FirstTime) {
+                                EventManager.getInstance().postEvent(StatusEvent.getInstance(mStatusesList));
+                                FirstTime = false;
+                            }
                     }
                 });
             }

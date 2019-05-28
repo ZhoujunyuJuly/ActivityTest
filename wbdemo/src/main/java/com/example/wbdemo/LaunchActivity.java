@@ -11,15 +11,15 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.wbdemo.FunctionModule.Find.FindFragment;
-import com.example.wbdemo.FunctionModule.Info.InfoFragment;
-import com.example.wbdemo.FunctionModule.Main.MainFragment;
-import com.example.wbdemo.FunctionModule.Setting.SettingFragment;
-import com.example.wbdemo.Object.EventTransStatusBean;
-import com.example.wbdemo.Object.MainFgData.StatusesBean;
+import com.example.wbdemo.business.find.FindFragment;
+import com.example.wbdemo.business.info.InfoFragment;
+import com.example.wbdemo.business.main.MainFragment;
+import com.example.wbdemo.business.setting.SettingFragment;
+import com.example.wbdemo.event.EventManager;
+import com.example.wbdemo.event.StatusEvent;
+import com.example.wbdemo.info.MainFgData.StatusesBean;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -28,7 +28,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.wbdemo.Object.URLInfo.TOKEN_TAG;
+import static com.example.wbdemo.info.URLInfo.TOKEN_TAG;
 
 public class LaunchActivity extends AppCompatActivity implements ViewPager.OnClickListener {
 
@@ -68,12 +68,12 @@ public class LaunchActivity extends AppCompatActivity implements ViewPager.OnCli
         initView();
         initData();
 
-        EventBus.getDefault().register(this);
+        EventManager.getInstance().register(this);
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(EventTransStatusBean event){
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    public void onEventMainThread(StatusEvent event){
         mStatusesList = event.getmStatusesBean();
         if(mStatusesList != null) {
             Glide.with(getApplicationContext()).load(mStatusesList.get(0).getUser().getProfile_image_url()).into(mMyPortrait);
@@ -199,6 +199,6 @@ public class LaunchActivity extends AppCompatActivity implements ViewPager.OnCli
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().register(this);
+        EventManager.getInstance().unregister(this);
     }
 }

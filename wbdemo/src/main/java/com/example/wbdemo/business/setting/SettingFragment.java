@@ -1,4 +1,4 @@
-package com.example.wbdemo.FunctionModule.Setting;
+package com.example.wbdemo.business.setting;
 
 import android.net.Uri;
 import android.os.Bundle;

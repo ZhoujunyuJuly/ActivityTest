@@ -11,20 +11,20 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.example.wbdemo.Object.Token;
+import com.example.wbdemo.info.Token;
 import com.google.gson.Gson;
 
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.wbdemo.Object.URLInfo.API_URL;
-import static com.example.wbdemo.Object.URLInfo.CLIENT_ID;
-import static com.example.wbdemo.Object.URLInfo.CLIENT_SECRET;
-import static com.example.wbdemo.Object.URLInfo.GRANT_TYPE;
-import static com.example.wbdemo.Object.URLInfo.HEADER_ACCESS;
-import static com.example.wbdemo.Object.URLInfo.REDIRECT_URL;
-import static com.example.wbdemo.Object.URLInfo.TAG_URL;
+import static com.example.wbdemo.info.URLInfo.API_URL;
+import static com.example.wbdemo.info.URLInfo.CLIENT_ID;
+import static com.example.wbdemo.info.URLInfo.CLIENT_SECRET;
+import static com.example.wbdemo.info.URLInfo.GRANT_TYPE;
+import static com.example.wbdemo.info.URLInfo.HEADER_ACCESS;
+import static com.example.wbdemo.info.URLInfo.REDIRECT_URL;
+import static com.example.wbdemo.info.URLInfo.TAG_URL;
 
 public class WebViewActivity extends AppCompatActivity {
 

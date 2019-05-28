@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.wbdemo.Object.MainFgData.HomeTimeLine;
+import com.example.wbdemo.info.MainFgData.HomeTimeLine;
 import com.example.wbdemo.net.OkHttpManager;
 import com.google.gson.Gson;
 
@@ -20,8 +20,8 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static com.example.wbdemo.Object.URLInfo.API_URL;
-import static com.example.wbdemo.Object.URLInfo.EntireLINK;
+import static com.example.wbdemo.info.URLInfo.API_URL;
+import static com.example.wbdemo.info.URLInfo.EntireLINK;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {

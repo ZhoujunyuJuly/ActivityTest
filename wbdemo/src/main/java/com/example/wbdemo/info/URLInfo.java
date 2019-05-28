@@ -1,4 +1,4 @@
-package com.example.wbdemo.Object;
+package com.example.wbdemo.info;
 
 /**
  * Created by zhoujunyu on 2019/5/20.

@@ -1,17 +1,20 @@
-package com.example.wbdemo.Object;
+package com.example.wbdemo.event;
 
-import com.example.wbdemo.Object.MainFgData.StatusesBean;
+import com.example.wbdemo.info.MainFgData.StatusesBean;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by zhoujunyu on 2019/5/24.
  */
-public class EventTransStatusBean {
+public class StatusEvent {
     private List<StatusesBean> mStatusesBean;
 
-    public EventTransStatusBean(List<StatusesBean> mStatusesBean) {
+    public static StatusEvent getInstance(List<StatusesBean> mStatusesBean){
+        return new StatusEvent(mStatusesBean);
+    }
+
+    private StatusEvent(List<StatusesBean> mStatusesBean) {
         this.mStatusesBean = mStatusesBean;
     }
 

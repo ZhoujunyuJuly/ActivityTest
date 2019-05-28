@@ -1,34 +1,30 @@
-package com.example.wbdemo.FunctionModule.Main;
+package com.example.wbdemo.business.main;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
-import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.example.wbdemo.Object.MainFgData.StatusesBean;
+import com.example.wbdemo.info.MainFgData.StatusesBean;
 import com.example.wbdemo.R;
 import com.lzy.ninegrid.ImageInfo;
 import com.lzy.ninegrid.NineGridView;
 import com.lzy.ninegrid.preview.NineGridViewClickAdapter;
-import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by zhoujunyu on 2019/5/23.
@@ -57,22 +53,44 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
         helper.setText(R.id.tv_main_timeline,time);
 
         //微博内容
-        if(item.getText().contains("http://")){
-            //final String videoURL = item.getText().substring(item.getText().indexOf("http://"),item.getText().length()-1);
-            SpannableString content = new SpannableString(item.getText());
-            content.setSpan(new LINKURLSpan(""),item.getText().indexOf("http://"),
-                    item.getText().length()-1,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-            helper.setText(R.id.tv_main_content,content);
-            TextView ActiveText;
-            ActiveText = helper.getView(R.id.tv_main_content);
-            ActiveText.setMovementMethod(new LinkMovementMethod(){
-                @Override
-                public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
-                    //WatchVideoActivity.start(mContext,videoURL);
-                    //return super.onTouchEvent(widget, buffer, event);
-                    return true;
+        if(item.getText().contains("http://") || item.getText().contains("#")){
+            //SPannableString富文本样式
+            String ContentStr = item.getText();
+            SpannableString content = new SpannableString(ContentStr);
+            //超链接
+            if(ContentStr.contains("http://t.cn")) {
+                String ALLURL = ContentStr.substring(ContentStr.indexOf("http://t.cn"), ContentStr.length() - 1);
+                int lastPosition = ALLURL.indexOf(" ");
+                final String videoURL = ALLURL.substring(0, lastPosition);
+                content.setSpan(new LINKURLSpan(videoURL), ContentStr.indexOf(videoURL),
+                        ContentStr.indexOf(videoURL)+videoURL.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            }
+            //话题
+            if(ContentStr.contains("#")){
+                Matcher m = Pattern.compile("#").matcher(ContentStr);
+                int number = 0;
+                List<Integer> position = new ArrayList<>();
+                while (m.find()){
+                    position.add(number,m.end()-1);
+                    number  = number +1;
                 }
-            });
+
+                if(number >=2){
+                    for(int i =0;i < number - 1;i = i+2){
+                        content.setSpan(new LINKURLSpan(""),position.get(i),position.get(i+1)+1,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                    }
+                }
+            }
+            //文章链接
+            if(ContentStr.contains("全文：")){
+                content.setSpan(new LINKURLSpan(""),ContentStr.indexOf("全文：")+3,ContentStr.length()-1,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            }
+
+
+            TextView ActiveTextEvent = helper.getView(R.id.tv_main_content);
+            ActiveTextEvent.setMovementMethod(LinkMovementMethod.getInstance());
+            ActiveTextEvent.setText(content);
+
 
         }else {
             helper.setText(R.id.tv_main_content, item.getText());
@@ -109,6 +127,15 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
             ds.setUnderlineText(false);//无下划线
             ds.setColor(Color.parseColor("#1E90FF"));//蓝色
         }
+
+        @Override
+        public void onClick(View widget) {
+            super.onClick(widget);
+            if(widget instanceof  TextView && getURL()!= null && !getURL().isEmpty()) {
+                WatchVideoActivity.start(mContext, getURL());
+            }
+        }
     }
+
 
 }

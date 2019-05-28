@@ -7,7 +7,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 /**
  * Created by zhoujunyu on 2019/5/24.
  */
-public class MyApp extends Application {
+public class WbApp extends Application {
 
     @Override
     public void onCreate() {
@@ -15,7 +15,7 @@ public class MyApp extends Application {
 
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(this);
         strategy.setAppChannel("myWeibo");
-        strategy.setAppVersion("0.1");
+        strategy.setAppVersion("0.2");
         strategy.setAppPackageName("com.example.wbdemo");
         CrashReport.initCrashReport(this,"4037d61985",false);
     }
