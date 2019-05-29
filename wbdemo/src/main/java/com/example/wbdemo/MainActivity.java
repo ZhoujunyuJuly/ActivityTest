@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         initView();
-        mResponse.setText(getAPPVersionName());
     }
 
     private void initView() {
@@ -53,31 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mResponse.setMovementMethod(ScrollingMovementMethod.getInstance());
     }
 
-    private String getAPPVersionName(){
-        PackageManager manager = this.getPackageManager();
-        String name = null;
-        try{
-            PackageInfo info = manager.getPackageInfo(this.getPackageName(),0);
-            name = info.packageName;
-        }catch (PackageManager.NameNotFoundException e){
-            e.printStackTrace();
-        }
 
-        return name;
-    }
-
-    // TODO: 2019/5/29 返回报错，提示targetVersion的版本过高 
-    private String getAPPVersionCode(){
-        PackageManager manager = this.getPackageManager();
-        long versionCOde = 0;
-        try{
-            PackageInfo info = manager.getPackageInfo(this.getPackageName(),0);
-            versionCOde = info.getLongVersionCode();
-        }catch (PackageManager.NameNotFoundException e){
-            e.printStackTrace();
-        }
-        return String.valueOf(versionCOde);
-    }
 
     @Override
     public void onClick(View v) {

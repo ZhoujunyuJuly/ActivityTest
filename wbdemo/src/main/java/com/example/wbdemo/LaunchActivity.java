@@ -73,7 +73,6 @@ public class LaunchActivity extends AppCompatActivity  {
         initData();
 
         EventManager.getInstance().register(this);
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
@@ -112,6 +111,7 @@ public class LaunchActivity extends AppCompatActivity  {
         mFragments.add(new InfoFragment());
         mFragments.add(new SettingFragment());
 
+        //fragment适配器
         mFragPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int i) {
@@ -124,7 +124,28 @@ public class LaunchActivity extends AppCompatActivity  {
             }
         };
 
+        //viewpager监听
         mViewPager.setAdapter(mFragPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                mCommonTabLayout.setCurrentTab(i);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+
+        //mViewPager.setCurrentItem(0);
+
+        //commantablayout监听
         mCommonTabLayout.setTabData((ArrayList<CustomTabEntity>)getData());
         mCommonTabLayout.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
@@ -138,10 +159,14 @@ public class LaunchActivity extends AppCompatActivity  {
             }
         });
 
+
+        //commontablayout微调
         mCommonTabLayout.setIconHeight(27);
         mCommonTabLayout.setIconWidth(27);
         // TODO: 2019/5/29 gracity不起作用
         mCommonTabLayout.setIconGravity(Gravity.CENTER);
+
+
 //        mViewPager.setAdapter(mFragPagerAdapter);
 //        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 //            @Override

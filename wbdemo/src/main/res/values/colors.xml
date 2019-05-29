@@ -10,4 +10,5 @@
     <color name="White">#FFFFFF</color>
     <color name="TimeLineGray">#B0B0B0</color>
     <color name="TextContent">#464646</color>
+    <color name="UnderlineRed">#DC143C</color>
 </resources>

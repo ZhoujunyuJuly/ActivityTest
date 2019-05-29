@@ -28,7 +28,8 @@
         </activity>
         <activity android:name=".WebViewActivity" />
         <activity android:name=".LaunchActivity" />
-        <activity android:name=".business.main.WatchVideoActivity"></activity>
+        <activity android:name=".business.main.WatchVideoActivity" />
+        <activity android:name=".business.main.CommentsActivity"></activity>
     </application>
 
 </manifest>

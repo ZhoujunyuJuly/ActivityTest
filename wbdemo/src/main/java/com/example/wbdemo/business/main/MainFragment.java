@@ -127,7 +127,7 @@ public class MainFragment extends Fragment {
         });
 
 
-        mMainAdapter = new MainAdapter(R.layout.launch_main_item,mStatusesList,getActivity());
+        mMainAdapter = new MainAdapter(R.layout.item_launch_main,mStatusesList,getActivity());
         mRecyclerView.setAdapter(mMainAdapter);
         NineGridView.setImageLoader(new PicassoImageLoader());//载入九宫格图片基类
 
