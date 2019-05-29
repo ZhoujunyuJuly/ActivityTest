@@ -5,20 +5,27 @@
     android:orientation="horizontal"
     android:background="@color/BarGray">
 
-    <ImageView
-        android:id="@+id/iv_main_tab"
-        style="@style/launch_bottom_image"/>
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_main_tab"-->
+        <!--style="@style/launch_bottom_image"/>-->
 
-    <ImageView
-        android:id="@+id/iv_find_tab"
-        style="@style/launch_bottom_image"/>
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_find_tab"-->
+        <!--style="@style/launch_bottom_image"/>-->
 
-    <ImageView
-        android:id="@+id/iv_info_tab"
-        style="@style/launch_bottom_image"/>
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_info_tab"-->
+        <!--style="@style/launch_bottom_image"/>-->
 
-    <ImageView
-        android:id="@+id/iv_setting_tab"
-        style="@style/launch_bottom_image"/>
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_setting_tab"-->
+        <!--style="@style/launch_bottom_image"/>-->
+
+    <com.flyco.tablayout.CommonTabLayout
+        android:id="@+id/launch_bottom_tab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </com.flyco.tablayout.CommonTabLayout>
 
 </LinearLayout>

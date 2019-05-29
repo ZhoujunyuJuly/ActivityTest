@@ -15,8 +15,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.example.wbdemo.info.MainFgData.StatusesBean;
+import com.example.wbdemo.info.maindata.StatusesBean;
 import com.example.wbdemo.R;
+import com.flyco.tablayout.CommonTabLayout;
 import com.lzy.ninegrid.ImageInfo;
 import com.lzy.ninegrid.NineGridView;
 import com.lzy.ninegrid.preview.NineGridViewClickAdapter;
@@ -111,6 +112,9 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
 
         NineGridView nineGridView = helper.getView(R.id.nine_grid_view);
         nineGridView.setAdapter(new NineGridViewClickAdapter(mContext,imageInfo));
+
+
+        CommonTabLayout a;
 
     }
 

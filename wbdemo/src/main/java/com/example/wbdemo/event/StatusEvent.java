@@ -1,6 +1,6 @@
 package com.example.wbdemo.event;
 
-import com.example.wbdemo.info.MainFgData.StatusesBean;
+import com.example.wbdemo.info.maindata.StatusesBean;
 
 import java.util.List;
 

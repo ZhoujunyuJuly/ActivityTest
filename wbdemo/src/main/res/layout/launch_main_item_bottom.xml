@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="30dp"
+    android:orientation="horizontal"
+    android:background="@color/white">
+
+
+    <LinearLayout
+        style="@style/launch_main_item_layout">
+        <ImageView
+            android:src="@mipmap/attitudes"
+            style="@style/launch_main_item_image"/>
+        <TextView
+            android:id="@+id/tv_item_attitudes"
+            style="@style/launch_main_item_text"/>
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        style="@style/launch_main_item_layout">
+        <ImageView
+            android:src="@mipmap/comments"
+            style="@style/launch_main_item_image"/>
+        <TextView
+            android:id="@+id/tv_item_comments"
+            style="@style/launch_main_item_text"/>
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        style="@style/launch_main_item_layout">
+        <ImageView
+            android:src="@mipmap/reposts"
+            style="@style/launch_main_item_image"/>
+        <TextView
+            android:id="@+id/tv_item_reposts"
+            style="@style/launch_main_item_text"/>
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        style="@style/launch_main_item_layout">
+        <ImageView
+            android:src="@mipmap/share"
+            style="@style/launch_main_item_image"/>
+        <TextView
+            android:id="@+id/tv_item_share"
+            style="@style/launch_main_item_text"/>
+    </LinearLayout>
+
+
+
+</LinearLayout>

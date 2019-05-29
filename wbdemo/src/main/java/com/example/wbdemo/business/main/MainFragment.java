@@ -17,8 +17,8 @@ import android.widget.Toast;
 
 import com.example.wbdemo.event.EventManager;
 import com.example.wbdemo.event.StatusEvent;
-import com.example.wbdemo.info.MainFgData.HomeTimeLine;
-import com.example.wbdemo.info.MainFgData.StatusesBean;
+import com.example.wbdemo.info.maindata.HomeTimeLine;
+import com.example.wbdemo.info.maindata.StatusesBean;
 import com.example.wbdemo.R;
 import com.example.wbdemo.net.OkHttpManager;
 import com.google.gson.Gson;
@@ -30,8 +30,6 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.squareup.picasso.Picasso;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.ArrayList;

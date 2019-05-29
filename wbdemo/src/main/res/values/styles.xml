@@ -7,7 +7,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-    
+
+    <!--全局底部四个fg图标-->
     <style name="launch_bottom_image">
         <item name="android:layout_height">25dp</item>
         <item name="android:layout_width">25dp</item>
@@ -15,5 +16,33 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:src">@mipmap/launch_portrait</item>
     </style>
+
+
+    <!--首页适配器点赞栏图片-->
+    <style name="launch_main_item_image">
+        <item name="android:layout_height">23dp</item>
+        <item name="android:layout_width">23dp</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+
+    <!--首页适配器点赞栏文字-->
+    <style name="launch_main_item_text">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">10dp</item>
+        <item name="android:text">345</item>
+    </style>
+
+    <!--首页适配器点赞栏布局-->
+    <style name="launch_main_item_layout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+
 
 </resources>
