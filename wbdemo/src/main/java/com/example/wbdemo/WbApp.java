@@ -16,9 +16,8 @@ public class WbApp extends Application {
         super.onCreate();
 
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(this);
-        strategy.setAppChannel("myWeibo");
-        strategy.setAppVersion(String.valueOf(BuildConfig.VERSION_CODE));
-        strategy.setAppPackageName(BuildConfig.VERSION_NAME);
+        strategy.setAppVersion(BuildConfig.VERSION_NAME);
+        strategy.setAppPackageName(BuildConfig.APPLICATION_ID);
         CrashReport.initCrashReport(this,"4037d61985",false);
     }
 

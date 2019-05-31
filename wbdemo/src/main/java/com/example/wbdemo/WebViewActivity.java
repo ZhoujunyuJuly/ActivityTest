@@ -129,18 +129,6 @@ public class WebViewActivity extends AppCompatActivity {
         });
     }
 
-    //保存token
-    private void saveToken() {
-        SharedPreferences.Editor editor = getSharedPreferences("access_token", MODE_PRIVATE).edit();
-        editor.putString("access_token", mToken.getAccess_token());
-        editor.putString("remind_in", mToken.getRemind_in());
-        editor.putString("expires_in", String.valueOf(mToken.getExpires_in()));
-        editor.putString("uid", mToken.getUid());
-        editor.putString("isRealName", mToken.getIsRealName());
-
-        editor.apply();
-    }
-
     //使用code请求token的post信息
     private String getPost() {
         String post = MapToString(getMap());
@@ -172,11 +160,12 @@ public class WebViewActivity extends AppCompatActivity {
     final class InJavaScriptLocalObj {
         @JavascriptInterface
         public void showSource(String html) {
-            Log.d("zjy", "html is " + html);
             if (html != null && html.contains("{\"access_token\"")) {
                 String json = html.substring(html.indexOf("{\"access_token\""), html.indexOf("</pre>"));
                 mToken = new Gson().fromJson(json, Token.class);
                 mToken_content = mToken.getAccess_token();
+
+                saveToken();
 
                 if (!TextUtils.isEmpty(mToken_content)) {
                     runOnUiThread(new Runnable() {
@@ -189,6 +178,18 @@ public class WebViewActivity extends AppCompatActivity {
             }
 
         }
+    }
+
+    //保存token
+    private void saveToken() {
+        SharedPreferences.Editor editor = getSharedPreferences("access_token", MODE_PRIVATE).edit();
+        editor.putString("access_token", mToken.getAccess_token());
+        editor.putString("remind_in", mToken.getRemind_in());
+        editor.putString("expires_in", String.valueOf(mToken.getExpires_in()));
+        editor.putString("uid", mToken.getUid());
+        editor.putString("isRealName", mToken.getIsRealName());
+
+        editor.apply();
     }
 
 }

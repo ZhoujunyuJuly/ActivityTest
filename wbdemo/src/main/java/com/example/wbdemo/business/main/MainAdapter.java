@@ -24,6 +24,7 @@ import com.lzy.ninegrid.preview.NineGridViewClickAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,7 +63,12 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
             if(ContentStr.contains("http://t.cn")) {
                 String ALLURL = ContentStr.substring(ContentStr.indexOf("http://t.cn"), ContentStr.length() - 1);
                 int lastPosition = ALLURL.indexOf(" ");
-                final String videoURL = ALLURL.substring(0, lastPosition);
+                final String videoURL;
+                if( lastPosition != -1) {
+                     videoURL = ALLURL.substring(0, lastPosition);
+                }else {
+                    videoURL = ALLURL.substring(0, ALLURL.length()-1);
+                }
                 content.setSpan(new LINKURLSpan(videoURL), ContentStr.indexOf(videoURL),
                         ContentStr.indexOf(videoURL)+videoURL.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
             }
@@ -113,8 +119,19 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
         NineGridView nineGridView = helper.getView(R.id.nine_grid_view);
         nineGridView.setAdapter(new NineGridViewClickAdapter(mContext,imageInfo));
 
+        //点赞、转发、分享、评论数
+        helper.setText(R.id.tv_item_comments,String.valueOf(item.getComments_count()));
+        helper.setText(R.id.tv_item_attitudes,String.valueOf(item.getAttitudes_count()));
+        helper.setText(R.id.tv_item_reposts,String.valueOf(item.getReposts_count()));
+        helper.setText(R.id.tv_item_share,String.valueOf((int)(Math.random() * 1000)));
 
-        CommonTabLayout a;
+
+        helper.addOnClickListener(R.id.layout_comments);
+        helper.addOnClickListener(R.id.layout_attitude);
+        helper.addOnClickListener(R.id.layout_repost);
+        helper.addOnClickListener(R.id.layout_share);
+
+
 
     }
 
@@ -140,6 +157,4 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
             }
         }
     }
-
-
 }

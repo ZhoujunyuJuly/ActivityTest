@@ -1,5 +1,6 @@
 package com.example.wbdemo;
 
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.wbdemo.business.main.CommentsActivity;
 import com.example.wbdemo.info.maindata.HomeTimeLine;
 import com.example.wbdemo.net.OkHttpManager;
 import com.google.gson.Gson;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button html_btn;
     private TextView mResponse;
     private HomeTimeLine mHomeTimeLine;
+    private String mToken;
 
 
     @Override
@@ -88,11 +91,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.button_webview:
-                //进行授权
-                WebViewActivity.start(MainActivity.this, API_URL);
+                if(getToken() != null && !getToken().isEmpty()){
+                    //保存token直接跳转
+                    LaunchActivity.start(this,getToken());
+                }else {
+                    //进行授权
+                    WebViewActivity.start(MainActivity.this, API_URL);
+                }
 
                 //查看布局,直接跳转布局，不传token
-                //LaunchActivity.start(this,"222");
+                //CommentsActivity.start(this,"4377940965525634");
+
+
                 break;
 
         }
@@ -105,6 +115,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         map.put("redirect_uri", redirect_url);
 
         return map;
+    }
+
+    private String getToken(){
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("access_token", MODE_PRIVATE);
+        mToken = pref.getString("access_token", "");
+
+        return mToken;
     }
 
 }

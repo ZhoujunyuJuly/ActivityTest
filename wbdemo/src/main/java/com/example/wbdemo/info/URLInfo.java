@@ -14,6 +14,7 @@ public class URLInfo {
     public static final String TAG_URL = "authurl";
     public static final String TOKEN_TAG = "token_tag";
     public static final String HOME_TIMELINE_URL = "https://api.weibo.com/2/statuses/home_timeline.json";
+    public static final String COMMENTS_URL = "https://api.weibo.com/2/comments/show.json";
 
     //token链接存档
     public static final String REQUET_TOKEN = "client_id=621366344&client_secret=908d762f52c133243a2165e8fc2468d8" +

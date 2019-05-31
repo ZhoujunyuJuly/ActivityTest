@@ -2,12 +2,13 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="30dp"
+    android:layout_height="40dp"
     android:orientation="horizontal"
     android:background="@color/white">
 
 
     <LinearLayout
+        android:id="@+id/layout_attitude"
         style="@style/launch_main_item_layout">
         <ImageView
             android:src="@mipmap/attitudes"
@@ -20,6 +21,7 @@
 
 
     <LinearLayout
+        android:id="@+id/layout_comments"
         style="@style/launch_main_item_layout">
         <ImageView
             android:src="@mipmap/comments"
@@ -32,6 +34,7 @@
 
 
     <LinearLayout
+        android:id="@+id/layout_repost"
         style="@style/launch_main_item_layout">
         <ImageView
             android:src="@mipmap/reposts"
@@ -44,6 +47,7 @@
 
 
     <LinearLayout
+        android:id="@+id/layout_share"
         style="@style/launch_main_item_layout">
         <ImageView
             android:src="@mipmap/share"

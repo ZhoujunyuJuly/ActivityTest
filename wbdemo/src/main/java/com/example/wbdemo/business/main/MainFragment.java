@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemChildClickListener;
 import com.example.wbdemo.event.EventManager;
 import com.example.wbdemo.event.StatusEvent;
 import com.example.wbdemo.info.maindata.HomeTimeLine;
@@ -125,7 +127,26 @@ public class MainFragment extends Fragment {
                 }
             }
         });
+        mRecyclerView.addOnItemTouchListener(new OnItemChildClickListener() {
 
+            @Override
+            public void onSimpleItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+
+            }
+
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                super.onItemChildClick(adapter, view, position);
+                switch (view.getId()){
+                    case R.id.layout_comments :
+                    case R.id.layout_attitude :
+                    case R.id.layout_repost :
+                    case R.id.layout_share :
+                        CommentsActivity.start(getContext(),mStatusesList.get(position).getIdstr());
+                        break;
+                }
+            }
+        });
 
         mMainAdapter = new MainAdapter(R.layout.item_launch_main,mStatusesList,getActivity());
         mRecyclerView.setAdapter(mMainAdapter);

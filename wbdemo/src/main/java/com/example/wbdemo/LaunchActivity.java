@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -34,7 +35,7 @@ import java.util.List;
 
 import static com.example.wbdemo.info.URLInfo.TOKEN_TAG;
 
-public class LaunchActivity extends AppCompatActivity  {
+public class LaunchActivity extends AppCompatActivity {
 
     public static final int TAB_MAIN = 0;
     public static final int TAB_FIND = 1;
@@ -77,7 +78,7 @@ public class LaunchActivity extends AppCompatActivity  {
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void onEventMainThread(StatusEvent event){
-        mStatusesList = event.getmStatusesBean();
+        mStatusesList = event.getStatusesBean();
         if(mStatusesList != null) {
             Glide.with(getApplicationContext()).load(mStatusesList.get(0).getUser().getProfile_image_url()).into(mMyPortrait);
         }
@@ -94,7 +95,7 @@ public class LaunchActivity extends AppCompatActivity  {
 //        mFindTab = findViewById(R.id.iv_find_tab);
 //        mInfoTab = findViewById(R.id.iv_info_tab);
 //        mSettingTab = findViewById(R.id.iv_setting_tab);
-
+//
 //        mMainTab.setOnClickListener(this);
 //        mFindTab.setOnClickListener(this);
 //        mInfoTab.setOnClickListener(this);
@@ -126,6 +127,7 @@ public class LaunchActivity extends AppCompatActivity  {
 
         //viewpager监听
         mViewPager.setAdapter(mFragPagerAdapter);
+
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -143,10 +145,11 @@ public class LaunchActivity extends AppCompatActivity  {
             }
         });
 
-        //mViewPager.setCurrentItem(0);
+        mViewPager.setCurrentItem(0);
 
         //commantablayout监听
         mCommonTabLayout.setTabData((ArrayList<CustomTabEntity>)getData());
+
         mCommonTabLayout.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelect(int position) {
@@ -163,10 +166,11 @@ public class LaunchActivity extends AppCompatActivity  {
         //commontablayout微调
         mCommonTabLayout.setIconHeight(27);
         mCommonTabLayout.setIconWidth(27);
-        // TODO: 2019/5/29 gracity不起作用
+         //TODO: 2019/5/29 gracity不起作用
         mCommonTabLayout.setIconGravity(Gravity.CENTER);
 
 
+        //原始方法
 //        mViewPager.setAdapter(mFragPagerAdapter);
 //        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 //            @Override
@@ -197,6 +201,7 @@ public class LaunchActivity extends AppCompatActivity  {
     }
 
 
+    //设置TAB的数据
     private List<CustomTabEntity> getData(){
         List<CustomTabEntity> AllData = new ArrayList<>();
         final List<Integer> unChosenImage = new ArrayList<>();
@@ -215,7 +220,7 @@ public class LaunchActivity extends AppCompatActivity  {
             AllData.add(new CustomTabEntity() {
                 @Override
                 public String getTabTitle() {
-                    return null;
+                    return "测试tab";
                 }
 
                 @Override
@@ -256,7 +261,7 @@ public class LaunchActivity extends AppCompatActivity  {
 //                break;
 //        }
 //    }
-
+//
 //    private void setTab(int position) {
 //        switch (position) {
 //            case TAB_MAIN:
@@ -273,7 +278,7 @@ public class LaunchActivity extends AppCompatActivity  {
 //                break;
 //        }
 //    }
-
+//
 //    private void resetImg(){
 //        mMainTab.setImageResource(R.mipmap.main);
 //        mFindTab.setImageResource(R.mipmap.find);

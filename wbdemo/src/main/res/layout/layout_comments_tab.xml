@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="30dp"
+    android:layout_height="40dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:gravity="center"
     android:background="@color/white"
@@ -34,11 +35,15 @@
         <!--android:layout_marginRight="20dp"/>-->
 
 
-    <com.flyco.tablayout.CommonTabLayout
-        android:id="@+id/comments_commonLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <com.flyco.tablayout.SlidingTabLayout
+        android:id="@+id/comments_slidingTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:tl_textUnselectColor="@color/black"
+        app:tl_textSelectColor="@color/UnderlineRed"
+        app:tl_indicator_width_equal_title="true"
+        app:tl_textsize="12dp">
 
-    </com.flyco.tablayout.CommonTabLayout>
+    </com.flyco.tablayout.SlidingTabLayout>
 
 </LinearLayout>
