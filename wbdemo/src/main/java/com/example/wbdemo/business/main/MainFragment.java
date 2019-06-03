@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -36,6 +37,7 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -142,7 +144,15 @@ public class MainFragment extends Fragment {
                     case R.id.layout_attitude :
                     case R.id.layout_repost :
                     case R.id.layout_share :
-                        CommentsActivity.start(getContext(),mStatusesList.get(position).getIdstr());
+                        int[] counts = new int[4];
+                        counts[0] = mStatusesList.get(0).getAttitudes_count();
+                        counts[1] = mStatusesList.get(0).getComments_count();
+                        counts[2] = mStatusesList.get(0).getReposts_count();
+
+                        View view_bottom = View.inflate(getContext(),R.layout.item_launch_main_bottom,null);
+                        TextView shareCounts = view_bottom.findViewById(R.id.tv_item_share);
+                        counts[3] = Integer.parseInt(shareCounts.getText().toString());
+                        CommentsActivity.start(getContext(),mStatusesList.get(position).getIdstr(),counts);
                         break;
                 }
             }

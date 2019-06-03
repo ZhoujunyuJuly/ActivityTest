@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.FocusFinder;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -44,13 +45,15 @@ import static java.security.AccessController.getContext;
 public class CommentsActivity extends AppCompatActivity {
 
     private static final String TAG_WEIBOID = "weiboID";
+    public static final String TAG_COUNTS = "countsArray";
     private RecyclerView mRecyclerView;
-    private ViewPager mViewPager;
+    private CommentsViewPager mViewPager;
     private SlidingTabLayout mSlidingTabLayout;
     private List<Fragment> mFragment;
     private TabEntity mTabEntity;
     private ArrayList<CustomTabEntity> mTabEntityList = new ArrayList<>();
     private List<CommentsBean> mCommentsList = new ArrayList<>();
+    private int[] mCounts = new int[4];
 
 
     private RoundedImageView mMyPortrait;
@@ -63,12 +66,14 @@ public class CommentsActivity extends AppCompatActivity {
     private TextView mCountsCommt;
     private TextView mCountsRepos;
     private TextView mCountsShare;
+//    private View mHeaderView;
 
 
 
-    public static void start(Context context,String weiboID){
+    public static void start(Context context,String weiboID,int[] count){
         Intent intent = new Intent(context,CommentsActivity.class);
         intent.putExtra(TAG_WEIBOID,weiboID);
+        //intent.putExtra(TAG_COUNTS,count);
         context.startActivity(intent);
     }
 
@@ -79,9 +84,11 @@ public class CommentsActivity extends AppCompatActivity {
 
         initView();
         EventManager.getInstance().register(this);
+        mCounts = getIntent().getIntArrayExtra(TAG_COUNTS);
     }
 
     private void initView(){
+        mViewPager = new CommentsViewPager(getApplicationContext());
         mViewPager = findViewById(R.id.comments_viewpager);
         mSlidingTabLayout = findViewById(R.id.comments_slidingTabLayout);
 
@@ -96,6 +103,11 @@ public class CommentsActivity extends AppCompatActivity {
         mCountsRepos = findViewById(R.id.tv_item_reposts);
         mCountsShare = findViewById(R.id.tv_item_share);
 
+//
+//        mHeaderView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_launch_main,null,false);
+//        mHeaderView.setFocusable(true);
+//        mHeaderView.setFocusableInTouchMode(true);
+//        mHeaderView.requestFocus();
 
         loadView();
 
@@ -145,7 +157,11 @@ public class CommentsActivity extends AppCompatActivity {
         });
 
 
-        String [] title = {"赞245","评论1456","转发345"};
+
+        String [] title = new String[3];
+        title[0] = "赞 " + mCounts[0];
+        title[1] = "评论 " + mCounts[1];
+        title[2] = "转发 " + mCounts[2];
 
         //加载tab布局
         mSlidingTabLayout.setViewPager(mViewPager,title);
@@ -163,15 +179,15 @@ public class CommentsActivity extends AppCompatActivity {
             }
         });
 
-        DisplayMetrics metrics = getResources().getDisplayMetrics();//获取屏幕宽度
-        mSlidingTabLayout.getTitleView(0).setWidth((int)metrics.widthPixels/4);
-        mSlidingTabLayout.getTitleView(1).setWidth((int)metrics.widthPixels/2);
-        mSlidingTabLayout.getTitleView(2).setWidth((int)metrics.widthPixels/4);
-
-
-        mSlidingTabLayout.getTitleView(0).setGravity(View.TEXT_ALIGNMENT_VIEW_END);
-        mSlidingTabLayout.getTitleView(1).setGravity(View.TEXT_ALIGNMENT_VIEW_END);
-        mSlidingTabLayout.getTitleView(2).setGravity(View.TEXT_ALIGNMENT_VIEW_END);
+//        DisplayMetrics metrics = getResources().getDisplayMetrics();//获取屏幕宽度
+//        mSlidingTabLayout.getTitleView(0).setWidth((int)metrics.widthPixels/4);
+//        mSlidingTabLayout.getTitleView(1).setWidth((int)metrics.widthPixels/2);
+//        mSlidingTabLayout.getTitleView(2).setWidth((int)metrics.widthPixels/4);
+//
+//
+//        mSlidingTabLayout.getTitleView(0).setGravity(View.TEXT_ALIGNMENT_VIEW_END);
+//        mSlidingTabLayout.getTitleView(1).setGravity(View.TEXT_ALIGNMENT_VIEW_END);
+//        mSlidingTabLayout.getTitleView(2).setGravity(View.TEXT_ALIGNMENT_VIEW_END);
 
 
     }
@@ -206,11 +222,13 @@ public class CommentsActivity extends AppCompatActivity {
 
             mNineGridView.setAdapter(new NineGridViewClickAdapter(getApplicationContext(),imageInfo));
 
+
             //点赞、转发、评论、分享数
-            mCountsRepos.setText(String.valueOf(mCommentsList.get(0).getStatus().getReposts_count()));
-            mCountsAtti.setText(String.valueOf(mCommentsList.get(0).getStatus().getAttitudes_count()));
-            mCountsCommt.setText(String.valueOf(mCommentsList.get(0).getStatus().getComments_count()));
-            mCountsShare.setText(String.valueOf((int)(Math.random() * 1000)));
+            mCountsAtti.setText(String.valueOf(mCounts[0]));
+            mCountsCommt.setText(String.valueOf(mCounts[1]));
+            mCountsRepos.setText(String.valueOf(mCounts[2]));
+            mCountsShare.setText(String.valueOf(mCounts[3]));
+
 
 
         }
@@ -222,4 +240,5 @@ public class CommentsActivity extends AppCompatActivity {
         super.onDestroy();
         EventManager.getInstance().unregister(this);
     }
+
 }
