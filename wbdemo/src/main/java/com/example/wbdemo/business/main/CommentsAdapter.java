@@ -33,5 +33,8 @@ public class CommentsAdapter extends BaseQuickAdapter<CommentsBean,BaseViewHolde
         helper.setText(R.id.tv_comments_content,item.getText());
         helper.setText(R.id.tv_comments_attitudeCounts,String.valueOf(item.getUser().getFavourites_count()));
 
+        helper.addOnClickListener(R.id.iv_comments_attitude);
+        helper.addOnClickListener(R.id.tv_comments_attitudeCounts);
+
     }
 }

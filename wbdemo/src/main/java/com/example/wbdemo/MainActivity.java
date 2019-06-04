@@ -15,6 +15,7 @@ import com.example.wbdemo.business.main.CommentsActivity;
 import com.example.wbdemo.info.maindata.HomeTimeLine;
 import com.example.wbdemo.net.OkHttpManager;
 import com.google.gson.Gson;
+import com.tencent.bugly.beta.Beta;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -91,6 +92,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.button_webview:
+
+                //Beta.checkUpgrade();
+
                 if(getToken() != null && !getToken().isEmpty()){
                     //保存token直接跳转
                     LaunchActivity.start(this,getToken());
@@ -101,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 //查看布局,直接跳转布局，不传token
                 //CommentsActivity.start(this,"4377940965525634");
-
 
                 break;
 

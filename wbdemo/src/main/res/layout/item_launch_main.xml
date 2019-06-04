@@ -8,7 +8,7 @@
 
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:descendantFocusability="beforeDescendants">
+    android:descendantFocusability="blocksDescendants">
 
 
     <RelativeLayout
@@ -75,6 +75,31 @@
         </com.lzy.ninegrid.NineGridView>
 
     </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_repost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="转发内容" />
+
+        <com.lzy.ninegrid.NineGridView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_repost"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp">
+
+
+        </com.lzy.ninegrid.NineGridView>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

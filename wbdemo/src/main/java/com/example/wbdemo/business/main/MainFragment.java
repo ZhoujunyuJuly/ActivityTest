@@ -144,15 +144,17 @@ public class MainFragment extends Fragment {
                     case R.id.layout_attitude :
                     case R.id.layout_repost :
                     case R.id.layout_share :
-                        int[] counts = new int[4];
-                        counts[0] = mStatusesList.get(0).getAttitudes_count();
-                        counts[1] = mStatusesList.get(0).getComments_count();
-                        counts[2] = mStatusesList.get(0).getReposts_count();
+
+                        ArrayList<Integer> count = new ArrayList<>();
+                        count.add(mStatusesList.get(position).getAttitudes_count());
+                        count.add(mStatusesList.get(position).getComments_count());
+                        count.add(mStatusesList.get(position).getReposts_count());
 
                         View view_bottom = View.inflate(getContext(),R.layout.item_launch_main_bottom,null);
                         TextView shareCounts = view_bottom.findViewById(R.id.tv_item_share);
-                        counts[3] = Integer.parseInt(shareCounts.getText().toString());
-                        CommentsActivity.start(getContext(),mStatusesList.get(position).getIdstr(),counts);
+                        count.add(Integer.parseInt(shareCounts.getText().toString()));
+
+                        CommentsActivity.start(getContext(),mStatusesList.get(position).getIdstr(),count);
                         break;
                 }
             }

@@ -3,7 +3,10 @@ package com.example.wbdemo;
 import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.util.Log;
 
+import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.crashreport.CrashReport;
 
 /**
@@ -18,7 +21,14 @@ public class WbApp extends Application {
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(this);
         strategy.setAppVersion(BuildConfig.VERSION_NAME);
         strategy.setAppPackageName(BuildConfig.APPLICATION_ID);
-        CrashReport.initCrashReport(this,"4037d61985",false);
+        //CrashReport.initCrashReport(this,"4037d61985",false);
+        Bugly.init(getApplicationContext(), "4037d61985", false);
+
+
+        Beta.autoCheckUpgrade = false;//设置不自动检查
+        Log.i("App","init success");
+        Bugly.init(getApplicationContext(), "336b7711dc", false);
+
     }
 
 //    private String getAPPVersionName(){

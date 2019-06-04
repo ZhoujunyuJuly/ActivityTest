@@ -123,7 +123,7 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
         helper.setText(R.id.tv_item_comments,String.valueOf(item.getComments_count()));
         helper.setText(R.id.tv_item_attitudes,String.valueOf(item.getAttitudes_count()));
         helper.setText(R.id.tv_item_reposts,String.valueOf(item.getReposts_count()));
-        helper.setText(R.id.tv_item_share,String.valueOf((int)(Math.random() * 1000)));
+        helper.setText(R.id.tv_item_share,String.valueOf((int)(Math.random() * 50)));
 
 
         helper.addOnClickListener(R.id.layout_comments);

@@ -2,29 +2,23 @@ package com.example.wbdemo.business.main;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.FocusFinder;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.wbdemo.R;
 import com.example.wbdemo.event.CommentsEvent;
+import com.example.wbdemo.event.CountsEvent;
 import com.example.wbdemo.event.EventManager;
-import com.example.wbdemo.event.StatusEvent;
 import com.example.wbdemo.info.commentdata.CommentsBean;
 import com.example.wbdemo.info.maindata.StatusesBean;
-import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
@@ -35,27 +29,25 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.security.AccessController.getContext;
 
 public class CommentsActivity extends AppCompatActivity {
 
     private static final String TAG_WEIBOID = "weiboID";
     public static final String TAG_COUNTS = "countsArray";
+    private List<Fragment> mFragment;
+    private TabEntity mTabEntity;
+    private String [] mTitle = {"0","0","0"};
+    private ArrayList<Integer> mCounts = new ArrayList<>();
+    private ArrayList<CustomTabEntity> mTabEntityList = new ArrayList<>();
+    private List<CommentsBean> mCommentsList = new ArrayList<>();
+
     private RecyclerView mRecyclerView;
     private CommentsViewPager mViewPager;
     private SlidingTabLayout mSlidingTabLayout;
-    private List<Fragment> mFragment;
-    private TabEntity mTabEntity;
-    private ArrayList<CustomTabEntity> mTabEntityList = new ArrayList<>();
-    private List<CommentsBean> mCommentsList = new ArrayList<>();
-    private int[] mCounts = new int[4];
-
-
+    private NestedScrollView mScrollview;
     private RoundedImageView mMyPortrait;
     private TextView mUsername;
     private TextView mTime;
@@ -70,10 +62,10 @@ public class CommentsActivity extends AppCompatActivity {
 
 
 
-    public static void start(Context context,String weiboID,int[] count){
+    public static void start(Context context,String weiboID,ArrayList<Integer> count){
         Intent intent = new Intent(context,CommentsActivity.class);
         intent.putExtra(TAG_WEIBOID,weiboID);
-        //intent.putExtra(TAG_COUNTS,count);
+        intent.putIntegerArrayListExtra(TAG_COUNTS,count);
         context.startActivity(intent);
     }
 
@@ -84,13 +76,20 @@ public class CommentsActivity extends AppCompatActivity {
 
         initView();
         EventManager.getInstance().register(this);
-        mCounts = getIntent().getIntArrayExtra(TAG_COUNTS);
+
+        mScrollview.post(new Runnable() {
+            @Override
+            public void run() {
+                mScrollview.scrollTo(0,mSlidingTabLayout.getMeasuredHeight());
+            }
+        });
     }
 
     private void initView(){
         mViewPager = new CommentsViewPager(getApplicationContext());
         mViewPager = findViewById(R.id.comments_viewpager);
         mSlidingTabLayout = findViewById(R.id.comments_slidingTabLayout);
+        mScrollview = findViewById(R.id.comment_scrollview);
 
         //头部
         mMyPortrait = findViewById(R.id.iv_main_portrait);
@@ -103,12 +102,6 @@ public class CommentsActivity extends AppCompatActivity {
         mCountsRepos = findViewById(R.id.tv_item_reposts);
         mCountsShare = findViewById(R.id.tv_item_share);
 
-//
-//        mHeaderView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_launch_main,null,false);
-//        mHeaderView.setFocusable(true);
-//        mHeaderView.setFocusableInTouchMode(true);
-//        mHeaderView.requestFocus();
-
         loadView();
 
     }
@@ -118,11 +111,6 @@ public class CommentsActivity extends AppCompatActivity {
         mFragment.add(initCmtsMainFragment());
         mFragment.add(initCmtsMainFragment());
         mFragment.add(initCmtsMainFragment());
-
-//        mFragment.add(new TestFragment());
-//        mFragment.add(new TestFragment());
-//        mFragment.add(new TestFragment());
-
 
         FragmentPagerAdapter fgAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
@@ -157,14 +145,14 @@ public class CommentsActivity extends AppCompatActivity {
         });
 
 
+        mCounts = getIntent().getIntegerArrayListExtra(TAG_COUNTS);
+        mTitle[0] = "赞 " + mCounts.get(0).toString();
+        mTitle[1] = "评论 " + mCounts.get(1).toString();
+        mTitle[2] = "转发 " + mCounts.get(2).toString();
 
-        String [] title = new String[3];
-        title[0] = "赞 " + mCounts[0];
-        title[1] = "评论 " + mCounts[1];
-        title[2] = "转发 " + mCounts[2];
 
         //加载tab布局
-        mSlidingTabLayout.setViewPager(mViewPager,title);
+        mSlidingTabLayout.setViewPager(mViewPager,mTitle);
 
         mSlidingTabLayout.setIndicatorColor(getResources().getColor(R.color.UnderlineRed));
         mSlidingTabLayout.setOnTabSelectListener(new OnTabSelectListener() {
@@ -179,6 +167,8 @@ public class CommentsActivity extends AppCompatActivity {
             }
         });
 
+
+
 //        DisplayMetrics metrics = getResources().getDisplayMetrics();//获取屏幕宽度
 //        mSlidingTabLayout.getTitleView(0).setWidth((int)metrics.widthPixels/4);
 //        mSlidingTabLayout.getTitleView(1).setWidth((int)metrics.widthPixels/2);
@@ -190,6 +180,17 @@ public class CommentsActivity extends AppCompatActivity {
 //        mSlidingTabLayout.getTitleView(2).setGravity(View.TEXT_ALIGNMENT_VIEW_END);
 
 
+        loadData();
+
+    }
+
+    private void loadData(){
+
+        //点赞、转发、评论、分享数
+        mCountsAtti.setText(String.valueOf(mCounts.get(0)));
+        mCountsCommt.setText(String.valueOf(mCounts.get(1)));
+        mCountsRepos.setText(String.valueOf(mCounts.get(2)));
+        mCountsShare.setText(String.valueOf(mCounts.get(3)));
     }
 
     private CmtsMainFragment initCmtsMainFragment(){
@@ -221,19 +222,10 @@ public class CommentsActivity extends AppCompatActivity {
             }
 
             mNineGridView.setAdapter(new NineGridViewClickAdapter(getApplicationContext(),imageInfo));
-
-
-            //点赞、转发、评论、分享数
-            mCountsAtti.setText(String.valueOf(mCounts[0]));
-            mCountsCommt.setText(String.valueOf(mCounts[1]));
-            mCountsRepos.setText(String.valueOf(mCounts[2]));
-            mCountsShare.setText(String.valueOf(mCounts[3]));
-
-
-
         }
-
     }
+
+
 
     @Override
     protected void onDestroy() {
