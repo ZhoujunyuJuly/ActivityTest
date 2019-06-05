@@ -43,4 +43,10 @@ public class WatchVideoActivity extends AppCompatActivity {
     private String getURL(){
         return  getIntent().getStringExtra(TAG_VIDEO_URL);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

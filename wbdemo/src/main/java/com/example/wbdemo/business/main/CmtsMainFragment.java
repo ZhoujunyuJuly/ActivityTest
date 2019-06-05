@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.ToDoubleBiFunction;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -86,6 +87,7 @@ public class CmtsMainFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_cmts_main, container, false);
+
         mRecyclerView = view.findViewById(R.id.fg_comments_recyclerview);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//又忘记写这个了！！！
@@ -100,32 +102,33 @@ public class CmtsMainFragment extends Fragment {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 super.onItemChildClick(adapter, view, position);
+                mAttitudeCounts = mRecyclerView.getChildAt(position).findViewById(R.id.tv_comments_attitudeCounts);
+                mAttitude = mRecyclerView.getChildAt(position).findViewById(R.id.iv_comments_attitude);
                 switch (view.getId()) {
-                    case R.id.iv_comments_attitude:
                     case R.id.tv_comments_attitudeCounts:
-//                        view.setFocusable(true);
-//                        view.setFocusableInTouchMode(true);
+                    case R.id.iv_comments_attitude:
+                        if (!isChosen) {
+                            int counts = mCommentsList.get(position).getUser().getFavourites_count() + 1;
+                            String count = String.valueOf(counts);
 
-                       View view_item = LayoutInflater.from(getActivity()).inflate(R.layout.item_comments,null);
+                            mAttitudeCounts.setText(count);
+                            mAttitude.setImageResource(R.mipmap.chosen_attitude);
+                            isChosen = true;
 
-                       view_item.requestFocus();
+                        } else {
+                            int counts = mCommentsList.get(position).getUser().getFavourites_count();
+                            String count = String.valueOf(counts);
 
-                       mAttitude = view_item.findViewById(R.id.iv_comments_attitude);
-                       mAttitudeCounts = view_item.findViewById(R.id.tv_comments_attitudeCounts);
-//                        if (!isChosen) {
-//                            mAttitude.setImageResource(R.mipmap.chosen_attitude);
-//                            int counts = Integer.parseInt(mAttitudeCounts.getText().toString()) + 1;
-//                            mAttitudeCounts.setText(String.valueOf(counts));
-//                            isChosen = true;
-//                        } else {
-//                            mAttitude.setImageResource(R.mipmap.attitudes);
-//                            int counts = Integer.parseInt(mAttitudeCounts.getText().toString()) - 1;
-//                            mAttitudeCounts.setText(String.valueOf(counts));
-//                            isChosen = false;
-//                        }
-                        mAttitude.setImageResource(R.mipmap.chosen_attitude);
-                        mAttitudeCounts.setText("333");
-                        Toast.makeText(getContext(),"点击事件有效",Toast.LENGTH_LONG).show();
+                            mAttitudeCounts.setText(count);
+                            mAttitude.setImageResource(R.mipmap.attitudes);
+                            isChosen = false;
+                        }
+
+
+                        //TODO:使用notifydatasetchange()导致图片重置无效
+//                        mCommentsList.get(position).getUser().setFavourites_count(mCommentsList.get(position).getUser().getFavourites_count() + 1);
+//                        mAdapter.notifyDataSetChanged();
+
                         break;
                 }
             }
