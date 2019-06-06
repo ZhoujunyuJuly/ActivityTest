@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.Window;
 import android.widget.LinearLayout;
 
 import com.example.wbdemo.R;
@@ -14,9 +16,9 @@ public class WatchVideoActivity extends AppCompatActivity {
     private static final String TAG_VIDEO_URL = "video_url";
 
 
-    public static void start(Context context,String url){
-        Intent intent = new Intent(context,WatchVideoActivity.class);
-        intent.putExtra(TAG_VIDEO_URL,url);
+    public static void start(Context context, String url) {
+        Intent intent = new Intent(context, WatchVideoActivity.class);
+        intent.putExtra(TAG_VIDEO_URL, url);
         context.startActivity(intent);
     }
 
@@ -24,6 +26,8 @@ public class WatchVideoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_watch_video);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+
 
 //        WebView webView = findViewById(R.id.watchVideo_webview);
 //        //webView.setWebViewClient(new WebViewClient());
@@ -40,13 +44,14 @@ public class WatchVideoActivity extends AppCompatActivity {
                 .go(getURL());
     }
 
-    private String getURL(){
-        return  getIntent().getStringExtra(TAG_VIDEO_URL);
+    private String getURL() {
+        return getIntent().getStringExtra(TAG_VIDEO_URL);
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+        WatchVideoActivity.this.finish();
     }
 }
+

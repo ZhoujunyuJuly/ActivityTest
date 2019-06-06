@@ -10,6 +10,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.Window;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -48,6 +49,7 @@ public class CommentsActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private CommentsViewPager mViewPager;
     private SlidingTabLayout mSlidingTabLayout;
+    private LinearLayout mLinearLayout;
     private NestedScrollView mScrollview;
     private RoundedImageView mMyPortrait;
     private TextView mUsername;
@@ -79,12 +81,12 @@ public class CommentsActivity extends AppCompatActivity {
         initView();
         EventManager.getInstance().register(this);
 
-        mScrollview.post(new Runnable() {
+        mScrollview.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mScrollview.scrollTo(0,mSlidingTabLayout.getMeasuredHeight());
+                mScrollview.smoothScrollTo(0,mLinearLayout.getMeasuredHeight());
             }
-        });
+        },1000);
     }
 
     private void initView(){
@@ -92,6 +94,7 @@ public class CommentsActivity extends AppCompatActivity {
         mViewPager = findViewById(R.id.comments_viewpager);
         mSlidingTabLayout = findViewById(R.id.comments_slidingTabLayout);
         mScrollview = findViewById(R.id.comment_scrollview);
+        mLinearLayout = findViewById(R.id.comment_wb_layout);
 
         //头部
         mMyPortrait = findViewById(R.id.iv_main_portrait);
