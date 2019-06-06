@@ -22,13 +22,12 @@ public class WbApp extends Application {
         strategy.setAppVersion(BuildConfig.VERSION_NAME);
         strategy.setAppPackageName(BuildConfig.APPLICATION_ID);
         //CrashReport.initCrashReport(this,"4037d61985",false);
-        Bugly.init(getApplicationContext(), "4037d61985", false);
 
 
         Beta.autoCheckUpgrade = false;//设置不自动检查
         Log.i("App","init success");
-        Bugly.init(getApplicationContext(), "336b7711dc", false);
-
+        //Bugly.init(getApplicationContext(), "336b7711dc", false);
+        Bugly.init(getApplicationContext(), "4037d61985", false);
     }
 
 //    private String getAPPVersionName(){
