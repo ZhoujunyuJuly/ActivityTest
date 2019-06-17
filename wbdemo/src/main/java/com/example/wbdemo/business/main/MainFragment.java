@@ -16,10 +16,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemChildClickListener;
 import com.example.wbdemo.event.EventManager;
 import com.example.wbdemo.event.StatusEvent;
+import com.example.wbdemo.info.MyItemDecoration;
+import com.example.wbdemo.info.ScaleUtils;
 import com.example.wbdemo.info.maindata.HomeTimeLine;
 import com.example.wbdemo.info.maindata.StatusesBean;
 import com.example.wbdemo.R;
@@ -32,7 +35,6 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,15 +45,14 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static com.example.wbdemo.info.URLInfo.ACCESS_TOKEN_HEADER;
 import static com.example.wbdemo.info.URLInfo.HOME_TIMELINE_URL;
 
 
 public class MainFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String TOKEN = "token";
 
-    // TODO: Rename and change types of parameters
     private String mToken;
     private int mPage;
     private ImageView mMyPortrait;
@@ -78,7 +79,6 @@ public class MainFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment MainFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static MainFragment newInstance(String token) {
         MainFragment fragment = new MainFragment();
         Bundle args = new Bundle();
@@ -119,16 +119,7 @@ public class MainFragment extends Fragment {
 
         mRecyclerView = view.findViewById(R.id.recyclerview_fg_main);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                super.getItemOffsets(outRect, view, parent, state);
-                outRect.bottom = 40;//item间间隔
-                if (parent.getChildAdapterPosition(view) == 0) {
-                    outRect.top = 40;
-                }
-            }
-        });
+        mRecyclerView.addItemDecoration(new MyItemDecoration(getContext(),15));
         mRecyclerView.addOnItemTouchListener(new OnItemChildClickListener() {
 
             @Override
@@ -145,16 +136,19 @@ public class MainFragment extends Fragment {
                     case R.id.layout_repost :
                     case R.id.layout_share :
 
-                        ArrayList<Integer> count = new ArrayList<>();
-                        count.add(mStatusesList.get(position).getAttitudes_count());
-                        count.add(mStatusesList.get(position).getComments_count());
-                        count.add(mStatusesList.get(position).getReposts_count());
+//                        ArrayList<Integer> count = new ArrayList<>();
+//                        count.add(mStatusesList.get(position).getAttitudes_count());
+//                        count.add(mStatusesList.get(position).getComments_count());
+//                        count.add(mStatusesList.get(position).getReposts_count());
+//
+//                        View view_bottom = View.inflate(getContext(),R.layout.item_launch_main_bottom,null);
+//                        TextView shareCounts = view_bottom.findViewById(R.id.tv_item_share);
+//                        count.add(Integer.parseInt(shareCounts.getText().toString()));
+//
+//                        CommentsActivity.start(getContext(),mStatusesList.get(position).getIdstr(),count);
 
-                        View view_bottom = View.inflate(getContext(),R.layout.item_launch_main_bottom,null);
-                        TextView shareCounts = view_bottom.findViewById(R.id.tv_item_share);
-                        count.add(Integer.parseInt(shareCounts.getText().toString()));
+                        CommentsActivity.start(getContext(),mStatusesList,position);
 
-                        CommentsActivity.start(getContext(),mStatusesList.get(position).getIdstr(),count);
                         break;
                 }
             }
@@ -162,7 +156,7 @@ public class MainFragment extends Fragment {
 
         mMainAdapter = new MainAdapter(R.layout.item_launch_main,mStatusesList,getActivity());
         mRecyclerView.setAdapter(mMainAdapter);
-        NineGridView.setImageLoader(new PicassoImageLoader());//载入九宫格图片基类
+        NineGridView.setImageLoader(new GlideImageLoader());//载入九宫格图片基类
 
     }
 
@@ -229,16 +223,16 @@ public class MainFragment extends Fragment {
 
 
     private String getURL(){
-        String OriURL = HOME_TIMELINE_URL + "?access_token=" + mToken;
+        String OriURL = HOME_TIMELINE_URL + ACCESS_TOKEN_HEADER + mToken;
         Log.d("zjyy", "getURL: " + mToken);
         return OriURL + "&page=" + mPage;
     }
 
 
-    private class PicassoImageLoader implements NineGridView.ImageLoader {
+    private class GlideImageLoader implements NineGridView.ImageLoader {
         @Override
         public void onDisplayImage(Context context, ImageView imageView, String url) {
-            Picasso.with(context).load(url)//
+            Glide.with(context).load(url)//
                     .placeholder(R.drawable.ic_default_image)//
                     .error(R.drawable.ic_default_image)//
                     .into(imageView);

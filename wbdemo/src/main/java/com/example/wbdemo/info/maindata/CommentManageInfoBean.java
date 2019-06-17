@@ -1,9 +1,11 @@
 package com.example.wbdemo.info.maindata;
 
+import java.io.Serializable;
+
 /**
  * Created by zhoujunyu on 2019/5/23.
  */
-public class CommentManageInfoBean {
+public class CommentManageInfoBean implements Serializable {
     /**
      * comment_permission_type : -1
      * approval_comment_type : 0

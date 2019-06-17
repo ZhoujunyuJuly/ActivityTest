@@ -2,10 +2,12 @@ package com.example.wbdemo.info.maindata;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by zhoujunyu on 2019/5/23.
  */
-public class UserBean {
+public class UserBean implements Serializable {
     /**
      * id : 1867571077
      * idstr : 1867571077

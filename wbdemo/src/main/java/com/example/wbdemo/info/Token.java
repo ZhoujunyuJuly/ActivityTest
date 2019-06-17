@@ -1,9 +1,11 @@
 package com.example.wbdemo.info;
 
+import java.io.Serializable;
+
 /**
  * Created by zhoujunyu on 2019/5/21.
  */
-public class Token {
+public class Token implements Serializable {
 
     /**
      * access_token : 2.00U1XGpF0olLDg992dbd1487pHDnXE

@@ -96,14 +96,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 //Beta.checkUpgrade();
 
-                if(getToken() != null && !getToken().isEmpty()){
-                    //保存token直接跳转
-                    LaunchActivity.start(this,getToken());
-                }else {
-                    //进行授权
-                    WebViewActivity.start(MainActivity.this, API_URL);
-                }
+//                if(getToken() != null && !getToken().isEmpty()){
+//                    //保存token直接跳转
+//                    LaunchActivity.start(this,getToken());
+//                }else {
+//                    //进行授权
+//                    WebViewActivity.start(MainActivity.this, API_URL);
+//                }
 
+
+                WebViewActivity.start(MainActivity.this, API_URL);
                 //查看布局,直接跳转布局，不传token
                 //CommentsActivity.start(this,"4377940965525634");
 

@@ -3,6 +3,8 @@ package com.example.wbdemo.info.commentdata;
 import com.example.wbdemo.info.maindata.StatusesBean;
 import com.example.wbdemo.info.maindata.UserBean;
 
+import java.io.Serializable;
+
 /**
  * Created by zhoujunyu on 2019/5/29.
  */

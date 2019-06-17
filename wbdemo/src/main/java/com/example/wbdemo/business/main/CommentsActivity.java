@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -32,19 +33,20 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommentsActivity extends AppCompatActivity {
 
-    private static final String TAG_WEIBOID = "weiboID";
-    public static final String TAG_COUNTS = "countsArray";
+    private static final String TAG_STATUSBEAN = "statusBean";
+    public static final String TAG_POSITION = "position";
     private List<Fragment> mFragment;
     private TabEntity mTabEntity;
     private String [] mTitle = {"0","0","0"};
-    private ArrayList<Integer> mCounts = new ArrayList<>();
     private ArrayList<CustomTabEntity> mTabEntityList = new ArrayList<>();
-    private List<CommentsBean> mCommentsList = new ArrayList<>();
+    private List<StatusesBean> mStatusBean = new ArrayList<>();
+    private int mPosition = 0;
 
     private RecyclerView mRecyclerView;
     private CommentsViewPager mViewPager;
@@ -65,10 +67,10 @@ public class CommentsActivity extends AppCompatActivity {
 
 
 
-    public static void start(Context context,String weiboID,ArrayList<Integer> count){
+    public static void start(Context context,List<StatusesBean> statusBean,int position){
         Intent intent = new Intent(context,CommentsActivity.class);
-        intent.putExtra(TAG_WEIBOID,weiboID);
-        intent.putIntegerArrayListExtra(TAG_COUNTS,count);
+        intent.putExtra(TAG_STATUSBEAN,(Serializable)statusBean);
+        intent.putExtra(TAG_POSITION,position);
         context.startActivity(intent);
     }
 
@@ -78,8 +80,10 @@ public class CommentsActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_comments);
 
+        getData();
+
         initView();
-        EventManager.getInstance().register(this);
+        //EventManager.getInstance().register(this);
 
         mScrollview.postDelayed(new Runnable() {
             @Override
@@ -87,6 +91,12 @@ public class CommentsActivity extends AppCompatActivity {
                 mScrollview.smoothScrollTo(0,mLinearLayout.getMeasuredHeight());
             }
         },1000);
+    }
+
+    private void getData(){
+        Intent intent = getIntent();
+        mStatusBean = (List<StatusesBean>)intent.getSerializableExtra(TAG_STATUSBEAN);
+        mPosition = intent.getIntExtra(TAG_POSITION,0);
     }
 
     private void initView(){
@@ -150,10 +160,9 @@ public class CommentsActivity extends AppCompatActivity {
         });
 
 
-        mCounts = getIntent().getIntegerArrayListExtra(TAG_COUNTS);
-        mTitle[0] = "赞 " + mCounts.get(0).toString();
-        mTitle[1] = "评论 " + mCounts.get(1).toString();
-        mTitle[2] = "转发 " + mCounts.get(2).toString();
+        mTitle[0] = "赞 " + String.valueOf(mStatusBean.get(mPosition).getAttitudes_count());
+        mTitle[1] = "评论 " + String.valueOf(mStatusBean.get(mPosition).getComments_count());
+        mTitle[2] = "转发 " + String.valueOf(mStatusBean.get(mPosition).getReposts_count());
 
 
         //加载tab布局
@@ -192,50 +201,74 @@ public class CommentsActivity extends AppCompatActivity {
     private void loadData(){
 
         //点赞、转发、评论、分享数
-        mCountsAtti.setText(String.valueOf(mCounts.get(0)));
-        mCountsCommt.setText(String.valueOf(mCounts.get(1)));
-        mCountsRepos.setText(String.valueOf(mCounts.get(2)));
-        mCountsShare.setText(String.valueOf(mCounts.get(3)));
+        mCountsAtti.setText(String.valueOf(mStatusBean.get(mPosition).getAttitudes_count()));
+        mCountsCommt.setText(String.valueOf(mStatusBean.get(mPosition).getComments_count()));
+        mCountsRepos.setText(String.valueOf(mStatusBean.get(mPosition).getReposts_count()));
+        mCountsShare.setText(String.valueOf(mStatusBean.get(mPosition).getShares_count()));
+
+        //头像、内容、事件、昵称
+        Glide.with(getApplicationContext()).load(mStatusBean.get(mPosition).getUser().getAvatar_hd()).into(mMyPortrait);
+        mUsername.setText(mStatusBean.get(mPosition).getUser().getName());
+        mTime.setText(mStatusBean.get(mPosition).getCreated_at());
+        mContent.setText(mStatusBean.get(mPosition).getText());
+
+        //九宫格
+        ArrayList<ImageInfo> imageInfo = new ArrayList<>();
+        List<StatusesBean.PicUrlsBean> imageDetails = mStatusBean.get(mPosition).getPic_urls();
+        if (imageDetails != null) {
+            for (StatusesBean.PicUrlsBean imageDetail : imageDetails) {
+                ImageInfo info = new ImageInfo();
+                info.setThumbnailUrl(imageDetail.getThumbnail_pic());
+                info.setBigImageUrl(imageDetail.getThumbnail_pic().replace("thumbnail","large"));
+                imageInfo.add(info);
+            }
+        }
+
+        mNineGridView.setAdapter(new NineGridViewClickAdapter(getApplicationContext(),imageInfo));
+
+
     }
 
     private CmtsMainFragment initCmtsMainFragment(){
-        CmtsMainFragment fragment = CmtsMainFragment.newInstance(getIntent().getStringExtra(TAG_WEIBOID));
+        String WBid = mStatusBean.get(mPosition).getIdstr();
+        Log.d("zjyy", "weibo id is  " + WBid);
+        CmtsMainFragment fragment = CmtsMainFragment.newInstance(WBid);
         return fragment;
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
-    public void onEventCommentsThread(CommentsEvent event){
-        mCommentsList = event.getCommentsList();
-        if(mCommentsList != null) {
-            //头像、内容、事件、昵称
-            Glide.with(getApplicationContext()).load(mCommentsList.get(0).getStatus().getUser().getAvatar_hd()).into(mMyPortrait);
-            mUsername.setText(mCommentsList.get(0).getStatus().getUser().getName());
-            mTime.setText(mCommentsList.get(0).getStatus().getCreated_at());
-            mContent.setText(mCommentsList.get(0).getStatus().getText());
-
-            //九宫格
-            ArrayList<ImageInfo> imageInfo = new ArrayList<>();
-            List<StatusesBean.PicUrlsBean> imageDetails = mCommentsList.get(0).getStatus().getPic_urls();
-            if (imageDetails != null) {
-                for (StatusesBean.PicUrlsBean imageDetail : imageDetails) {
-                    ImageInfo info = new ImageInfo();
-                    info.setThumbnailUrl(imageDetail.getThumbnail_pic());
-                    info.setBigImageUrl(imageDetail.getThumbnail_pic().replace("thumbnail","large"));
-                    imageInfo.add(info);
-                }
-            }
-
-            mNineGridView.setAdapter(new NineGridViewClickAdapter(getApplicationContext(),imageInfo));
-        }
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+//    public void onEventCommentsThread(CommentsEvent event){
+//        mCommentsList = event.getCommentsList();
+//        if(mCommentsList != null) {
+//            //头像、内容、事件、昵称
+//            Glide.with(getApplicationContext()).load(mCommentsList.get(0).getStatus().getUser().getAvatar_hd()).into(mMyPortrait);
+//            mUsername.setText(mCommentsList.get(0).getStatus().getUser().getName());
+//            mTime.setText(mCommentsList.get(0).getStatus().getCreated_at());
+//            mContent.setText(mCommentsList.get(0).getStatus().getText());
+//
+//            //九宫格
+//            ArrayList<ImageInfo> imageInfo = new ArrayList<>();
+//            List<StatusesBean.PicUrlsBean> imageDetails = mCommentsList.get(0).getStatus().getPic_urls();
+//            if (imageDetails != null) {
+//                for (StatusesBean.PicUrlsBean imageDetail : imageDetails) {
+//                    ImageInfo info = new ImageInfo();
+//                    info.setThumbnailUrl(imageDetail.getThumbnail_pic());
+//                    info.setBigImageUrl(imageDetail.getThumbnail_pic().replace("thumbnail","large"));
+//                    imageInfo.add(info);
+//                }
+//            }
+//
+//            mNineGridView.setAdapter(new NineGridViewClickAdapter(getApplicationContext(),imageInfo));
+//        }
+//    }
 
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventManager.getInstance().unregister(this);
+        //EventManager.getInstance().unregister(this);
     }
 
 }

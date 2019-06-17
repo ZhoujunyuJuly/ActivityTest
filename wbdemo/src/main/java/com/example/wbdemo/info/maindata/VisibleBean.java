@@ -1,9 +1,11 @@
 package com.example.wbdemo.info.maindata;
 
+import java.io.Serializable;
+
 /**
  * Created by zhoujunyu on 2019/5/23.
  */
-public class VisibleBean {
+public class VisibleBean implements Serializable {
     /**
      * type : 0
      * list_id : 0

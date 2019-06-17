@@ -2,12 +2,13 @@ package com.example.wbdemo.info.maindata;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by zhoujunyu on 2019/5/23.
  */
-public class StatusesBean {
+public class StatusesBean implements Serializable {
     /**
      * created_at : Tue May 21 19:08:49 +0800 2019
      * id : 4374463896095038
@@ -82,6 +83,7 @@ public class StatusesBean {
     private int reposts_count;
     private int comments_count;
     private int attitudes_count;
+    private int shares_count;
     private int pending_approval_count;
     private boolean isLongText;
     private int hide_multi_attitude;
@@ -291,6 +293,14 @@ public class StatusesBean {
         return attitudes_count;
     }
 
+    public int getShares_count() {
+        return shares_count;
+    }
+
+    public void setShares_count(int shares_count) {
+        this.shares_count = shares_count;
+    }
+
     public void setAttitudes_count(int attitudes_count) {
         this.attitudes_count = attitudes_count;
     }
@@ -498,7 +508,7 @@ public class StatusesBean {
     }
 
 
-    public static class PicUrlsBean {
+    public static class PicUrlsBean implements Serializable{
         /**
          * thumbnail_pic : http://wx1.sinaimg.cn/thumbnail/80762695ly1g3b2qrfj9mj20j62n1gt6.jpg
          */

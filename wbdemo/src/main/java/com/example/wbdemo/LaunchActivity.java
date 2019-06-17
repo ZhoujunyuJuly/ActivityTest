@@ -166,7 +166,7 @@ public class LaunchActivity extends AppCompatActivity {
         //commontablayout微调
         mCommonTabLayout.setIconHeight(27);
         mCommonTabLayout.setIconWidth(27);
-         //TODO: 2019/5/29 gracity不起作用
+         //TODO: 2019/5/29 gravity不起作用
         mCommonTabLayout.setIconGravity(Gravity.CENTER);
 
 

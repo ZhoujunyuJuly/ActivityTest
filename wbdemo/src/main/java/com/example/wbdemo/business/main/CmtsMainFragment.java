@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,9 @@ import com.example.wbdemo.net.OkHttpManager;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.security.spec.EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.ToDoubleBiFunction;
@@ -32,7 +36,9 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.example.wbdemo.info.URLInfo.ACCESS_TOKEN_HEADER;
 import static com.example.wbdemo.info.URLInfo.COMMENTS_URL;
+import static com.example.wbdemo.info.URLInfo.TOKEN;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,6 +51,7 @@ import static com.example.wbdemo.info.URLInfo.COMMENTS_URL;
 public class CmtsMainFragment extends Fragment {
 
     private static final String TAG_WBID = "weiboID";
+    public static final String ACCESS_TOKEN = "access_token";
 
     private String mWeiboID;
     private String mToken;
@@ -77,8 +84,8 @@ public class CmtsMainFragment extends Fragment {
             mWeiboID = getArguments().getString(TAG_WBID);
         }
 
-        SharedPreferences pref = getActivity().getSharedPreferences("access_token", MODE_PRIVATE);
-        mToken = pref.getString("access_token", "");
+        SharedPreferences pref = getActivity().getSharedPreferences(ACCESS_TOKEN, MODE_PRIVATE);
+        mToken = pref.getString(ACCESS_TOKEN, TOKEN);
 
     }
 
@@ -153,6 +160,8 @@ public class CmtsMainFragment extends Fragment {
                 mCommentsList.clear();
                 mCommentsList.addAll(mComments.getCommentsBeans());
 
+                Log.d("zjyy", "comments is  " + json);
+
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -162,13 +171,22 @@ public class CmtsMainFragment extends Fragment {
                     });
                 }
 
-                EventManager.getInstance().postEvent(CommentsEvent.CommentsEvent(mCommentsList));
+                //EventManager.getInstance().postEvent(CommentsEvent.CommentsEvent(mCommentsList));
             }
         });
     }
 
     private String getURL() {
-        return COMMENTS_URL + "?access_token=" + mToken + "&id=" + mWeiboID;
+        String URL = COMMENTS_URL + ACCESS_TOKEN_HEADER + mToken + "&id=" + mWeiboID;
+        try {
+            String DecodeURL = URLDecoder.decode(URL,"UTF-8");
+            return DecodeURL;
+        }
+        catch (Exception e){
+            Log.e("","toURLEncode error of CmtsMainFragment");
+            Toast.makeText(getContext(),"toURLEncode error of CmtsMainFragment",Toast.LENGTH_LONG).show();
+        }
+        return "";
     }
 
 
