@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#80000000">
+
+
+    <LinearLayout
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/shape_corner">
+
+        <ImageView
+            android:id="@+id/bugly_iv"
+            android:layout_width="match_parent"
+            android:layout_height="84dp"
+            android:src="@mipmap/bugly_ui"/>
+
+        <TextView
+            android:id="@+id/bugly_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/TextContent"
+            android:visibility="gone"
+            android:tag="beta_title" />
+
+        <TextView
+            android:id="@+id/bugly_info"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/TimeLineGray"
+            android:text="版本：V1.0.1"
+            android:tag="beta_upgrade_info"/>
+
+        <TextView
+            android:id="@+id/bugly_feature"
+            android:layout_marginLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/TextContent"
+            android:text="功能说明：添加自定义feature"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:tag="beta_upgrade_feature"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            android:layout_marginTop="20dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+        <TextView
+            android:id="@+id/bugly_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/TimeLineGray"
+            android:text="暂不更新"
+            android:tag="beta_cancel_button"
+            android:layout_weight="1"
+            android:gravity="center"/>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/black"/>
+
+        <TextView
+            android:id="@+id/bugly_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/Yellow"
+            android:text="立即更新"
+            android:textStyle="bold"
+            android:tag="beta_confirm_button"
+            android:layout_weight="1"
+            android:gravity="center"/>
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -25,6 +25,7 @@ public class WbApp extends Application {
 
 
         Beta.autoCheckUpgrade = false;//设置不自动检查
+        Beta.upgradeDialogLayoutId = R.layout.bugly_ui;
         Log.i("App","init success");
         //Bugly.init(getApplicationContext(), "336b7711dc", false);
         Bugly.init(getApplicationContext(), "4037d61985", false);

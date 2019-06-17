@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Beta.checkUpgrade();
     }
 
+
     private void initView() {
         webview_btn = findViewById(R.id.button_webview);
         html_btn = findViewById(R.id.button_html);
