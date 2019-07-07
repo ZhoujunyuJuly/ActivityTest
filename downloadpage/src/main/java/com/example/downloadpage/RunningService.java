@@ -27,23 +27,22 @@ public class RunningService extends Service {
             public void run() {
                 Notify.DownloadAlarm(getApplicationContext());
                 Log.d("zjy", "service is 1");
-                //Toast.makeText(getApplicationContext(),"弹框",Toast.LENGTH_LONG).show();
 
             }
         }).start();
 
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        int interval = 5*1000;
+        int interval = 25*1000;
         long triggerAtTime = SystemClock.elapsedRealtime() + interval;
         Intent i = new Intent(this, RunningService.class);
         PendingIntent pi = PendingIntent.getService(this, 0, i, 0);
-        //alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,triggerAtTime,pi);
+        alarmManager.cancel(pi);
 
         if (Build.VERSION.SDK_INT < 19) {
-            alarmManager.set(AlarmManager.RTC_WAKEUP,  triggerAtTime, pi);
+            alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,  triggerAtTime, pi);
         } else {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerAtTime, pi);
+            alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
         }
 
         return super.onStartCommand(intent, flags, startId);

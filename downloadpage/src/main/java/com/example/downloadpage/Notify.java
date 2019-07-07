@@ -9,6 +9,7 @@ import android.os.Build;
 import androidx.core.app.NotificationCompat;
 
 import static androidx.core.content.ContextCompat.getSystemService;
+import static androidx.core.content.ContextCompat.startForegroundService;
 
 
 /**
@@ -35,7 +36,9 @@ public class Notify {
             // 注册通道，注册后除非卸载再安装否则不改变
             notifyManager.createNotificationChannel(notificationChannel);
             builder.setChannelId("AppTestNotificationId");
+            builder.setAutoCancel(true);
         }
+
 
         notifyManager.notify(10,builder.build());
 
