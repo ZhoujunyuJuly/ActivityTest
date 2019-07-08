@@ -3,6 +3,7 @@ package com.example.downloadpage;
 import android.net.sip.SipSession;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,7 +52,9 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
                 downFileLength = file.length();
             }
 
-            long contentLength = getContentLength(directory);
+            Log.d("zjy", "directory is " + directory + " url is " + downloadURL);
+
+            long contentLength = getContentLength(downloadURL);
             if(contentLength == 0){
                 return FAILED;
             }else if(contentLength == downFileLength){
@@ -65,7 +68,7 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
             Response response = client.newCall(request).execute();
             if(response != null){
                 is = response.body().byteStream();
-                savedFile = new RandomAccessFile(file,"w");
+                savedFile = new RandomAccessFile(file,"rw");
                 savedFile.seek(downFileLength);
                 byte[] b = new byte[1024];
                 int total = 0;
@@ -152,7 +155,7 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
                                      .build();
         Response response = okHttpClient.newCall(request).execute();
         if (response != null && response.isSuccessful()){
-            long contentLength = request.body().contentLength();
+            long contentLength = response.body().contentLength();
             response.close();
             return contentLength;
         }

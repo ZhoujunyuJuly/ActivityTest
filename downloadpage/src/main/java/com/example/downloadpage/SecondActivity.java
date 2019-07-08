@@ -46,6 +46,8 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
+        init();
+        StartDownloadService();
     }
 
     private void init(){
@@ -80,6 +82,7 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()){
             case R.id.bt_start:
                 String url = "https://raw.githubusercontent.com/guolindev/eclipse/master/eclipse-inst-win64.exe";
+                //String url = "https://avatar.csdn.net/4/E/8/1_y1scp.jpg";
                 downloadBinder.startDownload(url);
                 break;
             case R.id.bt_cancel:
