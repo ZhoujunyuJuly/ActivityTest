@@ -21,21 +21,23 @@ public class DownloadService extends Service {
 
     private DownloadTask downloadTask;
     private String downloadURL;
+    private UpdateProgress updateProgress;
 
     private DownloadListener listener = new DownloadListener() {
         @Override
         public void onSuccess() {
             downloadTask = null;
             stopForeground(true);
-            getNotificationManager().notify(1,getNotification("Download Success",-1));
+            //getNotificationManager().notify(1,getNotification("Download Success",-1));
             Toast.makeText(DownloadService.this,"Download Success",Toast.LENGTH_LONG).show();
+
         }
 
         @Override
         public void onFailed() {
             downloadTask = null;
             stopForeground(true);
-            getNotificationManager().notify(1,getNotification("Download Failed",-1));
+            //getNotificationManager().notify(1,getNotification("Download Failed",-1));
             Toast.makeText(DownloadService.this,"Download Failed",Toast.LENGTH_LONG).show();
         }
 
@@ -47,7 +49,8 @@ public class DownloadService extends Service {
 
         @Override
         public void onProgress(int progress) {
-            getNotificationManager().notify(1,getNotification("Downloading...",progress));
+            //getNotificationManager().notify(1,getNotification("Downloading...",progress));
+            updateProgress.update(progress);
         }
 
         @Override
@@ -55,10 +58,19 @@ public class DownloadService extends Service {
             downloadTask = null;
             stopForeground(true);
             Toast.makeText(DownloadService.this,"Canceled",Toast.LENGTH_LONG).show();
+            updateProgress.update(-1);
         }
     };
 
     public DownloadService() {
+    }
+
+    public interface UpdateProgress{
+        void update(int progress);
+    }
+
+    public void setUpdateProgress(UpdateProgress updateProgress) {
+        this.updateProgress = updateProgress;
     }
 
     private DownloadBinder mBinder= new DownloadBinder();
@@ -70,7 +82,12 @@ public class DownloadService extends Service {
         return mBinder;
     }
 
-    class DownloadBinder extends Binder{
+
+    public class DownloadBinder extends Binder{
+        public DownloadService getService(){
+            return DownloadService.this;
+        }
+
         public void startDownload(String url){
             if(downloadTask == null){
                 downloadURL = url;

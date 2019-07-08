@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.InputStream;
@@ -24,6 +26,8 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
     private Button bt_start;
     private Button bt_pause;
     private Button bt_cancel;
+    private ProgressBar progressBar;
+    private TextView tv_download;
 
     private DownloadService.DownloadBinder downloadBinder;
 
@@ -31,6 +35,25 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             downloadBinder = (DownloadService.DownloadBinder)service;
+            DownloadService downloadService= downloadBinder.getService();
+            downloadService.setUpdateProgress(new DownloadService.UpdateProgress() {
+                @Override
+                public void update(int progress) {
+                    if(progress != 0){
+                        progressBar.setVisibility(View.VISIBLE);
+                        tv_download.setVisibility(View.VISIBLE);
+
+                        if(progress == -1){
+                            progressBar.setProgress(0);
+                            tv_download.setText(0);
+                        }else {
+                            progressBar.setMax(100);
+                            progressBar.setProgress(progress);
+                            tv_download.setText(progress + "%");
+                        }
+                    }
+                }
+            });
         }
 
         @Override
@@ -54,10 +77,37 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
         bt_cancel = findViewById(R.id.bt_cancel);
         bt_start = findViewById(R.id.bt_start);
         bt_pause = findViewById(R.id.bt_pause);
+        progressBar = findViewById(R.id.progress);
+        tv_download = findViewById(R.id.tv_download_per);
 
         bt_pause.setOnClickListener(this);
         bt_start.setOnClickListener(this);
         bt_cancel.setOnClickListener(this);
+
+//        connection = new ServiceConnection() {
+//            @Override
+//            public void onServiceConnected(ComponentName name, IBinder service) {
+//                downloadBinder = (DownloadService.DownloadBinder)service;
+//                DownloadService downloadService= downloadBinder.getService();
+//                downloadService.setUpdateProgress(new DownloadService.UpdateProgress() {
+//                    @Override
+//                    public void update(int progress) {
+//                        if(progress != 0){
+//                            progressBar.setVisibility(View.VISIBLE);
+//                            tv_download.setVisibility(View.VISIBLE);
+//                            progressBar.setMax(100);
+//                            progressBar.setProgress(progress);
+//                            tv_download.setText(progress + "%");
+//                        }
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onServiceDisconnected(ComponentName name) {
+//
+//            }
+//        };
 
     }
 
@@ -71,6 +121,7 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
             ActivityCompat.requestPermissions(SecondActivity.this,new String[]
                     {Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
         }
+
     }
 
     @Override
