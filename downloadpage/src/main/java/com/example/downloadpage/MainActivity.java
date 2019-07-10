@@ -1,19 +1,14 @@
 package com.example.downloadpage;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -25,6 +20,13 @@ import com.chad.library.adapter.base.listener.OnItemChildClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         init();
         //StartService();启动定时服务
-        StartDownloadService();//启动下载服务
+        //StartDownloadService();//启动下载服务
         initAdapter();
 
     }
@@ -110,22 +112,39 @@ public class MainActivity extends AppCompatActivity {
                 mProgressBar = mRecyclerView.getChildAt(position).findViewById(R.id.progress_first);
                 mButton = mRecyclerView.getChildAt(position).findViewById(R.id.bt_download);
                 mText_Percent = mRecyclerView.getChildAt(position).findViewById(R.id.tv_progress_percent);
-                if( downloadBinder == null){
-                    return;
-                }
+
                 switch (view.getId()){
                     case R.id.bt_download :
                         mProgressBar.setVisibility(View.VISIBLE);
                         mText_Percent.setVisibility(View.VISIBLE);
-                        if( TAG_STATUS == START ) {
+                        if (TAG_STATUS == START) {
+                            StartDownloadService();
                             mButton.setText("暂停");
-                        }else {
+
+                            //首次开始下载，开启服务，等待服务开启0.5s
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (downloadBinder == null) {
+                                        return;
+                                    }
+                                    DownloadStatus(TAG_STATUS);
+                                }
+                            },500);
+
+
+                        } else {
                             mButton.setText("继续");
+                            DownloadStatus(TAG_STATUS);
                         }
-                        DownloadStatus(TAG_STATUS);
+
+
+
                         break;
                     default:
-                        break;
+                        Intent intent = new Intent(MainActivity.this,DetailActivity.class);
+                        startActivity(intent);
+                        Log.d("zjy", "翻页 ");
                 }
             }
 
@@ -142,8 +161,10 @@ public class MainActivity extends AppCompatActivity {
                         mProgressBar.setVisibility(View.VISIBLE);
                         mProgressBar.setProgress(0);
                         mText_Percent.setText("0%");
+
                         downloadBinder.cancelDownload();
                         mButton.setText("重新下载");
+                        StopDownloadService();//关闭服务
                         break;
                     default:
                         break;
@@ -179,6 +200,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void StopDownloadService(){
+        Intent intent = new Intent(this,DownloadService.class);
+        stopService(intent);
+        unbindService(connection);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -198,11 +225,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unbindService(connection);
-    }
-
-    private void StartService(){
-        Intent intent = new Intent(this,RunningService.class);
-        startService(intent);
     }
 
 }

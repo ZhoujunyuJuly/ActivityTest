@@ -15,9 +15,9 @@ import static androidx.core.content.ContextCompat.startForegroundService;
 /**
  * Created by zhoujunyu on 2019/7/5.
  */
-public class Notify {
+public class NotificationExample {
 
-    public Notify() {
+    public NotificationExample() {
         super();
     }
 

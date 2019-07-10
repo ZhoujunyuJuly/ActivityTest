@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
-import android.widget.Toast;
 
 public class RunningService extends Service {
     public RunningService() {
@@ -25,7 +24,7 @@ public class RunningService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Notify.DownloadAlarm(getApplicationContext());
+                NotificationExample.DownloadAlarm(getApplicationContext());
                 Log.d("zjy", "service is 1");
 
             }

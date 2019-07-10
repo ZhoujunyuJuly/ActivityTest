@@ -24,6 +24,7 @@ public class DownloadListAdapter extends BaseQuickAdapter<String,BaseViewHolder>
         helper.setText(R.id.tv_app_name, item);
         helper.addOnClickListener(R.id.bt_download);
         helper.addOnLongClickListener(R.id.bt_download);
+        helper.addOnClickListener(R.id.layout_recyclerview);
 
     }
 

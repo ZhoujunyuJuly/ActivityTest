@@ -61,11 +61,12 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
                 return SUCCESS;
             }
 
-            OkHttpClient client = new OkHttpClient();
+            //OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder().addHeader("RANGE","bytes=" + downFileLength + "-")
                                                    .url(downloadURL)
                                                    .build();
-            Response response = client.newCall(request).execute();
+            //Response response = client.newCall(request).execute();
+            Response response = OKHttpManager.getInstance().get(request);
             if(response != null){
                 is = response.body().byteStream();
                 savedFile = new RandomAccessFile(file,"rw");
@@ -149,11 +150,12 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
 
 
     private long getContentLength(String downloadUrl)throws IOException{
-        OkHttpClient okHttpClient = new OkHttpClient();
+        //OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder()
                                      .url(downloadUrl)
                                      .build();
-        Response response = okHttpClient.newCall(request).execute();
+        //Response response = okHttpClient.newCall(request).execute();
+        Response response = OKHttpManager.getInstance().get(request);
         if (response != null && response.isSuccessful()){
             long contentLength = response.body().contentLength();
             response.close();
