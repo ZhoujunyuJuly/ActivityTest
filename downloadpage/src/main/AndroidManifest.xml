@@ -35,7 +35,12 @@
         <receiver
             android:name=".ProgressChangeReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.downloadpage.PROGRESS_CHANGE_1"/>
+            </intent-filter>
+
+        </receiver>
     </application>
 
 </manifest>

@@ -3,6 +3,7 @@ package com.example.downloadpage;
 import android.Manifest;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mButton;
     private RecyclerView mRecyclerView;
     private TextView mText_Percent;
+    private ProgressChangeReceiver receiver;
 
 
 
@@ -78,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
         //StartService();启动定时服务
         //StartDownloadService();//启动下载服务
         initAdapter();
+
+
 
     }
 
@@ -142,8 +146,14 @@ public class MainActivity extends AppCompatActivity {
 
                         break;
                     default:
+
+//                        Intent intent_test = new Intent("com.example.downloadpage.PROGRESS_CHANGE_1");
+//                        sendBroadcast(intent_test);
+
                         Intent intent = new Intent(MainActivity.this,DetailActivity.class);
                         startActivity(intent);
+
+
                         Log.d("zjy", "翻页 ");
                 }
             }
@@ -171,6 +181,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+//        IntentFilter intentFilter = new IntentFilter();
+//        intentFilter.addAction("com.example.downloadpage.PROGRESS_CHANGE_1");
+//        receiver = new ProgressChangeReceiver();
+//        registerReceiver(receiver,intentFilter);
 
     }
 
@@ -225,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unbindService(connection);
+        //unregisterReceiver(receiver);
     }
 
 }

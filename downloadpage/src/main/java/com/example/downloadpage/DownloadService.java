@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.widget.Toast;
@@ -16,6 +17,9 @@ import android.widget.Toast;
 import java.io.File;
 
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import static com.example.downloadpage.DownloadTask.ACTION_PROGRESS_BROADCAST;
 
 public class DownloadService extends Service {
 
@@ -28,7 +32,6 @@ public class DownloadService extends Service {
         public void onSuccess() {
             downloadTask = null;
             Toast.makeText(DownloadService.this,"Download Success",Toast.LENGTH_LONG).show();
-
         }
 
         @Override
@@ -45,6 +48,13 @@ public class DownloadService extends Service {
 
         @Override
         public void onProgress(int progress) {
+            Intent Broadcast_Intent = new Intent(ACTION_PROGRESS_BROADCAST);
+            Bundle bundle = new Bundle();
+            bundle.putInt("progress",progress);
+            Broadcast_Intent.putExtras(bundle);
+
+            sendBroadcast(Broadcast_Intent);
+
             updateProgress.update(progress);
         }
 
@@ -85,7 +95,7 @@ public class DownloadService extends Service {
         public void startDownload(String url){
             if(downloadTask == null){
                 downloadURL = url;
-                downloadTask = new DownloadTask(listener);
+                downloadTask = new DownloadTask(listener,DownloadService.this);
                 downloadTask.execute(downloadURL);
                 Toast.makeText(DownloadService.this,"Downloading...",Toast.LENGTH_LONG).show();
             }

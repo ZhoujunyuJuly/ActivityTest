@@ -1,5 +1,7 @@
 package com.example.downloadpage;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.sip.SipSession;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -11,9 +13,11 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.util.Random;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
 
 /**
  * Created by zhoujunyu on 2019/7/6.
@@ -24,15 +28,20 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
     public static final int FAILED = 1;
     public static final int PAUSED = 2;
     public static final int CANCEL = 3;
+    public static final String ACTION_PROGRESS_BROADCAST = "com.example.downloadpage.PROGRESS_CHANGE";
+
 
     private boolean isCanceled = false;
     private boolean isPaused = false;
     private int lastProgress;
+    private Context mContext;
 
     private DownloadListener downloadListener;
+    private LocalBroadcastManager broadcastManager;
 
-    public DownloadTask(DownloadListener downloadListener) {
+    public DownloadTask(DownloadListener downloadListener, Context context) {
         this.downloadListener = downloadListener;
+        this.mContext = context;
     }
 
 
@@ -61,12 +70,14 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
                 return SUCCESS;
             }
 
-            //OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder().addHeader("RANGE","bytes=" + downFileLength + "-")
                                                    .url(downloadURL)
                                                    .build();
-            //Response response = client.newCall(request).execute();
             Response response = OKHttpManager.getInstance().get(request);
+
+//            broadcastManager = LocalBroadcastManager.getInstance(mContext);
+//            Intent Broadcast_Intent = new Intent(ACTION_PROGRESS_BROADCAST);
+
             if(response != null){
                 is = response.body().byteStream();
                 savedFile = new RandomAccessFile(file,"rw");
@@ -84,6 +95,7 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
                         savedFile.write(b,0,len);
                         int progressLength = (int)((total + downFileLength)*100/contentLength);
                         publishProgress(progressLength);
+                        //broadcastManager.sendBroadcast(Broadcast_Intent);//发送广播
                     }
                 }
                 response.body().close();
@@ -117,6 +129,7 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
         if(progress > lastProgress){
             downloadListener.onProgress(progress);
             lastProgress = progress;
+
         }
     }
 
@@ -146,7 +159,6 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
     public void CancelDownload(){
         isCanceled = true;
     }
-
 
 
     private long getContentLength(String downloadUrl)throws IOException{
