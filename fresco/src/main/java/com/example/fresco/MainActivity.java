@@ -1,10 +1,11 @@
 package com.example.fresco;
 
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 

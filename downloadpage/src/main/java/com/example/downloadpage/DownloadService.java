@@ -27,8 +27,6 @@ public class DownloadService extends Service {
         @Override
         public void onSuccess() {
             downloadTask = null;
-            stopForeground(true);
-            //getNotificationManager().notify(1,getNotification("Download Success",-1));
             Toast.makeText(DownloadService.this,"Download Success",Toast.LENGTH_LONG).show();
 
         }
@@ -36,8 +34,6 @@ public class DownloadService extends Service {
         @Override
         public void onFailed() {
             downloadTask = null;
-            stopForeground(true);
-            //getNotificationManager().notify(1,getNotification("Download Failed",-1));
             Toast.makeText(DownloadService.this,"Download Failed",Toast.LENGTH_LONG).show();
         }
 
@@ -49,16 +45,14 @@ public class DownloadService extends Service {
 
         @Override
         public void onProgress(int progress) {
-            //getNotificationManager().notify(1,getNotification("Downloading...",progress));
             updateProgress.update(progress);
         }
 
         @Override
         public void onCanceled() {
             downloadTask = null;
-            stopForeground(true);
             Toast.makeText(DownloadService.this,"Canceled",Toast.LENGTH_LONG).show();
-            updateProgress.update(-1);
+            updateProgress.update(0);
         }
     };
 
@@ -93,7 +87,6 @@ public class DownloadService extends Service {
                 downloadURL = url;
                 downloadTask = new DownloadTask(listener);
                 downloadTask.execute(downloadURL);
-                startForeground(1,getNotification("Downloading...",0));
                 Toast.makeText(DownloadService.this,"Downloading...",Toast.LENGTH_LONG).show();
             }
         }
@@ -116,48 +109,10 @@ public class DownloadService extends Service {
                     if(file.exists()){
                         file.delete();
                     }
-                    getNotificationManager().cancel(1);
-                    stopForeground(true);
                     Toast.makeText(DownloadService.this,"Canceled",Toast.LENGTH_LONG).show();
                 }
             }
         }
     }
 
-
-
-    private NotificationManager getNotificationManager(){
-        return (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-    }
-
-    private Notification getNotification(String title,int progress){
-        Intent intent = new Intent(this,SecondActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(this,0,intent,0);
-
-
-        NotificationManager notifyManager = (NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                                            .setSmallIcon(R.mipmap.ic_launcher_round)
-                                            .setContentTitle(title)
-                                            .setContentIntent(pi);
-
-        // 兼容  API 26，Android 8.0
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            // 第三个参数表示通知的重要程度，默认则只在通知栏闪烁一下
-            NotificationChannel notificationChannel = new NotificationChannel("AppTestNotificationId", "AppTestNotificationName", NotificationManager.IMPORTANCE_HIGH);
-            // 注册通道，注册后除非卸载再安装否则不改变
-            notifyManager.createNotificationChannel(notificationChannel);
-            builder.setChannelId("AppTestNotificationId");
-            builder.setAutoCancel(true);
-        }
-
-        notifyManager.notify(11,builder.build());
-
-
-        if(progress > 0){
-            builder.setContentText(progress + "%");
-            builder.setProgress(100,progress,false);
-        }
-        return builder.build();
-    }
 }
