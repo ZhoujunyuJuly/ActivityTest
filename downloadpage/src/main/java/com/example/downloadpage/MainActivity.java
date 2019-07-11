@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                         mProgressBar.setVisibility(View.VISIBLE);
                         mText_Percent.setVisibility(View.VISIBLE);
                         if (TAG_STATUS == START) {
-                            StartDownloadService();
+                            startDownloadService();
                             mButton.setText("暂停");
 
                             //首次开始下载，开启服务，等待服务开启0.5s
@@ -146,9 +146,6 @@ public class MainActivity extends AppCompatActivity {
 
                         break;
                     default:
-
-//                        Intent intent_test = new Intent("com.example.downloadpage.PROGRESS_CHANGE_1");
-//                        sendBroadcast(intent_test);
 
                         Intent intent = new Intent(MainActivity.this,DetailActivity.class);
                         startActivity(intent);
@@ -174,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
 
                         downloadBinder.cancelDownload();
                         mButton.setText("重新下载");
-                        StopDownloadService();//关闭服务
+                        stopDownloadService();//关闭服务
                         break;
                     default:
                         break;
@@ -202,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void StartDownloadService(){
+    private void startDownloadService(){
         Intent intent = new Intent(this,DownloadService.class);
         startService(intent);
         bindService(intent,connection,BIND_AUTO_CREATE);
@@ -215,10 +212,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void StopDownloadService(){
+    private void stopDownloadService(){
         Intent intent = new Intent(this,DownloadService.class);
-        stopService(intent);
         unbindService(connection);
+        stopService(intent);
+
     }
 
     @Override

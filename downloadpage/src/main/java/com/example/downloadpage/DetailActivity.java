@@ -4,10 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,15 +23,61 @@ public class DetailActivity extends AppCompatActivity {
     private ProChangeReceiver proChangeReceiver;
     private ProgressBar mProgress;
     private TextView mProgress_percent;
+    private DownloadService.DownloadBinder downloadBinder;
+    private int mProgress_value;
+
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            downloadBinder = (DownloadService.DownloadBinder)service;
+            DownloadService downloadService = downloadBinder.getService();
+            mProgress_value = downloadService.getProgress();
+            mProgress.setProgress(mProgress_value);
+            mProgress_percent.setText(mProgress_value + "%");
+
+            downloadService.setUpdateProgress(new DownloadService.UpdateProgress() {
+                @Override
+                public void update(int progress) {
+                    if( mProgress != null) {
+                        mProgress.setProgress(progress);
+                        mProgress_percent.setText(progress + "%");
+                    }
+                }
+            });
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+
+        //接收服务器广播的方法，缺陷：在上一界面取消任务时，接收不到广播；
+        //receiveBroadcast();
+
+        //监听服务
+        listenService();
+
+    }
+
+
+    //接收服务器广播
+    private void receiveBroadcast(){
         init();
         initReceiver();
+    }
 
+    //监听服务
+    private void listenService(){
+        init();
+        bindService();
     }
 
     private void init(){
@@ -46,11 +95,17 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
+    private void bindService(){
+        Intent intent = new Intent(this,DownloadService.class);
+        bindService(intent,connection,BIND_AUTO_CREATE);
+    }
+
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(proChangeReceiver);
+        //unregisterReceiver(proChangeReceiver);
+        unbindService(connection);
     }
 
     class ProChangeReceiver extends BroadcastReceiver{
@@ -67,5 +122,11 @@ public class DetailActivity extends AppCompatActivity {
             }
             //Toast.makeText(DetailActivity.this,"广播发送",Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //unbindService(connection);
     }
 }
