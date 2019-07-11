@@ -61,8 +61,6 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
                 downFileLength = file.length();
             }
 
-            Log.d("zjy", "directory is " + directory + " url is " + downloadURL);
-
             long contentLength = getContentLength(downloadURL);
             if(contentLength == 0){
                 return FAILED;

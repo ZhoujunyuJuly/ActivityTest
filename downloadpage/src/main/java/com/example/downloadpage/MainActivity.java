@@ -1,7 +1,9 @@
 package com.example.downloadpage;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -29,6 +31,8 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static com.example.downloadpage.DownloadTask.ACTION_PROGRESS_BROADCAST;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final int START  = 0;
@@ -44,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
     private Button mButton;
     private RecyclerView mRecyclerView;
     private TextView mText_Percent;
-    private ProgressChangeReceiver receiver;
+    private ProgressChangeReceiver mReceiver;
+
 
 
 
@@ -53,12 +58,19 @@ public class MainActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName name, IBinder service) {
             downloadBinder = (DownloadService.DownloadBinder)service;
             DownloadService downloadService = downloadBinder.getService();
+
+
+            int progress = downloadService.getProgress();
+            mProgressBar.setProgress(progress);
+            mText_Percent.setText(progress + "%");
+
             downloadService.setUpdateProgress(new DownloadService.UpdateProgress() {
                 @Override
                 public void update(int progress) {
                     if( mProgressBar != null ){
-                        mProgressBar.setProgress(progress);
-                        mText_Percent.setText(String.valueOf(progress) + "%");
+                        //mProgressBar.setProgress(progress);
+                        //mText_Percent.setText(String.valueOf(progress) + "%");
+                        Log.d("zjy", "mainactivity update " + progress);
                     }
                 }
             });
@@ -80,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         //StartService();启动定时服务
         //StartDownloadService();//启动下载服务
         initAdapter();
+        //TAG_PAGE = 1;
 
 
 
@@ -121,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.bt_download :
                         mProgressBar.setVisibility(View.VISIBLE);
                         mText_Percent.setVisibility(View.VISIBLE);
+
+
                         if (TAG_STATUS == START) {
                             startDownloadService();
                             mButton.setText("暂停");
@@ -146,12 +161,8 @@ public class MainActivity extends AppCompatActivity {
 
                         break;
                     default:
-
                         Intent intent = new Intent(MainActivity.this,DetailActivity.class);
                         startActivity(intent);
-
-
-                        Log.d("zjy", "翻页 ");
                 }
             }
 
@@ -179,11 +190,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        IntentFilter intentFilter = new IntentFilter();
-//        intentFilter.addAction("com.example.downloadpage.PROGRESS_CHANGE_1");
-//        receiver = new ProgressChangeReceiver();
-//        registerReceiver(receiver,intentFilter);
-
     }
 
     private void DownloadStatus(int status){
@@ -202,7 +208,15 @@ public class MainActivity extends AppCompatActivity {
     private void startDownloadService(){
         Intent intent = new Intent(this,DownloadService.class);
         startService(intent);
+
+        //绑定服务
         bindService(intent,connection,BIND_AUTO_CREATE);
+
+        //广播接收器
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ACTION_PROGRESS_BROADCAST);
+        mReceiver = new ProgressChangeReceiver();
+        registerReceiver(mReceiver,intentFilter);
 
         if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.
                 permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
@@ -214,9 +228,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void stopDownloadService(){
         Intent intent = new Intent(this,DownloadService.class);
-        unbindService(connection);
+        //unbindService(connection);
         stopService(intent);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -236,9 +255,27 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         unbindService(connection);
-        //unregisterReceiver(receiver);
+        super.onDestroy();
+        unregisterReceiver(mReceiver);
     }
+
+    class ProgressChangeReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            int progress = bundle.getInt("progress");
+            if( progress != -1 ) {
+                mProgressBar.setProgress(progress);
+                mText_Percent.setText(progress + "%");
+            }else {
+                mProgressBar.setProgress(50);
+                mText_Percent.setText("50%");
+            }
+            //Toast.makeText(MainActivity.this,"广播发送",Toast.LENGTH_LONG).show();
+        }
+    }
+
+
 
 }

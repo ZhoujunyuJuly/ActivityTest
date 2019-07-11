@@ -1,8 +1,6 @@
 package com.example.downloadpage;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -11,9 +9,9 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import static com.example.downloadpage.DownloadTask.ACTION_PROGRESS_BROADCAST;
 
@@ -31,6 +29,7 @@ public class DetailActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName name, IBinder service) {
             downloadBinder = (DownloadService.DownloadBinder)service;
             DownloadService downloadService = downloadBinder.getService();
+
             mProgress_value = downloadService.getProgress();
             mProgress.setProgress(mProgress_value);
             mProgress_percent.setText(mProgress_value + "%");
@@ -41,6 +40,7 @@ public class DetailActivity extends AppCompatActivity {
                     if( mProgress != null) {
                         mProgress.setProgress(progress);
                         mProgress_percent.setText(progress + "%");
+                        Log.d("zjy", "detail activity update " + progress);
                     }
                 }
             });
@@ -103,9 +103,9 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        unbindService(connection);
         super.onDestroy();
         //unregisterReceiver(proChangeReceiver);
-        unbindService(connection);
     }
 
     class ProChangeReceiver extends BroadcastReceiver{
@@ -124,9 +124,4 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        //unbindService(connection);
-    }
 }

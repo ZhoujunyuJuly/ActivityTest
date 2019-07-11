@@ -25,8 +25,6 @@ public class RunningService extends Service {
             @Override
             public void run() {
                 NotificationExample.DownloadAlarm(getApplicationContext());
-                Log.d("zjy", "service is 1");
-
             }
         }).start();
 
@@ -51,6 +49,5 @@ public class RunningService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("zjy", "onCreate: service");
     }
 }
