@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
@@ -49,7 +50,7 @@ public class DownloadService extends Service {
         @Override
         public void onPaused() {
             downloadTask = null;
-            //updateProgress.update(mProgress_Record);
+            sendProgressBroadcast(-1);
             Toast.makeText(DownloadService.this,"Paused",Toast.LENGTH_LONG).show();
         }
 
@@ -77,6 +78,7 @@ public class DownloadService extends Service {
 
     public void setUpdateProgress(UpdateProgress updateProgress) {
         this.updateProgress = updateProgress;
+
     }
 
     public int getProgress(){
@@ -140,4 +142,15 @@ public class DownloadService extends Service {
         sendBroadcast(mIntent_Broadcast);
     }
 
+    @Override
+    public boolean onUnbind(Intent intent) {
+        //return super.onUnbind(intent);
+        return true;
+    }
+
+
+    @Override
+    public void onRebind(Intent intent) {
+        super.onRebind(intent);
+    }
 }

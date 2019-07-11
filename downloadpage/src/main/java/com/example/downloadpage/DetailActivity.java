@@ -24,7 +24,7 @@ public class DetailActivity extends AppCompatActivity {
     private DownloadService.DownloadBinder downloadBinder;
     private int mProgress_value;
 
-    private ServiceConnection connection = new ServiceConnection() {
+    private ServiceConnection connection_detail = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             downloadBinder = (DownloadService.DownloadBinder)service;
@@ -33,6 +33,8 @@ public class DetailActivity extends AppCompatActivity {
             mProgress_value = downloadService.getProgress();
             mProgress.setProgress(mProgress_value);
             mProgress_percent.setText(mProgress_value + "%");
+            Log.d("zjy", "detail come in! ");
+
 
             downloadService.setUpdateProgress(new DownloadService.UpdateProgress() {
                 @Override
@@ -68,16 +70,10 @@ public class DetailActivity extends AppCompatActivity {
     }
 
 
-    //接收服务器广播
+    //接收服务器广播-----------------------------------------------
     private void receiveBroadcast(){
         init();
         initReceiver();
-    }
-
-    //监听服务
-    private void listenService(){
-        init();
-        bindService();
     }
 
     private void init(){
@@ -95,17 +91,52 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
+    //--------------------------------------------------------
+    //监听服务
+    private void listenService(){
+        init();
+        bindService();
+
+    }
+
+
     private void bindService(){
         Intent intent = new Intent(this,DownloadService.class);
-        bindService(intent,connection,BIND_AUTO_CREATE);
+        bindService(intent,connection_detail,BIND_AUTO_CREATE);
     }
 
 
     @Override
     protected void onDestroy() {
-        unbindService(connection);
+        //unbindService(connection);
         super.onDestroy();
         //unregisterReceiver(proChangeReceiver);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    protected void onStop() {
+        //unbindService(connection);
+        super.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+
+        super.onPause();
+        unbindService(connection_detail);
+        connection_detail = null;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //bindService();
     }
 
     class ProChangeReceiver extends BroadcastReceiver{
@@ -113,6 +144,9 @@ public class DetailActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
             int progress = bundle.getInt("progress");
+
+            Log.d("zjy", "detail receive " + progress);
+
             if( progress != -1 ) {
                 mProgress.setProgress(progress);
                 mProgress_percent.setText(progress + "%");
@@ -124,4 +158,8 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }
