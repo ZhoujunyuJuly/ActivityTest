@@ -10,9 +10,12 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
 import static com.example.downloadpage.DownloadTask.ACTION_PROGRESS_BROADCAST;
 
 
@@ -22,7 +25,8 @@ public class DetailActivity extends AppCompatActivity {
     private ProgressBar mProgress;
     private TextView mProgress_percent;
     private DownloadService.DownloadBinder downloadBinder;
-    private int mProgress_value;
+    private Button mBt;
+    private int STATUS = 1;
 
     private ServiceConnection connection_detail = new ServiceConnection() {
         @Override
@@ -30,10 +34,24 @@ public class DetailActivity extends AppCompatActivity {
             downloadBinder = (DownloadService.DownloadBinder)service;
             DownloadService downloadService = downloadBinder.getService();
 
-            mProgress_value = downloadService.getProgress();
-            mProgress.setProgress(mProgress_value);
-            mProgress_percent.setText(mProgress_value + "%");
-            Log.d("zjy", "detail come in! ");
+            if( mBt != null) {
+                int service_status = downloadService.getServiceStatus();
+                if (service_status != -1) {
+                    if (service_status == 0) {//正在运行
+                        mBt.setText("暂停");
+                        STATUS = service_status;
+                    } else {
+                        mBt.setText("开始");
+                        STATUS = service_status;
+                    }
+                }
+            }
+
+            int mProgress_value = downloadService.getProgress();
+            if(mProgress != null) {
+                mProgress.setProgress(mProgress_value);
+                mProgress_percent.setText(mProgress_value + "%");
+            }
 
 
             downloadService.setUpdateProgress(new DownloadService.UpdateProgress() {
@@ -42,7 +60,6 @@ public class DetailActivity extends AppCompatActivity {
                     if( mProgress != null) {
                         mProgress.setProgress(progress);
                         mProgress_percent.setText(progress + "%");
-                        Log.d("zjy", "detail activity update " + progress);
                     }
                 }
             });
@@ -79,6 +96,7 @@ public class DetailActivity extends AppCompatActivity {
     private void init(){
         mProgress = findViewById(R.id.progress_detail);
         mProgress_percent = findViewById(R.id.tv_progress_percent_detail);
+        mBt = findViewById(R.id.bt_pause);
     }
 
     private void initReceiver(){
@@ -97,20 +115,35 @@ public class DetailActivity extends AppCompatActivity {
         init();
         bindService();
 
+        mBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if( STATUS == 1) {//正在运行
+                    //bindService();
+                    mBt.setText("暂停");
+                    downloadBinder.startDownload("https://raw.githubusercontent.com/guolindev/eclipse/master/eclipse-inst-win64.exe");
+                    STATUS = 0;
+                }else {//暂停
+                    downloadBinder.pausedDownload();
+                    mBt.setText("开始");
+                    STATUS = 1;
+                }
+            }
+        });
+
     }
 
 
     private void bindService(){
         Intent intent = new Intent(this,DownloadService.class);
+        startService(intent);
         bindService(intent,connection_detail,BIND_AUTO_CREATE);
     }
 
 
     @Override
     protected void onDestroy() {
-        //unbindService(connection);
         super.onDestroy();
-        //unregisterReceiver(proChangeReceiver);
     }
 
     @Override
@@ -121,7 +154,6 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        //unbindService(connection);
         super.onStop();
     }
 
@@ -136,7 +168,6 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //bindService();
     }
 
     class ProChangeReceiver extends BroadcastReceiver{
@@ -145,7 +176,6 @@ public class DetailActivity extends AppCompatActivity {
             Bundle bundle = intent.getExtras();
             int progress = bundle.getInt("progress");
 
-            Log.d("zjy", "detail receive " + progress);
 
             if( progress != -1 ) {
                 mProgress.setProgress(progress);
@@ -158,8 +188,4 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
 }

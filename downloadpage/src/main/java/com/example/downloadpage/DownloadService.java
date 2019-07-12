@@ -25,14 +25,16 @@ import static com.example.downloadpage.DownloadTask.ACTION_PROGRESS_BROADCAST;
 
 public class DownloadService extends Service {
 
-    private static final int PAUSE = -1;
-    private static final int SUCCESS = -2;
+    private static final int PROGRESS = 0;
+    private static final int PAUSE = 1;
+
 
     private DownloadTask downloadTask;
     private String downloadURL;
     private UpdateProgress updateProgress;
     private Intent mIntent_Broadcast;
     private int mProgress_Record =0;
+    private int SERVICE_STATUS = -1;
 
     private DownloadListener listener = new DownloadListener() {
         @Override
@@ -52,6 +54,7 @@ public class DownloadService extends Service {
             downloadTask = null;
             sendProgressBroadcast(-1);
             Toast.makeText(DownloadService.this,"Paused",Toast.LENGTH_LONG).show();
+            SERVICE_STATUS = PAUSE;
         }
 
         @Override
@@ -59,6 +62,7 @@ public class DownloadService extends Service {
             sendProgressBroadcast(progress);
             mProgress_Record = progress;
             updateProgress.update(progress);
+            SERVICE_STATUS = PROGRESS;
         }
 
         @Override
@@ -70,6 +74,10 @@ public class DownloadService extends Service {
     };
 
     public DownloadService() {
+    }
+
+    public int getServiceStatus(){
+        return SERVICE_STATUS;
     }
 
     public interface UpdateProgress{
@@ -142,15 +150,16 @@ public class DownloadService extends Service {
         sendBroadcast(mIntent_Broadcast);
     }
 
-    @Override
-    public boolean onUnbind(Intent intent) {
-        //return super.onUnbind(intent);
-        return true;
-    }
-
-
-    @Override
-    public void onRebind(Intent intent) {
-        super.onRebind(intent);
-    }
+    //重新绑定服务
+//    @Override
+//    public boolean onUnbind(Intent intent) {
+//        //return super.onUnbind(intent);
+//        return true;
+//    }
+//
+//
+//    @Override
+//    public void onRebind(Intent intent) {
+//        super.onRebind(intent);
+//    }
 }

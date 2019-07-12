@@ -55,7 +55,10 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
             long downFileLength = 0;
             String downloadURL = params[0];
             String fileName = downloadURL.substring(downloadURL.lastIndexOf("/"));
+            Log.d("zjy", "filename : "+ fileName );
+
             String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
+            Log.d("zjy", "filename : "+ fileName + " directory is " + directory);
             file = new File(directory + fileName);
             if(file.exists()){
                 downFileLength = file.length();

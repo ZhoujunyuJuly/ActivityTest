@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int START  = 0;
     public static final int PAUSED = 1;
-    private String URL = "https://raw.githubusercontent.com/guolindev/eclipse/master/eclipse-inst-win64.exe";
+    public String URL = "https://raw.githubusercontent.com/guolindev/eclipse/master/eclipse-inst-win64.exe";
     private int TAG_STATUS = 0;
 
 
@@ -48,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
     private Button mButton;
     private RecyclerView mRecyclerView;
     private TextView mText_Percent;
-    private ProgressChangeReceiver mReceiver;
+    private boolean isBind = true;
+    //private ProgressChangeReceiver mReceiver;
 
 
      private ServiceConnection connection = new ServiceConnection() {
@@ -57,11 +58,28 @@ public class MainActivity extends AppCompatActivity {
             downloadBinder = (DownloadService.DownloadBinder)service;
             DownloadService downloadService = downloadBinder.getService();
 
-            Log.d("zjy", "mainactivity come in! ");
+            if( mButton != null) {
+                int service_status = downloadService.getServiceStatus();
+                if (service_status != -1) {//非默认状态，服务启动后检测
+                    if (service_status == 0) {//正在运行
+                        mProgressBar.setVisibility(View.VISIBLE);
+                        mText_Percent.setVisibility(View.VISIBLE);
+                        mButton.setText("暂停");
+                        TAG_STATUS = PAUSED;
+                    } else {
+                        mProgressBar.setVisibility(View.VISIBLE);
+                        mText_Percent.setVisibility(View.VISIBLE);
+                        mButton.setText("开始");
+                        TAG_STATUS = START;
+                    }
+                }
+            }
 
-  //          int progress = downloadService.getProgress();
-//            mProgressBar.setProgress(progress);
-//            mText_Percent.setText(progress + "%");
+            int progress = downloadService.getProgress();
+            if ( mProgressBar != null) {
+                mProgressBar.setProgress(progress);
+                mText_Percent.setText(progress + "%");
+            }
 
             downloadService.setUpdateProgress(new DownloadService.UpdateProgress() {
                 @Override
@@ -69,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
                     if (mProgressBar != null) {
                         mProgressBar.setProgress(progress);
                         mText_Percent.setText(String.valueOf(progress) + "%");
-                         Log.d("zjy", "mainactivity update " + progress);
                     }
                 }
             });
@@ -88,10 +105,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         init();
-        //StartService();启动定时服务
-        //StartDownloadService();//启动下载服务
         initAdapter();
 
+        //StartService();启动定时服务
     }
 
     private void init() {
@@ -100,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         data.add("JAVA");
         data.add("C++");
         data.add("CSS");
+
 
 
         mRecyclerView = findViewById(R.id.recyclerview_main);
@@ -149,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                         } else {
-                            mButton.setText("继续");
+                            mButton.setText("开始");
                             DownloadStatus(TAG_STATUS);
                         }
 
@@ -167,6 +184,8 @@ public class MainActivity extends AppCompatActivity {
                 super.onItemChildLongClick(adapter, view, position);
                 mProgressBar = mRecyclerView.getChildAt(position).findViewById(R.id.progress_first);
                 mButton = mRecyclerView.getChildAt(position).findViewById(R.id.bt_download);
+                mText_Percent = mRecyclerView.getChildAt(position).findViewById(R.id.tv_progress_percent);
+
                 if( downloadBinder == null){
                     return;
                 }
@@ -206,8 +225,13 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this,DownloadService.class);
         startService(intent);
 
+        if( !isBind ){
+            bindService(intent,connection,BIND_AUTO_CREATE);
+        }
+
+
         //绑定服务
-        bindService(intent,connection,BIND_AUTO_CREATE);
+        //bindService(intent,connection,BIND_AUTO_CREATE);
 
         //广播接收器
 //        IntentFilter intentFilter = new IntentFilter();
@@ -227,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this,DownloadService.class);
         unbindService(connection);
         stopService(intent);
+        isBind = false;
 
     }
 
@@ -258,7 +283,6 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
             int progress = bundle.getInt("progress");
-            Log.d("zjy", "mainactivity receive  " + progress);
 
             if( progress != -1 ) {
                 mProgressBar.setProgress(progress);
@@ -284,7 +308,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        unbindService(connection);
+        if( isBind ) {
+            unbindService(connection);
+        }
     }
 
 

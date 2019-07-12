@@ -40,6 +40,14 @@
             android:layout_gravity="center"
             android:text="15%"/>
 
+        <Button
+            android:id="@+id/bt_pause"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:background="@drawable/download_button"
+            android:text="开始"
+            android:layout_marginTop="10dp"/>
+
     </LinearLayout>
 
 </RelativeLayout>
