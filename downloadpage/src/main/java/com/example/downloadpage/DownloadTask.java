@@ -39,9 +39,12 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
     private DownloadListener downloadListener;
     private LocalBroadcastManager broadcastManager;
 
-    public DownloadTask(DownloadListener downloadListener, Context context) {
+    private int mPosition;
+
+    public DownloadTask(DownloadListener downloadListener, Context context,int position) {
         this.downloadListener = downloadListener;
         this.mContext = context;
+        this.mPosition = position;
     }
 
 
@@ -55,10 +58,8 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
             long downFileLength = 0;
             String downloadURL = params[0];
             String fileName = downloadURL.substring(downloadURL.lastIndexOf("/"));
-            Log.d("zjy", "filename : "+ fileName );
 
             String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
-            Log.d("zjy", "filename : "+ fileName + " directory is " + directory);
             file = new File(directory + fileName);
             if(file.exists()){
                 downFileLength = file.length();
@@ -128,7 +129,7 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
     protected void onProgressUpdate(Integer... values) {
         int progress = values[0];
         if(progress > lastProgress){
-            downloadListener.onProgress(progress);
+            downloadListener.onProgress(progress,mPosition);
             lastProgress = progress;
 
         }
@@ -138,16 +139,16 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
     protected void onPostExecute(Integer integer) {
         switch (integer){
             case SUCCESS:
-                downloadListener.onSuccess();
+                downloadListener.onSuccess(mPosition);
                 break;
             case FAILED:
-                downloadListener.onFailed();
+                downloadListener.onFailed(mPosition);
                 break;
             case PAUSED:
-                downloadListener.onPaused();
+                downloadListener.onPaused(mPosition);
                 break;
             case CANCEL:
-                downloadListener.onCanceled();
+                downloadListener.onCanceled(mPosition);
                 default:
                     break;
         }

@@ -13,14 +13,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
+import android.provider.ContactsContract;
+import android.util.ArrayMap;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import static android.os.AsyncTask.THREAD_POOL_EXECUTOR;
 import static com.example.downloadpage.DownloadTask.ACTION_PROGRESS_BROADCAST;
 
 public class DownloadService extends Service {
@@ -29,47 +36,54 @@ public class DownloadService extends Service {
     private static final int PAUSE = 1;
 
 
-    private DownloadTask downloadTask;
     private String downloadURL;
     private UpdateProgress updateProgress;
     private Intent mIntent_Broadcast;
     private int mProgress_Record =0;
     private int SERVICE_STATUS = -1;
 
+    private List<DownloadTask> mTasks = new ArrayList<>();
+    private Map<Integer,String> mInfo =new HashMap<>();
+
+
+
     private DownloadListener listener = new DownloadListener() {
         @Override
-        public void onSuccess() {
-            downloadTask = null;
+        public void onSuccess(int position) {
+            mTasks.remove(position);
             Toast.makeText(DownloadService.this,"Download Success",Toast.LENGTH_LONG).show();
         }
 
+
+
         @Override
-        public void onFailed() {
-            downloadTask = null;
+        public void onFailed(int position) {
+            mTasks.remove(position);
             Toast.makeText(DownloadService.this,"Download Failed",Toast.LENGTH_LONG).show();
         }
 
         @Override
-        public void onPaused() {
-            downloadTask = null;
+        public void onPaused(int position) {
+            mTasks.remove(position);
             sendProgressBroadcast(-1);
             Toast.makeText(DownloadService.this,"Paused",Toast.LENGTH_LONG).show();
             SERVICE_STATUS = PAUSE;
         }
 
         @Override
-        public void onProgress(int progress) {
+        public void onProgress(int progress,int position) {
             sendProgressBroadcast(progress);
             mProgress_Record = progress;
-            updateProgress.update(progress);
+            updateProgress.update(progress,position);
             SERVICE_STATUS = PROGRESS;
+
         }
 
         @Override
-        public void onCanceled() {
-            downloadTask = null;
+        public void onCanceled(int position) {
+            mTasks.remove(position);
             Toast.makeText(DownloadService.this,"Canceled",Toast.LENGTH_LONG).show();
-            updateProgress.update(0);
+            updateProgress.update(0,position);
         }
     };
 
@@ -81,7 +95,7 @@ public class DownloadService extends Service {
     }
 
     public interface UpdateProgress{
-        void update(int progress);
+        void update(int progress,int position);
     }
 
     public void setUpdateProgress(UpdateProgress updateProgress) {
@@ -108,28 +122,33 @@ public class DownloadService extends Service {
             return DownloadService.this;
         }
 
-        public void startDownload(String url){
-            if(downloadTask == null){
+        public void startDownload(String url,int position){
+            //if(downloadTask == null){
                 downloadURL = url;
-                downloadTask = new DownloadTask(listener,DownloadService.this);
-                downloadTask.execute(downloadURL);
+                mInfo.put(position,url);
+                DownloadTask dt = new DownloadTask(listener,DownloadService.this,position);
+                dt.executeOnExecutor(THREAD_POOL_EXECUTOR,downloadURL);
+
+                mTasks.add(position,dt);
+
                 Toast.makeText(DownloadService.this,"Downloading...",Toast.LENGTH_LONG).show();
+            //}
+        }
+
+        public void pausedDownload(int position){
+            if(mTasks.get(position) != null){
+                mTasks.get(position).PauseDownload();
             }
         }
 
-        public void pausedDownload(){
-            if(downloadTask != null){
-                downloadTask.PauseDownload();
-            }
-        }
-
-        public void cancelDownload(){
-            if(downloadTask != null){
-                downloadTask.CancelDownload();
+        public void cancelDownload(int position){
+            if(mTasks.get(position) != null){
+                mTasks.get(position).CancelDownload();
             }
             else {
-                if(downloadURL != null){
-                    String fileName = downloadURL.substring(downloadURL.lastIndexOf("/"));
+                if( mInfo.get(position) != null){
+                    String mapURL = mInfo.get(position);
+                    String fileName = mapURL.substring(mapURL.lastIndexOf("/"));
                     String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
                     File file = new File(directory + fileName);
                     if(file.exists()){

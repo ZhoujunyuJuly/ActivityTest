@@ -37,12 +37,13 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int START  = 0;
     public static final int PAUSED = 1;
-    public String URL = "https://raw.githubusercontent.com/guolindev/eclipse/master/eclipse-inst-win64.exe";
+    public String URL_1 = "https://raw.githubusercontent.com/guolindev/eclipse/master/eclipse-inst-win64.exe";
+    public String URL_2 = "http://gdown.baidu.com/data/wisegame/77dae776f870e572/PPTVjuli_61.apk";
     private int TAG_STATUS = 0;
 
 
     private DownloadListAdapter mAdapter;
-    private List<String> data = new ArrayList<String>();
+    private List<DownloadData> data = new ArrayList<>();
     private DownloadService.DownloadBinder downloadBinder;
     private ProgressBar mProgressBar;
     private Button mButton;
@@ -83,10 +84,14 @@ public class MainActivity extends AppCompatActivity {
 
             downloadService.setUpdateProgress(new DownloadService.UpdateProgress() {
                 @Override
-                public void update(int progress) {
-                    if (mProgressBar != null) {
-                        mProgressBar.setProgress(progress);
-                        mText_Percent.setText(String.valueOf(progress) + "%");
+                public void update(int progress,int position) {
+                    if( mRecyclerView != null) {
+                        ProgressBar mPB = mRecyclerView.getChildAt(position).findViewById(R.id.progress_first);
+                        TextView mTV = mRecyclerView.getChildAt(position).findViewById(R.id.tv_progress_percent);
+                        if (mPB != null) {
+                            mPB.setProgress(progress);
+                            mTV.setText(String.valueOf(progress) + "%");
+                        }
                     }
                 }
             });
@@ -111,11 +116,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        data.add("Android");
-        data.add("IOS");
-        data.add("JAVA");
-        data.add("C++");
-        data.add("CSS");
+        data.add(new DownloadData("Android",URL_1));
+        data.add(new DownloadData("IOS",URL_2));
+        data.add(new DownloadData("JAVA",URL_1));
+        data.add(new DownloadData("C++",URL_2));
+        data.add(new DownloadData("CSS"," "));
 
 
 
@@ -137,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, final int position) {
                 super.onItemChildClick(adapter, view, position);
                 mProgressBar = mRecyclerView.getChildAt(position).findViewById(R.id.progress_first);
                 mButton = mRecyclerView.getChildAt(position).findViewById(R.id.bt_download);
@@ -148,6 +153,15 @@ public class MainActivity extends AppCompatActivity {
                         mProgressBar.setVisibility(View.VISIBLE);
                         mText_Percent.setVisibility(View.VISIBLE);
 
+                        String text = mButton.getText().toString();
+
+                        if( text.equals("开始") || text.equals("点击下载") || text.equals("重新下载")){
+                            TAG_STATUS = START;
+                        }else {
+                            TAG_STATUS = PAUSED;
+                        }
+
+                        Log.d("zjy", "text " + mButton.getText().toString());
 
                         if (TAG_STATUS == START) {
                             startDownloadService();
@@ -160,14 +174,14 @@ public class MainActivity extends AppCompatActivity {
                                     if (downloadBinder == null) {
                                         return;
                                     }
-                                    DownloadStatus(TAG_STATUS);
+                                    DownloadStatus(TAG_STATUS,position);
                                 }
                             },500);
 
 
                         } else {
                             mButton.setText("开始");
-                            DownloadStatus(TAG_STATUS);
+                            DownloadStatus(TAG_STATUS,position);
                         }
 
 
@@ -195,10 +209,10 @@ public class MainActivity extends AppCompatActivity {
                         mProgressBar.setProgress(0);
                         mText_Percent.setText("0%");
 
-                        downloadBinder.cancelDownload();
+                        downloadBinder.cancelDownload(position);
                         mButton.setText("重新下载");
                         TAG_STATUS = START;
-                        stopDownloadService();//关闭服务
+                        //stopDownloadService();//关闭服务
                         break;
                     default:
                         break;
@@ -208,14 +222,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void DownloadStatus(int status){
+    private void DownloadStatus(int status,int position){
         switch (status){
             case START:
-                downloadBinder.startDownload(URL);
+                downloadBinder.startDownload(data.get(position).getURL(),position);
                 TAG_STATUS = PAUSED;
                 break;
             case PAUSED:
-                downloadBinder.pausedDownload();
+                downloadBinder.pausedDownload(position);
                 TAG_STATUS = START;
                 break;
         }
