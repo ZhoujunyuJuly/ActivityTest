@@ -56,7 +56,7 @@ public class DetailActivity extends AppCompatActivity {
 
             downloadService.setUpdateProgress(new DownloadService.UpdateProgress() {
                 @Override
-                public void update(int progress) {
+                public void update(int progress,DownloadTask dt) {
                     if( mProgress != null) {
                         mProgress.setProgress(progress);
                         mProgress_percent.setText(progress + "%");
@@ -124,7 +124,7 @@ public class DetailActivity extends AppCompatActivity {
                     downloadBinder.startDownload("https://raw.githubusercontent.com/guolindev/eclipse/master/eclipse-inst-win64.exe");
                     STATUS = 0;
                 }else {//暂停
-                    downloadBinder.pausedDownload();
+                    downloadBinder.pausedDownload("https://raw.githubusercontent.com/guolindev/eclipse/master/eclipse-inst-win64.exe");
                     mBt.setText("开始");
                     STATUS = 1;
                 }
