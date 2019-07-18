@@ -1,30 +1,30 @@
 package com.example.downloadpage;
 
 /**
- * Created by zhoujunyu on 2019/7/16.
+ * Created by zhoujunyu on 2019/7/17.
  */
 public class DownloadData {
-    private String name;
-    private String URL;
+    private String BookName;
+    private String BookURL;
 
-    public DownloadData(String name,String URL) {
-        this.name = name;
-        this.URL = URL;
+    public DownloadData(String bookName,String url) {
+        this.BookName = bookName;
+        this.BookURL = url;
     }
 
-    public String getName() {
-        return name;
+    public String getBookName() {
+        return BookName;
     }
 
-    public String getURL() {
-        return URL;
+    public String getBookURL() {
+        return BookURL;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setBookName(String bookName) {
+        BookName = bookName;
     }
 
-    public void setURL(String URL) {
-        this.URL = URL;
+    public void setBookURL(String bookURL) {
+        BookURL = bookURL;
     }
 }

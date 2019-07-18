@@ -21,7 +21,7 @@ public class DownloadListAdapter extends BaseQuickAdapter<DownloadData,BaseViewH
     @Override
     protected void convert(BaseViewHolder helper, DownloadData item) {
 
-        helper.setText(R.id.tv_app_name, item.getName());
+        helper.setText(R.id.tv_app_name, item.getBookName());
         helper.addOnClickListener(R.id.bt_download);
         helper.addOnLongClickListener(R.id.bt_download);
         helper.addOnClickListener(R.id.layout_recyclerview);

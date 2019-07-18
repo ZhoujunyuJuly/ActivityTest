@@ -1,31 +1,15 @@
 package com.example.downloadpage;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Binder;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
-import android.provider.ContactsContract;
-import android.util.ArrayMap;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import androidx.core.app.NotificationCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import static android.os.AsyncTask.THREAD_POOL_EXECUTOR;
 import static com.example.downloadpage.DownloadTask.ACTION_PROGRESS_BROADCAST;
@@ -35,55 +19,63 @@ public class DownloadService extends Service {
     private static final int PROGRESS = 0;
     private static final int PAUSE = 1;
 
-
-    private String downloadURL;
     private UpdateProgress updateProgress;
     private Intent mIntent_Broadcast;
     private int mProgress_Record =0;
     private int SERVICE_STATUS = -1;
-
-    private List<DownloadTask> mTasks = new ArrayList<>();
-    private Map<Integer,String> mInfo =new HashMap<>();
+    private HashMap<String,DownloadTask> mTaskMap = new HashMap<>();
 
 
-
+    //下载结果监听
     private DownloadListener listener = new DownloadListener() {
         @Override
-        public void onSuccess(int position) {
-            mTasks.remove(position);
-            Toast.makeText(DownloadService.this,"Download Success",Toast.LENGTH_LONG).show();
+        public void onSuccess(DownloadTask dt) {
+            if( dt != null ) {
+                mTaskMap.remove(dt.getDownURL());
+                dt = null;
+                Toast.makeText(DownloadService.this, "Download Success", Toast.LENGTH_LONG).show();
+            }
         }
 
 
 
         @Override
-        public void onFailed(int position) {
-            mTasks.remove(position);
-            Toast.makeText(DownloadService.this,"Download Failed",Toast.LENGTH_LONG).show();
+        public void onFailed(DownloadTask dt) {
+            if( dt != null) {
+                mTaskMap.remove(dt.getDownURL());
+                dt = null;
+                Toast.makeText(DownloadService.this, "Download Failed", Toast.LENGTH_LONG).show();
+            }
         }
 
         @Override
-        public void onPaused(int position) {
-            mTasks.remove(position);
-            sendProgressBroadcast(-1);
-            Toast.makeText(DownloadService.this,"Paused",Toast.LENGTH_LONG).show();
-            SERVICE_STATUS = PAUSE;
+        public void onPaused(DownloadTask dt) {
+            if( dt != null) {
+                mTaskMap.remove(dt.getDownURL());
+                dt = null;
+                Toast.makeText(DownloadService.this,"Paused",Toast.LENGTH_LONG).show();
+                SERVICE_STATUS = PAUSE;
+            }
         }
 
         @Override
-        public void onProgress(int progress,int position) {
-            sendProgressBroadcast(progress);
-            mProgress_Record = progress;
-            updateProgress.update(progress,position);
-            SERVICE_STATUS = PROGRESS;
-
+        public void onProgress(int progress,DownloadTask dt) {
+            if( dt != null ) {
+                mProgress_Record = progress;
+                //实时调用接口与客户端进行通信，对UI线程更新
+                updateProgress.update(progress,dt);
+                SERVICE_STATUS = PROGRESS;
+            }
         }
 
         @Override
-        public void onCanceled(int position) {
-            mTasks.remove(position);
-            Toast.makeText(DownloadService.this,"Canceled",Toast.LENGTH_LONG).show();
-            updateProgress.update(0,position);
+        public void onCanceled(DownloadTask dt) {
+            if( dt != null) {
+                mTaskMap.remove(dt.getDownURL());
+                dt = null;
+                Toast.makeText(DownloadService.this, "Canceled", Toast.LENGTH_LONG).show();
+                updateProgress.update(0, dt);
+            }
         }
     };
 
@@ -95,7 +87,7 @@ public class DownloadService extends Service {
     }
 
     public interface UpdateProgress{
-        void update(int progress,int position);
+        void update(int progress,DownloadTask dt);
     }
 
     public void setUpdateProgress(UpdateProgress updateProgress) {
@@ -117,44 +109,52 @@ public class DownloadService extends Service {
     }
 
 
+    //Service与activity建立联系的跨进程通信方式；Binder创建一个内存接收缓存空间，使用用户空间传送数据时只需要拷贝一次
+    //绑定服务后，系统可调用service的OnBinder返回与service交互的IBinder,并通过Binder对服务进行操作
     public class DownloadBinder extends Binder{
         public DownloadService getService(){
             return DownloadService.this;
         }
 
-        public void startDownload(String url,int position){
-            //if(downloadTask == null){
-                downloadURL = url;
-                mInfo.put(position,url);
-                DownloadTask dt = new DownloadTask(listener,DownloadService.this,position);
-                dt.executeOnExecutor(THREAD_POOL_EXECUTOR,downloadURL);
+        public void startDownload(String url){
 
-                mTasks.add(position,dt);
+            if(mTaskMap.containsKey(url)) {
+                return;
+            }
 
-                Toast.makeText(DownloadService.this,"Downloading...",Toast.LENGTH_LONG).show();
-            //}
+            //创建下载任务
+            DownloadTask downloadTask = new DownloadTask(listener, DownloadService.this,url);
+            downloadTask.executeOnExecutor(THREAD_POOL_EXECUTOR, url);
+
+            mTaskMap.put(url, downloadTask);
+            Toast.makeText(DownloadService.this,"Downloading...",Toast.LENGTH_LONG).show();
+
         }
 
-        public void pausedDownload(int position){
-            if(mTasks.get(position) != null){
-                mTasks.get(position).PauseDownload();
-            }
+        public void pausedDownload(String url){
+                if (mTaskMap.size() > 0 && mTaskMap.containsKey(url)) {
+                    DownloadTask task = mTaskMap.get(url);
+                    if( task != null){
+                        task.pauseDownload();
+                    }
+                }
         }
 
-        public void cancelDownload(int position){
-            if(mTasks.get(position) != null){
-                mTasks.get(position).CancelDownload();
-            }
-            else {
-                if( mInfo.get(position) != null){
-                    String mapURL = mInfo.get(position);
-                    String fileName = mapURL.substring(mapURL.lastIndexOf("/"));
+        public void cancelDownload(String url) {
+            if ( mTaskMap.containsKey(url)) {
+                DownloadTask task = mTaskMap.get(url);
+                if (task != null) {
+                    task.cancelDownload();
+                }
+            } else {
+                if (url != null) {
+                    String fileName = url.substring(url.lastIndexOf("/"));
                     String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
                     File file = new File(directory + fileName);
-                    if(file.exists()){
+                    if (file.exists()) {
                         file.delete();
                     }
-                    Toast.makeText(DownloadService.this,"Canceled",Toast.LENGTH_LONG).show();
+                    Toast.makeText(DownloadService.this, "Canceled", Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -169,7 +169,7 @@ public class DownloadService extends Service {
         sendBroadcast(mIntent_Broadcast);
     }
 
-    //重新绑定服务
+    //重新绑定服务,了解activity生命周期
 //    @Override
 //    public boolean onUnbind(Intent intent) {
 //        //return super.onUnbind(intent);

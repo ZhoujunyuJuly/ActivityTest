@@ -36,29 +36,31 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
     private int lastProgress;
     private Context mContext;
 
+    private String downURL;
+
     private DownloadListener downloadListener;
     private LocalBroadcastManager broadcastManager;
 
-    private int mPosition;
-
-    public DownloadTask(DownloadListener downloadListener, Context context,int position) {
+    public DownloadTask(DownloadListener downloadListener, Context context,String url) {
         this.downloadListener = downloadListener;
         this.mContext = context;
-        this.mPosition = position;
+        this.downURL = url;
     }
 
 
     @Override
     protected Integer doInBackground(String... params) {
         InputStream is = null;
-        RandomAccessFile savedFile = null;
+        RandomAccessFile savedFile = null;//可随机跳到文件指定位置读写；记录当前位置指针；可追加内容；在指定位置追加会覆盖
         File file = null;
 
         try{
             long downFileLength = 0;
+            //获取下载参数，如下载地址
             String downloadURL = params[0];
             String fileName = downloadURL.substring(downloadURL.lastIndexOf("/"));
 
+            //默认保存在系统文件
             String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
             file = new File(directory + fileName);
             if(file.exists()){
@@ -66,6 +68,7 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
             }
 
             long contentLength = getContentLength(downloadURL);
+            //对下载任务初始判断：如获取不到下载内容，返回失败；如已存在文件大小与下载任务一致，为下载完成，不需进行下载
             if(contentLength == 0){
                 return FAILED;
             }else if(contentLength == downFileLength){
@@ -77,24 +80,22 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
                                                    .build();
             Response response = OKHttpManager.getInstance().get(request);
 
-//            broadcastManager = LocalBroadcastManager.getInstance(mContext);
-//            Intent Broadcast_Intent = new Intent(ACTION_PROGRESS_BROADCAST);
 
             if(response != null){
-                is = response.body().byteStream();
+                is = response.body().byteStream();//为防止内存泄漏，要关闭字节流
                 savedFile = new RandomAccessFile(file,"rw");
-                savedFile.seek(downFileLength);
+                savedFile.seek(downFileLength);//跳到已下载的文件位置
                 byte[] b = new byte[1024];
                 int total = 0;
                 int len;
-                while ((len = is.read(b)) != -1){
+                while ((len = is.read(b)) != -1){//文件持续不断读取，当有暂停时跳出循环
                     if(isCanceled){
                         return CANCEL;
                     }else if(isPaused){
                         return PAUSED;
                     }else {
                         total += len;
-                        savedFile.write(b,0,len);
+                        savedFile.write(b,0,len);//offset指从当前指针处开始写入字节数组，一次性写len长度
                         int progressLength = (int)((total + downFileLength)*100/contentLength);
                         publishProgress(progressLength);
                         //broadcastManager.sendBroadcast(Broadcast_Intent);//发送广播
@@ -106,7 +107,7 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
         }catch (Exception e){
             e.printStackTrace();
         }finally {
-            try {
+            try {//记得关闭文件
                 if (is != null) {
                     is.close();
                 }
@@ -129,7 +130,8 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
     protected void onProgressUpdate(Integer... values) {
         int progress = values[0];
         if(progress > lastProgress){
-            downloadListener.onProgress(progress,mPosition);
+            //调用监听接口
+            downloadListener.onProgress(progress,this);
             lastProgress = progress;
 
         }
@@ -137,32 +139,34 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
 
     @Override
     protected void onPostExecute(Integer integer) {
+        //返回下载结果
         switch (integer){
             case SUCCESS:
-                downloadListener.onSuccess(mPosition);
+                downloadListener.onSuccess(this);
                 break;
             case FAILED:
-                downloadListener.onFailed(mPosition);
+                downloadListener.onFailed(this);
                 break;
             case PAUSED:
-                downloadListener.onPaused(mPosition);
+                downloadListener.onPaused(this);
                 break;
             case CANCEL:
-                downloadListener.onCanceled(mPosition);
+                downloadListener.onCanceled(this);
                 default:
                     break;
         }
     }
 
-    public void PauseDownload(){
+    public void pauseDownload(){
         isPaused = true;
     }
 
-    public void CancelDownload(){
+    public void cancelDownload(){
         isCanceled = true;
     }
 
 
+    //获取文件内容长度
     private long getContentLength(String downloadUrl)throws IOException{
         //OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder()
@@ -170,6 +174,7 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
                                      .build();
         //Response response = okHttpClient.newCall(request).execute();
         Response response = OKHttpManager.getInstance().get(request);
+        //获取文件内容
         if (response != null && response.isSuccessful()){
             long contentLength = response.body().contentLength();
             response.close();
@@ -177,5 +182,10 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer> {
         }
 
         return 0;
+    }
+
+    //获取当前下载任务的地址，通过地址进行单一映射
+    public String getDownURL() {
+        return downURL;
     }
 }

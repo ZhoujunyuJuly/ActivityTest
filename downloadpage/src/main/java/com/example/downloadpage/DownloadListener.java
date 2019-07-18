@@ -5,13 +5,13 @@ package com.example.downloadpage;
  */
 public interface DownloadListener {
 
-    void onSuccess(int position);
+    void onSuccess(DownloadTask dt);
 
-    void onFailed(int position);
+    void onFailed(DownloadTask dt);
 
-    void onPaused(int position);
+    void onPaused(DownloadTask dt);
 
-    void onProgress(int progress,int position);
+    void onProgress(int progress,DownloadTask dt);
 
-    void onCanceled(int position);
+    void onCanceled(DownloadTask dt);
 }
