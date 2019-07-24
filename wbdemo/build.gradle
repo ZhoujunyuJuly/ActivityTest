@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.wbdemo"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 28
         versionCode 100
         versionName "1.0.0"
@@ -71,15 +71,13 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.android.support:support-v4:28.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
     //OKhttp
     implementation 'com.squareup.okhttp3:okhttp:3.9.0'
     //Gson
@@ -104,6 +102,7 @@ dependencies {
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-26'
     implementation 'com.just.agentweb:agentweb:4.0.3-beta'
     implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
+    implementation files('libs/SQLiteStudioRemote.jar')
 }
 
 

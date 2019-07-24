@@ -1,6 +1,8 @@
 package com.example.wbdemo.business.main;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -26,7 +28,9 @@ import com.example.wbdemo.info.ScaleUtils;
 import com.example.wbdemo.info.maindata.HomeTimeLine;
 import com.example.wbdemo.info.maindata.StatusesBean;
 import com.example.wbdemo.R;
+import com.example.wbdemo.info.maindata.UserBean;
 import com.example.wbdemo.net.OkHttpManager;
+import com.example.wbdemo.sqlite.JsonDbHelper;
 import com.google.gson.Gson;
 import com.lzy.ninegrid.NineGridView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -65,6 +69,15 @@ public class MainFragment extends Fragment {
 
     private boolean FirstTime = true;
 
+    private JsonDbHelper dbHelper;
+    private SQLiteDatabase db;
+
+    public static final String SQL_INSERT = "insert into StatusesBean(" +
+            "id,name,portrait,time,content,image,attitude,comment,repost,share)" +
+            "values(?,?,?,?,?,?,?,?,?,?)";
+
+    public static final String SQL_SELECT = "select * from StatusesBean";
+
 
 
     public MainFragment() {
@@ -100,9 +113,23 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
+        //TODO:只能解析第一页的问题
         mPage = 1;
-        parseJson();
+
+        dbHelper = new JsonDbHelper(getContext(),"WbData.db",null,1);
+
+        db = dbHelper.getWritableDatabase();
+        Cursor c = db.rawQuery(SQL_SELECT,null);
+
+
         initView(view);
+
+        //判断数据库里是否有数
+        if( c.getCount() > 0){
+            getJsonInDatabase();
+        }else {
+            parseJson();
+        }
 
         return view;
     }
@@ -183,6 +210,83 @@ public class MainFragment extends Fragment {
         });
     }
 
+
+    private void getJsonInDatabase(){
+        db = dbHelper.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(SQL_SELECT,null,null);
+
+        int i = 0;
+        if( cursor.moveToFirst()){
+            do{
+                StatusesBean statusesBean = new StatusesBean();
+                UserBean userBean = new UserBean();
+
+                //1.微博昵称
+                userBean.setName(getStringDBData(cursor,"name"));
+                //2.微博头像
+                userBean.setAvatar_hd(getStringDBData(cursor,"portrait"));
+
+                statusesBean.setUser(userBean);
+
+                //3.发布时间
+                statusesBean.setCreated_at(getStringDBData(cursor,"time"));
+                //4.内容
+                statusesBean.setText(getStringDBData(cursor,"content"));
+                //5.点赞次数
+                statusesBean.setAttitudes_count(getIntDBData(cursor,"attitude"));
+                //6.评论次数
+                statusesBean.setShares_count(getIntDBData(cursor,"share"));
+                //7.转发次数
+                statusesBean.setComments_count(getIntDBData(cursor,"comment"));
+                //8.分享次数
+                statusesBean.setReposts_count(getIntDBData(cursor,"repost"));
+
+
+
+
+
+                //9.图片
+                String pic = cursor.getString(cursor.getColumnIndex("image"));
+
+                //考虑九格宫，一个字段里有多个图片链接的情况
+                List<StatusesBean.PicUrlsBean> pic_List = new ArrayList<>();
+                StatusesBean.PicUrlsBean picUrlsBean = new StatusesBean.PicUrlsBean();
+
+                if( pic.contains(",")){
+                    String[] picCollection = pic.split(",");
+                    for(int index = 0; index < picCollection.length;index ++){
+                        picUrlsBean.setThumbnail_pic(picCollection[index]);
+                        pic_List.add(picUrlsBean);
+                    }
+                }else {
+                    picUrlsBean.setThumbnail_pic(pic);
+                    pic_List.add(picUrlsBean);
+                }
+
+                statusesBean.setPic_urls(pic_List);
+
+                mStatusesList.add(statusesBean);
+
+                i = i + 1;
+
+            }while (cursor.moveToNext());
+        }
+
+        mMainAdapter.notifyDataSetChanged();
+
+
+    }
+
+    //从数据库拿相应行的数据
+    private String getStringDBData(Cursor cursor,String columnName){
+            return cursor.getString(cursor.getColumnIndex(columnName));
+    }
+
+    private int getIntDBData(Cursor cursor,String columnName){
+        return cursor.getInt(cursor.getColumnIndex(columnName));
+    }
+
     private void parseJson(){
         OkHttpManager.getInstance().get(getURL(), new Callback() {
             @Override
@@ -217,9 +321,42 @@ public class MainFragment extends Fragment {
                             }
                     }
                 });
+
+                saveDataToSqLite();
             }
         });
     }
+
+
+
+    private void saveDataToSqLite(){
+        if( db == null) {
+            db = dbHelper.getWritableDatabase();
+        }
+        //开始事务
+        db.beginTransaction();
+
+        Cursor cursor = db.rawQuery(SQL_SELECT,null);
+
+        //删除之前的数据
+        if( cursor.getCount() > 0){
+            db.delete("StatusesBean",null,null);
+        }
+
+
+        for(StatusesBean item:mStatusesList){
+            db.execSQL(SQL_INSERT,new Object[]{null,item.getUser().getName(),item.getUser().getAvatar_hd(),
+            item.getCreated_at(),item.getText(),item.getPic_urls(),item.getAttitudes_count(),
+                    item.getComments_count(),item.getReposts_count(),item.getShares_count()});
+
+        }
+
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        db.close();
+    }
+
+
 
 
     private String getURL(){

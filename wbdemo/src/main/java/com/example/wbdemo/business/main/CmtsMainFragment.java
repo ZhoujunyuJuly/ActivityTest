@@ -1,6 +1,8 @@
 package com.example.wbdemo.business.main;
 
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +23,7 @@ import com.example.wbdemo.event.EventManager;
 import com.example.wbdemo.info.commentdata.Comments;
 import com.example.wbdemo.info.commentdata.CommentsBean;
 import com.example.wbdemo.net.OkHttpManager;
+import com.example.wbdemo.sqlite.JsonDbHelper;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -64,6 +67,7 @@ public class CmtsMainFragment extends Fragment {
     private List<CommentsBean> mCommentsList = new ArrayList<>();
 
 
+
     public CmtsMainFragment() {
         // Required empty public constructor
     }
@@ -85,7 +89,7 @@ public class CmtsMainFragment extends Fragment {
         }
 
         SharedPreferences pref = getActivity().getSharedPreferences(ACCESS_TOKEN, MODE_PRIVATE);
-        mToken = pref.getString(ACCESS_TOKEN, TOKEN);
+        mToken = pref.getString(ACCESS_TOKEN, TOKEN);//获取存好的token，如果没有，默认指为INFO类中已存好的值
 
     }
 
@@ -159,6 +163,8 @@ public class CmtsMainFragment extends Fragment {
                 mComments = new Gson().fromJson(json, Comments.class);
                 mCommentsList.clear();
                 mCommentsList.addAll(mComments.getCommentsBeans());
+
+
 
                 Log.d("zjyy", "comments is  " + json);
 

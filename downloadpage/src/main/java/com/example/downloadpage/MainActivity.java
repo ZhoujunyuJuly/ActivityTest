@@ -208,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+
             //长按操作
             @Override
             public void onItemChildLongClick(BaseQuickAdapter adapter, View view, int position) {
@@ -248,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+    
 
     private void startDownloadService(){
         Intent intent = new Intent(this,DownloadService.class);

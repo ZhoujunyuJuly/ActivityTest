@@ -64,17 +64,22 @@ public class WebViewActivity extends AppCompatActivity {
 
         parseJson();
         mWebView.addJavascriptInterface(new InJavaScriptLocalObj(), "local_obj");
-        mWebView.loadUrl(API_URL);
+        mWebView.loadUrl(API_URL);//包括client_id的网址
     }
 
     private void parseJson() {
         mWebView.setWebViewClient(new WebViewClient() {
+
+            /**
+             * 拦截 url 跳转,在里边添加点击链接跳转或者操作
+             */
+
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 //view.loadUrl(url);
-                CODE = url.substring(url.indexOf("code=") + 5);//获取code
+                CODE = url.substring(url.indexOf("code=") + 5);//利用拦截的url，获取code
                 Log.d("zjy", "跳转网址为:  " + HEADER_ACCESS + getPost());
-                view.postUrl(HEADER_ACCESS, getPost().getBytes());
+                view.postUrl(HEADER_ACCESS, getPost().getBytes());//使用POST方法跳转页面
 
                 //使用OKHTTP获取json
 //                OkHttpManager.getInstance().post(HEADER_ACCESS, getMap(), new Callback() {
@@ -103,7 +108,7 @@ public class WebViewActivity extends AppCompatActivity {
 //                        });
 //                    }
 //                });
-                return true;
+                return true;//如果拦截返回true,默认为false
             }
 
             @Override
