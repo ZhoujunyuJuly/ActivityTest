@@ -57,7 +57,8 @@ public class WbApp extends Application {
 ```
 
 # 2.WebViewActivity
-授权页，[根据用户ID重定向code](https://open.weibo.com/wiki/Oauth2/authorize)；再拼接ID与code，[拿到用户token](https://open.weibo.com/wiki/Oauth2/access_token)
+* 授权页，[根据用户ID重定向code](https://open.weibo.com/wiki/Oauth2/authorize)<br>
+* 再拼接ID与code，[拿到用户token](https://open.weibo.com/wiki/Oauth2/access_token)
 
 1.WebView策略定义:<br>
 
@@ -132,7 +133,6 @@ public class WbApp extends Application {
                     });
                 }
             }
-
         }
     }
 
@@ -183,12 +183,10 @@ public class WbApp extends Application {
             public void onPageScrolled(int i, float v, int i1) {
 
             }
-
             @Override
             public void onPageSelected(int i) {
                 mCommonTabLayout.setCurrentTab(i);
             }
-
             @Override
             public void onPageScrollStateChanged(int i) {
 
@@ -205,7 +203,6 @@ public class WbApp extends Application {
             public void onTabSelect(int position) {
                 mViewPager.setCurrentItem(position);
             }
-
             @Override
             public void onTabReselect(int position) {
 
@@ -236,19 +233,16 @@ public class WbApp extends Application {
                 public String getTabTitle() {
                     return "测试tab";
                 }
-
                 @Override
                 public int getTabSelectedIcon() {
                     return ChosenImage.get(index);
                 }
-
                 @Override
                 public int getTabUnselectedIcon() {
                     return unChosenImage.get(index);
                 }
             });
         }
-
         return AllData;
     }
     
@@ -295,7 +289,6 @@ public class WbApp extends Application {
 
             @Override
             public void onSimpleItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-
             }
 
             @Override
@@ -311,11 +304,10 @@ public class WbApp extends Application {
                 }
             }
         });
-
+        
         mMainAdapter = new MainAdapter(R.layout.item_launch_main,mStatusesList,getActivity());
         mRecyclerView.setAdapter(mMainAdapter);
         NineGridView.setImageLoader(new GlideImageLoader());//载入九宫格图片基类
-
     }
 
     private void initRefreshLayout(View view){
@@ -370,8 +362,7 @@ public class WbApp extends Application {
                     mStatusesList.clear();
                     mStatusesList.addAll(mHomeTimeLine.getStatuses());
                 }
-
-
+                
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -383,7 +374,7 @@ public class WbApp extends Application {
                             }
                     }
                 });
-
+                
                 saveDataToSqLite();
             }
         });
@@ -403,13 +394,9 @@ public class WbApp extends Application {
  
  2.onCreate()时，初始化数据库，并判断数据库是否有数
  ```
-         dbHelper = new JsonDbHelper(getContext(),"WbData.db",null,1);
-
+        dbHelper = new JsonDbHelper(getContext(),"WbData.db",null,1);
         db = dbHelper.getWritableDatabase();
         Cursor c = db.rawQuery(SQL_SELECT,null);
-
-
-        initView(view);
 
         //判断数据库里是否有数
         if( c.getCount() > 0){
@@ -461,7 +448,6 @@ public class WbApp extends Application {
                 statusesBean.setPic_urls(pic_List);
                 mStatusesList.add(statusesBean);
                 i = i + 1;
-                
             }while (cursor.moveToNext());
         }
         
@@ -493,14 +479,12 @@ public class WbApp extends Application {
             db.delete("StatusesBean",null,null);
         }
 
-
         for(StatusesBean item:mStatusesList){
             db.execSQL(SQL_INSERT,new Object[]{null,item.getUser().getName(),item.getUser().getAvatar_hd(),
             item.getCreated_at(),item.getText(),item.getPic_urls(),item.getAttitudes_count(),
                     item.getComments_count(),item.getReposts_count(),item.getShares_count()});
-
         }
-
+        
         db.setTransactionSuccessful();
         db.endTransaction();
         db.close();
