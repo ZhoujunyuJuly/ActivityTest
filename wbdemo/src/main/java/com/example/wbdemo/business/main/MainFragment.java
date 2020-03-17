@@ -353,7 +353,11 @@ public class MainFragment extends Fragment {
 
         db.setTransactionSuccessful();
         db.endTransaction();
-        db.close();
+        //在此处会发生java.lang.IllegalStateException: attempt to re-open an already-closed
+        //原因是在刷新时反复对数据库进行操作，而一个线程只能使用一个SQLiteDatabase对象
+        //导致A完成读之后调用close(),而B正在进行读写操作
+        //解决方法：只在Activity注销或真正不需要数据时关闭数据库
+        //db.close();
     }
 
 
@@ -378,5 +382,11 @@ public class MainFragment extends Fragment {
         public Bitmap getCacheImage(String url) {
             return null;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        db.close();
     }
 }

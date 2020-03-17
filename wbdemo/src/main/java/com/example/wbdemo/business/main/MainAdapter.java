@@ -15,16 +15,15 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.example.wbdemo.info.maindata.RetweetedStatusBean;
 import com.example.wbdemo.info.maindata.StatusesBean;
 import com.example.wbdemo.R;
-import com.flyco.tablayout.CommonTabLayout;
 import com.lzy.ninegrid.ImageInfo;
 import com.lzy.ninegrid.NineGridView;
 import com.lzy.ninegrid.preview.NineGridViewClickAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,8 +57,20 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
         if(item.getText().contains("http://") || item.getText().contains("#")){
             //SPannableString富文本样式
             String ContentStr = item.getText();
-            SpannableString content = new SpannableString(ContentStr);
+            SpannableString content;
+            String Article_URL = "";
+
+            //超过140字，替换链接为"展开"字样
+            if( ContentStr.contains("全文： http://m.weibo.cn")){
+                Article_URL = ContentStr.substring(ContentStr.indexOf("全文： http://m.weibo.cn"),
+                        ContentStr.length() - 1);
+                ContentStr = ContentStr.replace(Article_URL,"展开");
+                Article_URL = Article_URL.substring(Article_URL.indexOf("http://m.weibo.cn"),Article_URL.length() - 1);
+            }
+            content = new SpannableString(ContentStr);
+
             //超链接
+            //1.视频链接
             if(ContentStr.contains("http://t.cn")) {
                 String ALLURL = ContentStr.substring(ContentStr.indexOf("http://t.cn"), ContentStr.length() - 1);
                 int lastPosition = ALLURL.indexOf(" ");
@@ -72,7 +83,7 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
                 content.setSpan(new LINKURLSpan(videoURL), ContentStr.indexOf(videoURL),
                         ContentStr.indexOf(videoURL)+videoURL.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
             }
-            //话题
+            //2.话题
             if(ContentStr.contains("#")){
                 Matcher m = Pattern.compile("#").matcher(ContentStr);
                 int number = 0;
@@ -84,15 +95,16 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
 
                 if(number >=2){
                     for(int i =0;i < number - 1;i = i+2){
-                        content.setSpan(new LINKURLSpan(""),position.get(i),position.get(i+1)+1,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                        content.setSpan(new LINKURLSpan(""),position.get(i),position.get(i+1)+1,
+                                Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                     }
                 }
             }
-            //文章链接
-            if(ContentStr.contains("全文：")){
-                content.setSpan(new LINKURLSpan(""),ContentStr.indexOf("全文：")+3,ContentStr.length()-1,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            //3.文章链接
+            if( ContentStr.contains("...展开")){
+                content.setSpan(new LINKURLSpan(Article_URL),ContentStr.indexOf("...展开") + 3,
+                        ContentStr.length()-1,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
             }
-
 
             TextView ActiveTextEvent = helper.getView(R.id.tv_main_content);
             ActiveTextEvent.setMovementMethod(LinkMovementMethod.getInstance());
@@ -103,21 +115,23 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
             helper.setText(R.id.tv_main_content, item.getText());
         }
 
-        //九宫格
         ArrayList<ImageInfo> imageInfo = new ArrayList<>();
         List<StatusesBean.PicUrlsBean> imageDetails = item.getPic_urls();
         if (imageDetails != null) {
             for (StatusesBean.PicUrlsBean imageDetail : imageDetails) {
-                ImageInfo info = new ImageInfo();
-                info.setThumbnailUrl(imageDetail.getThumbnail_pic());
-                info.setBigImageUrl(imageDetail.getThumbnail_pic().replace("thumbnail","large"));
-                imageInfo.add(info);
+                    ImageInfo info = new ImageInfo();
+                    if( imageDetails.size()>1) {
+                        info.setThumbnailUrl(imageDetail.getThumbnail_pic());
+                    }else {
+                        info.setThumbnailUrl(item.getOriginal_pic());
+                    }
+                    info.setBigImageUrl(imageDetail.getThumbnail_pic().replace("thumbnail", "large"));
+                    imageInfo.add(info);
             }
+            NineGridView nineGridView = helper.getView(R.id.nine_grid_view);
+            nineGridView.setAdapter(new NineGridViewClickAdapter(mContext,imageInfo));
         }
 
-
-        NineGridView nineGridView = helper.getView(R.id.nine_grid_view);
-        nineGridView.setAdapter(new NineGridViewClickAdapter(mContext,imageInfo));
 
         //点赞、转发、分享、评论数
         helper.setText(R.id.tv_item_comments,String.valueOf(item.getComments_count()));

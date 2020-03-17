@@ -80,6 +80,7 @@ public class StatusesBean implements Serializable {
     private boolean is_paid;
     private int mblog_vip_type;
     private UserBean user;
+//    private RetweetedStatusBean retweeted_status;
     private int reposts_count;
     private int comments_count;
     private int attitudes_count;
@@ -272,6 +273,14 @@ public class StatusesBean implements Serializable {
     public void setUser(UserBean user) {
         this.user = user;
     }
+
+//    public RetweetedStatusBean getRetweeted_status() {
+//        return retweeted_status;
+//    }
+//
+//    public void setRetweeted_status(RetweetedStatusBean retweeted_status) {
+//        this.retweeted_status = retweeted_status;
+//    }
 
     public int getReposts_count() {
         return reposts_count;

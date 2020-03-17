@@ -25,8 +25,9 @@ public class WatchVideoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_watch_video);
+        //设置全屏必须在setContentView之前
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_watch_video);
 
 
 //        WebView webView = findViewById(R.id.watchVideo_webview);

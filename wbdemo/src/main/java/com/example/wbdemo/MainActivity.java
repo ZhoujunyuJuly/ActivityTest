@@ -59,8 +59,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mResponse.setMovementMethod(ScrollingMovementMethod.getInstance());
     }
 
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
