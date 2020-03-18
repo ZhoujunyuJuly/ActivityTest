@@ -161,10 +161,10 @@ public class CmtsMainFragment extends Fragment {
             public void onResponse(Call call, Response response) throws IOException {
                 String json = response.body().string();
                 mComments = new Gson().fromJson(json, Comments.class);
-                mCommentsList.clear();
-                mCommentsList.addAll(mComments.getCommentsBeans());
-
-
+                if( mComments != null && mComments.getCommentsBeans() != null) {
+                    mCommentsList.clear();
+                    mCommentsList.addAll(mComments.getCommentsBeans());
+                }
 
                 Log.d("zjyy", "comments is  " + json);
 

@@ -15,9 +15,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.example.wbdemo.info.maindata.RetweetedStatusBean;
-import com.example.wbdemo.info.maindata.StatusesBean;
 import com.example.wbdemo.R;
+import com.example.wbdemo.info.maindata.StatusesBean;
 import com.lzy.ninegrid.ImageInfo;
 import com.lzy.ninegrid.NineGridView;
 import com.lzy.ninegrid.preview.NineGridViewClickAdapter;
@@ -30,7 +29,7 @@ import java.util.regex.Pattern;
 /**
  * Created by zhoujunyu on 2019/5/23.
  */
-public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
+public class MainAdapter extends BaseQuickAdapter<StatusesBean, BaseViewHolder> {
 
     private Context mContext;
 
@@ -43,67 +42,67 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
     protected void convert(BaseViewHolder helper, final StatusesBean item) {
 
         //微博头像
-        Glide.with(mContext).load(item.getUser().getAvatar_hd()).into((ImageView)helper.getView(R.id.iv_main_portrait));
+        Glide.with(mContext).load(item.getUser().getAvatar_hd()).into((ImageView) helper.getView(R.id.iv_main_portrait));
 
         //微博昵称
-        helper.setText(R.id.tv_main_username,item.getUser().getName());
+        helper.setText(R.id.tv_main_username, item.getUser().getName());
 
         //发布时间
         String time = item.getCreated_at();
-        time = time.substring(0,time.indexOf("+"));
-        helper.setText(R.id.tv_main_timeline,time);
+        time = time.substring(0, time.indexOf("+"));
+        helper.setText(R.id.tv_main_timeline, time);
 
         //微博内容
-        if(item.getText().contains("http://") || item.getText().contains("#")){
+        if (item.getText().contains("http://") || item.getText().contains("#")) {
             //SPannableString富文本样式
             String ContentStr = item.getText();
             SpannableString content;
             String Article_URL = "";
 
             //超过140字，替换链接为"展开"字样
-            if( ContentStr.contains("全文： http://m.weibo.cn")){
+            if (ContentStr.contains("全文： http://m.weibo.cn")) {
                 Article_URL = ContentStr.substring(ContentStr.indexOf("全文： http://m.weibo.cn"),
                         ContentStr.length() - 1);
-                ContentStr = ContentStr.replace(Article_URL,"展开");
-                Article_URL = Article_URL.substring(Article_URL.indexOf("http://m.weibo.cn"),Article_URL.length() - 1);
+                ContentStr = ContentStr.replace(Article_URL, "展开");
+                Article_URL = Article_URL.substring(Article_URL.indexOf("http://m.weibo.cn"), Article_URL.length() - 1);
             }
             content = new SpannableString(ContentStr);
 
             //超链接
             //1.视频链接
-            if(ContentStr.contains("http://t.cn")) {
+            if (ContentStr.contains("http://t.cn")) {
                 String ALLURL = ContentStr.substring(ContentStr.indexOf("http://t.cn"), ContentStr.length() - 1);
                 int lastPosition = ALLURL.indexOf(" ");
                 final String videoURL;
-                if( lastPosition != -1) {
-                     videoURL = ALLURL.substring(0, lastPosition);
-                }else {
-                    videoURL = ALLURL.substring(0, ALLURL.length()-1);
+                if (lastPosition != -1) {
+                    videoURL = ALLURL.substring(0, lastPosition);
+                } else {
+                    videoURL = ALLURL.substring(0, ALLURL.length() - 1);
                 }
                 content.setSpan(new LINKURLSpan(videoURL), ContentStr.indexOf(videoURL),
-                        ContentStr.indexOf(videoURL)+videoURL.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                        ContentStr.indexOf(videoURL) + videoURL.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
             }
             //2.话题
-            if(ContentStr.contains("#")){
+            if (ContentStr.contains("#")) {
                 Matcher m = Pattern.compile("#").matcher(ContentStr);
                 int number = 0;
                 List<Integer> position = new ArrayList<>();
-                while (m.find()){
-                    position.add(number,m.end()-1);
-                    number  = number +1;
+                while (m.find()) {
+                    position.add(number, m.end() - 1);
+                    number = number + 1;
                 }
 
-                if(number >=2){
-                    for(int i =0;i < number - 1;i = i+2){
-                        content.setSpan(new LINKURLSpan(""),position.get(i),position.get(i+1)+1,
+                if (number >= 2) {
+                    for (int i = 0; i < number - 1; i = i + 2) {
+                        content.setSpan(new LINKURLSpan(""), position.get(i), position.get(i + 1) + 1,
                                 Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                     }
                 }
             }
             //3.文章链接
-            if( ContentStr.contains("...展开")){
-                content.setSpan(new LINKURLSpan(Article_URL),ContentStr.indexOf("...展开") + 3,
-                        ContentStr.length()-1,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            if (ContentStr.contains("...展开")) {
+                content.setSpan(new LINKURLSpan(Article_URL), ContentStr.indexOf("...展开") + 3,
+                        ContentStr.length() - 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
             }
 
             TextView ActiveTextEvent = helper.getView(R.id.tv_main_content);
@@ -111,7 +110,7 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
             ActiveTextEvent.setText(content);
 
 
-        }else {
+        } else {
             helper.setText(R.id.tv_main_content, item.getText());
         }
 
@@ -119,37 +118,27 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
         List<StatusesBean.PicUrlsBean> imageDetails = item.getPic_urls();
         if (imageDetails != null) {
             for (StatusesBean.PicUrlsBean imageDetail : imageDetails) {
-                    ImageInfo info = new ImageInfo();
-                    if( imageDetails.size()>1) {
-                        info.setThumbnailUrl(imageDetail.getThumbnail_pic());
-                    }else {
-                        info.setThumbnailUrl(item.getOriginal_pic());
-                    }
-                    info.setBigImageUrl(imageDetail.getThumbnail_pic().replace("thumbnail", "large"));
-                    imageInfo.add(info);
+                ImageInfo info = new ImageInfo();
+                if (imageDetails.size() > 1) {
+                    info.setThumbnailUrl(imageDetail.getThumbnail_pic());
+                } else {
+                    info.setThumbnailUrl(item.getOriginal_pic());
+                }
+                info.setBigImageUrl(imageDetail.getThumbnail_pic().replace("thumbnail", "large"));
+                imageInfo.add(info);
             }
             NineGridView nineGridView = helper.getView(R.id.nine_grid_view);
-            nineGridView.setAdapter(new NineGridViewClickAdapter(mContext,imageInfo));
+            nineGridView.setAdapter(new NineGridViewClickAdapter(mContext, imageInfo));
         }
 
-
         //点赞、转发、分享、评论数
-        helper.setText(R.id.tv_item_comments,String.valueOf(item.getComments_count()));
-        helper.setText(R.id.tv_item_attitudes,String.valueOf(item.getAttitudes_count()));
-        helper.setText(R.id.tv_item_reposts,String.valueOf(item.getReposts_count()));
-        helper.setText(R.id.tv_item_share,String.valueOf(item.getShares_count()));
+        helper.setText(R.id.tv_item_comments, String.valueOf(item.getComments_count()));
+        helper.setText(R.id.tv_item_attitudes, String.valueOf(item.getAttitudes_count()));
+        helper.setText(R.id.tv_item_reposts, String.valueOf(item.getReposts_count()));
+        helper.setText(R.id.tv_item_share, String.valueOf(item.getShares_count()));
 
-
-        helper.addOnClickListener(R.id.layout_comments);
-        helper.addOnClickListener(R.id.layout_attitude);
-        helper.addOnClickListener(R.id.layout_repost);
-        helper.addOnClickListener(R.id.layout_share);
-
-
-
+        helper.addOnClickListener(R.id.nine_grid_view);
     }
-
-
 
     public class LINKURLSpan extends URLSpan {
         public LINKURLSpan(String url) {
@@ -166,7 +155,7 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean,BaseViewHolder> {
         @Override
         public void onClick(View widget) {
             super.onClick(widget);
-            if(widget instanceof  TextView && getURL()!= null && !getURL().isEmpty()) {
+            if (widget instanceof TextView && getURL() != null && !getURL().isEmpty()) {
                 WatchVideoActivity.start(mContext, getURL());
             }
         }
