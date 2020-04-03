@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import static com.example.wbdemo.info.URLInfo.DBName;
+
 /**
  * Created by zhoujunyu on 2019/7/22.
  */
@@ -21,16 +23,31 @@ public class JsonDbHelper extends SQLiteOpenHelper {
             + "repost integer,"  //转发数
             + "share integer)";  //分享数
 
-    private Context mContext;
+    public static final String CREAT_EMOTION = "create table if not exists Emotion("
+            + "id integer primary key autoincrement,"//自增长的ID
+            + "value text,"       //表情名称 "[呵呵]"
+            + "url text)"  ;      //表情地址
 
-    public JsonDbHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    private JsonDbHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
-        this.mContext = context;
+    }
+
+    private volatile static JsonDbHelper mJsonDbHelper;
+    public static JsonDbHelper getInstance(Context context){
+        if( mJsonDbHelper == null ){
+            synchronized (JsonDbHelper.class){
+                if( mJsonDbHelper == null ){
+                    mJsonDbHelper = new JsonDbHelper(context,DBName,null,1);
+                }
+            }
+        }
+        return mJsonDbHelper;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREAT_STATUSESBEAN);
+        db.execSQL(CREAT_EMOTION);
     }
 
     @Override

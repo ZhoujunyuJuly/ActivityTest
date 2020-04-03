@@ -2,14 +2,13 @@ package com.example.wbdemo.business.main;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +22,14 @@ import com.example.wbdemo.R;
 import com.example.wbdemo.event.EventManager;
 import com.example.wbdemo.event.StatusEvent;
 import com.example.wbdemo.info.MyItemDecoration;
+import com.example.wbdemo.info.maindata.Emotion;
 import com.example.wbdemo.info.maindata.HomeTimeLine;
 import com.example.wbdemo.info.maindata.StatusesBean;
 import com.example.wbdemo.info.maindata.UserBean;
 import com.example.wbdemo.net.OkHttpManager;
-import com.example.wbdemo.sqlite.JsonDbHelper;
+import com.example.wbdemo.sqlite.SQLiteManager;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.lzy.ninegrid.NineGridView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -39,14 +40,23 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
 import static com.example.wbdemo.info.URLInfo.ACCESS_TOKEN_HEADER;
+import static com.example.wbdemo.info.URLInfo.EMOTION_URL;
 import static com.example.wbdemo.info.URLInfo.HOME_TIMELINE_URL;
+import static com.example.wbdemo.info.URLInfo.SQL_INSERT_STATUSE;
+import static com.example.wbdemo.info.URLInfo.SQL_INSERT_EMOTION;
+import static com.example.wbdemo.info.URLInfo.SQL_SELECT_STATUSE;
+import static com.example.wbdemo.info.URLInfo.SQL_SELECT_EMOTION;
+import static com.example.wbdemo.info.URLInfo.TABLE_WB;
 
 
 public class MainFragment extends Fragment {
@@ -61,19 +71,11 @@ public class MainFragment extends Fragment {
     private SmartRefreshLayout mSmartRefresh;
 
     private HomeTimeLine mHomeTimeLine;
+    private List<Emotion> mEmotionList = new ArrayList<>();
+    private HashMap<String,String> mEmotionHashMap = new HashMap<>();
     private List<StatusesBean> mStatusesList = new ArrayList<>();
 
     private boolean FirstTime = true;
-
-    private JsonDbHelper dbHelper;
-    private SQLiteDatabase db;
-
-    public static final String SQL_INSERT = "insert into StatusesBean(" +
-            "id,name,portrait,time,content,image,attitude,comment,repost,share)" +
-            "values(?,?,?,?,?,?,?,?,?,?)";
-
-    public static final String SQL_SELECT = "select * from StatusesBean";
-
 
     public MainFragment() {
         // Required empty public constructor
@@ -83,8 +85,6 @@ public class MainFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment MainFragment.
      */
     public static MainFragment newInstance(String token) {
@@ -111,22 +111,34 @@ public class MainFragment extends Fragment {
         //TODO:只能解析第一页的问题
         mPage = 1;
 
-        dbHelper = new JsonDbHelper(getContext(), "WbData.db", null, 1);
-
-        db = dbHelper.getWritableDatabase();
-        Cursor c = db.rawQuery(SQL_SELECT, null);
-
 
         initView(view);
-
-        //判断数据库里是否有数
-        if (c.getCount() > 0) {
-            getJsonInDatabase();
-        } else {
-            parseJson();
-        }
+        loadData();
 
         return view;
+    }
+
+    private void loadData(){
+        //判断数据库里是否有微博内容
+        if (isDataInSQL(SQL_SELECT_STATUSE)) {
+            getWBDataFromDatabase();
+        } else {
+            parseWBJson();
+        }
+
+        //判断数据库是否有表情内容
+        if( isDataInSQL(SQL_SELECT_EMOTION)){
+            getEMDataFromDatabase();
+        } else {
+            parseEMJson();
+        }
+
+        //TODO 实在是太乱了
+        //表情请求和内容请求无法判断谁先，只能两个请求完毕后都刷新一遍，效率很低
+        if( mStatusesList.size() > 0 && mEmotionHashMap != null && mEmotionHashMap.size() > 0){
+            changeTextToEmotion();
+        }
+        mMainAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -172,7 +184,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 mPage = 1;
-                parseJson();
+                parseWBJson();
                 mSmartRefresh.finishRefresh(1000);
             }
         });
@@ -181,19 +193,15 @@ public class MainFragment extends Fragment {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 mPage = 1;
-                parseJson();
+                parseWBJson();
                 mSmartRefresh.finishLoadMore(1000);
             }
         });
     }
 
+    private void getWBDataFromDatabase() {
 
-    private void getJsonInDatabase() {
-        db = dbHelper.getWritableDatabase();
-
-        Cursor cursor = db.rawQuery(SQL_SELECT, null, null);
-
-        int i = 0;
+        Cursor cursor = SQLiteManager.getInstance(getContext()).rawQuery(SQL_SELECT_STATUSE);
         if (cursor.moveToFirst()) {
             do {
                 StatusesBean statusesBean = new StatusesBean();
@@ -203,9 +211,6 @@ public class MainFragment extends Fragment {
                 userBean.setName(getStringDBData(cursor, "name"));
                 //2.微博头像
                 userBean.setAvatar_hd(getStringDBData(cursor, "portrait"));
-
-                statusesBean.setUser(userBean);
-
                 //3.发布时间
                 statusesBean.setCreated_at(getStringDBData(cursor, "time"));
                 //4.内容
@@ -218,38 +223,68 @@ public class MainFragment extends Fragment {
                 statusesBean.setComments_count(getIntDBData(cursor, "comment"));
                 //8.分享次数
                 statusesBean.setReposts_count(getIntDBData(cursor, "repost"));
-
-
                 //9.图片
                 String pic = cursor.getString(cursor.getColumnIndex("image"));
-
                 //考虑九格宫，一个字段里有多个图片链接的情况
                 List<StatusesBean.PicUrlsBean> pic_List = new ArrayList<>();
                 StatusesBean.PicUrlsBean picUrlsBean = new StatusesBean.PicUrlsBean();
 
-                if (pic.contains(",")) {
-                    String[] picCollection = pic.split(",");
-                    for (int index = 0; index < picCollection.length; index++) {
-                        picUrlsBean.setThumbnail_pic(picCollection[index]);
-                        pic_List.add(picUrlsBean);
-                    }
-                } else {
-                    picUrlsBean.setThumbnail_pic(pic);
-                    pic_List.add(picUrlsBean);
-                }
 
+                //todo 图片存放和读取都有问题
+//                if (pic.contains(",")) {
+//                    String[] picCollection = pic.split(",");
+//                    for (int index = 0; index < picCollection.length; index++) {
+//                        picUrlsBean.setThumbnail_pic(picCollection[index]);
+//                        pic_List.add(picUrlsBean);
+//                    }
+//                } else {
+//                    picUrlsBean.setThumbnail_pic(pic);
+//                    pic_List.add(picUrlsBean);
+//                }
+                //保存图片信息
                 statusesBean.setPic_urls(pic_List);
-
+                //保存用户信息
+                statusesBean.setUser(userBean);
                 mStatusesList.add(statusesBean);
-
-                i = i + 1;
-
             } while (cursor.moveToNext());
         }
-
         mMainAdapter.notifyDataSetChanged();
+    }
+
+    private void getEMDataFromDatabase(){
+        Cursor cursor= SQLiteManager.getInstance(getContext()).rawQuery(SQL_SELECT_EMOTION);
+        if( cursor.moveToFirst()){
+            do {
+                Emotion emotion = new Emotion();
+                emotion.setUrl(getStringDBData(cursor,"url"));
+                emotion.setValue(getStringDBData(cursor,"value"));
+                mEmotionList.add(emotion);
+            }while (cursor.moveToNext());
+        }
+        convertListToHashMap();
+    }
 
 
+
+    private void changeTextToEmotion(){
+        for(StatusesBean item : mStatusesList){
+            item.setText(convertEmotionInText(item.getText()));
+        }
+    }
+
+    private String convertEmotionInText(String text){
+        if( TextUtils.isEmpty(text) ) return "";
+        Pattern p = Pattern.compile("\\[.{1,8}?\\]");
+        Matcher matcher = p.matcher(text);
+        while (matcher.find()){
+            String value = matcher.group();
+            if( mEmotionHashMap.containsKey(value) && !TextUtils.isEmpty(mEmotionHashMap.get(value))){
+                if( text.contains(value)) {
+                    text = text.replace(value, mEmotionHashMap.get(value));
+                }
+            }
+        }
+        return text;
     }
 
     //从数据库拿相应行的数据
@@ -261,14 +296,14 @@ public class MainFragment extends Fragment {
         return cursor.getInt(cursor.getColumnIndex(columnName));
     }
 
-    private void parseJson() {
-        OkHttpManager.getInstance().get(getURL(), new Callback() {
+    private void parseWBJson() {
+        OkHttpManager.getInstance().get(getWBURL(), new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getActivity(), "error okhttp", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "error wb okhttp", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -283,49 +318,70 @@ public class MainFragment extends Fragment {
                     mStatusesList.addAll(mHomeTimeLine.getStatuses());
                 }
 
-
+                //扔回到UI线程
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         Toast.makeText(getActivity(), "success", Toast.LENGTH_LONG).show();
+
+                        //todo 试下先屏蔽此处刷新
+                        //mMainAdapter.notifyDataSetChanged();
+
+                        if( mEmotionHashMap != null){
+                            changeTextToEmotion();
+                        }
                         mMainAdapter.notifyDataSetChanged();
+
+
                         if (FirstTime) {
-                            EventManager.getInstance().postEvent(StatusEvent.getInstance(mStatusesList));
+                            EventManager.getInstance().postEvent(new StatusEvent(mStatusesList));
                             FirstTime = false;
                         }
                     }
                 });
 
-                saveDataToSqLite();
+                saveWBDataToSQLite();
+            }
+        });
+    }
+
+    private void parseEMJson(){
+        OkHttpManager.getInstance().get(getEmotionURL(), new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getActivity(),"error emotion okhttp", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String json = response.body().string();
+
+                mEmotionList  = new Gson().fromJson(json,new TypeToken<List<Emotion>>(){}.getType());
+                if( mEmotionList != null) {
+                    convertListToHashMap();
+                    saveEmotionToSQLite();
+                }
+
             }
         });
     }
 
 
-    private void saveDataToSqLite() {
-        if (db == null) {
-            db = dbHelper.getWritableDatabase();
-        }
-        //开始事务
-        db.beginTransaction();
+    private void saveWBDataToSQLite() {
 
-        Cursor cursor = db.rawQuery(SQL_SELECT, null);
-
-        //删除之前的数据
-        if (cursor.getCount() > 0) {
-            db.delete("StatusesBean", null, null);
+        //查询数据库里是否有数,如有删除之前的数据
+        if (isDataInSQL(SQL_SELECT_STATUSE)) {
+            SQLiteManager.getInstance(getContext()).delete(TABLE_WB);
         }
 
+        //插入数据
+        SQLiteManager.getInstance(getContext()).execSQLWB(SQL_INSERT_STATUSE,mStatusesList);
 
-        for (StatusesBean item : mStatusesList) {
-            db.execSQL(SQL_INSERT, new Object[]{null, item.getUser().getName(), item.getUser().getAvatar_hd(),
-                    item.getCreated_at(), item.getText(), item.getPic_urls(), item.getAttitudes_count(),
-                    item.getComments_count(), item.getReposts_count(), item.getShares_count()});
-
-        }
-
-        db.setTransactionSuccessful();
-        db.endTransaction();
         //在此处会发生java.lang.IllegalStateException: attempt to re-open an already-closed
         //原因是在刷新时反复对数据库进行操作，而一个线程只能使用一个SQLiteDatabase对象
         //导致A完成读之后调用close(),而B正在进行读写操作
@@ -333,11 +389,32 @@ public class MainFragment extends Fragment {
         //db.close();
     }
 
+    private void saveEmotionToSQLite() {
+        Cursor cursor = SQLiteManager.getInstance(getContext()).rawQuery(SQL_SELECT_EMOTION);
+        if( cursor.getCount() <= 0){
+            SQLiteManager.getInstance(getContext()).execSQLEM(SQL_INSERT_EMOTION,mEmotionList);
+        }
+    }
 
-    private String getURL() {
+    private void convertListToHashMap(){
+        for(Emotion item : mEmotionList){
+            mEmotionHashMap.put(item.getValue(),item.getUrl());
+        }
+    }
+
+    private boolean isDataInSQL(String sql){
+        Cursor cursor = SQLiteManager.getInstance(getContext()).rawQuery(sql);
+        return cursor.getCount() > 0 ;
+    }
+
+
+    private String getWBURL() {
         String OriURL = HOME_TIMELINE_URL + ACCESS_TOKEN_HEADER + mToken;
-        Log.d("zjyy", "getURL: " + mToken);
         return OriURL + "&page=" + mPage;
+    }
+
+    private String getEmotionURL(){
+        return EMOTION_URL + ACCESS_TOKEN_HEADER + mToken;
     }
 
 
@@ -359,6 +436,6 @@ public class MainFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        db.close();
+        SQLiteManager.getInstance(getContext()).close();
     }
 }

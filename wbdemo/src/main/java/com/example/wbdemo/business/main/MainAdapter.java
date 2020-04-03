@@ -104,6 +104,22 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean, BaseViewHolder> 
                 content.setSpan(new LINKURLSpan(Article_URL), ContentStr.indexOf("...展开") + 3,
                         ContentStr.length() - 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
             }
+//            String url = group.substring(1, group.length() - 1);
+//            //异步获取网络图片
+//            Drawable drawableFromNet = new URLImageParser(textView, context, (int) imageSize).getDrawable(url);
+//            imageSpan = new ImageSpan(drawableFromNet, ImageSpan.ALIGN_BASELINE);
+//            //设置网络图片
+//            spannableString.setSpan(imageSpan, matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            //4.表情
+//            if( ContentStr.contains(EMOTION_SRC)){
+//                Matcher matcher = Pattern.compile(EMOTION_SRC + "(.+?)\\.(p|g)(n|i)(g|f)").matcher(ContentStr);
+//                while (matcher.find()){
+//                    String url = matcher.group();
+//                    Drawable drawable = new URLImageParser
+//                }
+//            }
+
 
             TextView ActiveTextEvent = helper.getView(R.id.tv_main_content);
             ActiveTextEvent.setMovementMethod(LinkMovementMethod.getInstance());
@@ -114,6 +130,7 @@ public class MainAdapter extends BaseQuickAdapter<StatusesBean, BaseViewHolder> 
             helper.setText(R.id.tv_main_content, item.getText());
         }
 
+        //九宫格
         ArrayList<ImageInfo> imageInfo = new ArrayList<>();
         List<StatusesBean.PicUrlsBean> imageDetails = item.getPic_urls();
         if (imageDetails != null) {

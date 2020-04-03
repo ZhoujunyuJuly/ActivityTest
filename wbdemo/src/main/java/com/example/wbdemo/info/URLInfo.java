@@ -14,6 +14,7 @@ public class URLInfo {
     public static final String TAG_URL = "authurl";
     public static final String TOKEN_TAG = "token_tag";
     public static final String HOME_TIMELINE_URL = "https://api.weibo.com/2/statuses/home_timeline.json";
+    public static final String EMOTION_URL = "https://api.weibo.com/2/emotions.json";
     public static final String COMMENTS_URL = "https://api.weibo.com/2/comments/show.json";
     public static final String ACCESS_TOKEN_HEADER = "?access_token=";
 
@@ -23,4 +24,20 @@ public class URLInfo {
     public static final String TOKEN = "2.00U1XGpF0olLDg992dbd1487pHDnXE";//某一token
     public static final String EntireLINK = "https://api.weibo.com/2/statuses/home_timeline.json?access_token=2.00U1XGpF0olLDg992dbd1487pHDnXE";
     public static final String code = "5c7e783246d6ce2d86684612d902d32a";
+
+    //表情图片资源前缀
+    public static final String EMOTION_SRC = "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal";
+
+    //sql语句
+    public static final String SQL_INSERT_STATUSE = "insert into StatusesBean(" +
+            "id,name,portrait,time,content,image,attitude,comment,repost,share)" +
+            "values(?,?,?,?,?,?,?,?,?,?)";
+    public static final String SQL_INSERT_EMOTION = "insert into Emotion(" +
+            "id,value,url)" + "values(?,?,?)";
+
+    public static final String SQL_SELECT_STATUSE = "select * from StatusesBean";
+    public static final String SQL_SELECT_EMOTION = "select * from Emotion";
+    public static final String DBName = "WbData.db";
+    public static final String TABLE_WB = "StatusesBean";
+    public static final String TABLE_EM = "Emotion";
 }

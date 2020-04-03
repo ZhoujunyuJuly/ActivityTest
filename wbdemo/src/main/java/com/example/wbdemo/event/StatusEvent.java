@@ -10,11 +10,8 @@ import java.util.List;
 public class StatusEvent {
     private List<StatusesBean> StatusesBean;
 
-    public static StatusEvent getInstance(List<StatusesBean> mStatusesBean){
-        return new StatusEvent(mStatusesBean);
-    }
 
-    private StatusEvent(List<StatusesBean> mStatusesBean) {
+    public StatusEvent(List<StatusesBean> mStatusesBean) {
         this.StatusesBean = mStatusesBean;
     }
 
